@@ -1,455 +1,411 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, type ReactNode } from "react";
 import {
-  ArrowRight,
-  Brain,
-  Clock,
-  ShieldCheck,
-  Sparkles,
-  Bot,
-  GraduationCap,
-  Zap,
-  Layers,
-  Eye,
-  Lock,
-  Check,
-  Play,
-  Star,
-  Users,
   Trophy,
-  TrendingUp,
-  ChevronRight,
-  Menu,
-  X,
+  BarChart2,
+  BookOpen,
+  Layers,
+  Scale,
+  Cpu,
+  Network,
+  FlaskConical,
+  GraduationCap,
 } from "lucide-react";
-import { Layout } from "@/components/sanixor/Layout";
-import { GlassCard } from "@/components/sanixor/GlassCard";
-import { Counter } from "@/components/sanixor/Counter";
+import sanixorMark from "@/assets/sanixor-mark.png";
 
-const offerings = [
-  {
-    icon: Bot,
-    title: "AI Products",
-    desc: "HackEval, BitBenchmark, AutoDash — production-grade tools that ship outcomes.",
-    color: 220,
-  },
-  {
-    icon: Layers,
-    title: "AI Services",
-    desc: "Agent as a Service (AaaS) and customized agentic solutions for enterprises.",
-    color: 280,
-  },
-  {
-    icon: GraduationCap,
-    title: "Training & Careers",
-    desc: "Industry-aligned bootcamps across AI, Data, Design, and Agentic systems.",
-    color: 170,
-  },
-];
-
-const why = [
-  {
-    icon: ShieldCheck,
-    title: "Bias-free automation",
-    desc: "Audited models with explainable, equitable decisions by design.",
-    color: 220,
-  },
-  {
-    icon: Clock,
-    title: "10× time saved",
-    desc: "Replace repetitive workflows with intelligent multi-agent systems.",
-    color: 280,
-  },
-  {
-    icon: Brain,
-    title: "AI-driven decisions",
-    desc: "Real-time, predictive insights from data your team already owns.",
-    color: 170,
-  },
-];
-
-const philosophy = [
-  {
-    icon: Zap,
-    title: "Automation First",
-    desc: "Replace repetitive and manual processes with intelligent automation.",
-    color: 210,
-  },
-  {
-    icon: Brain,
-    title: "Intelligence Driven",
-    desc: "Leverage AI for predictive, adaptive, and real-time decision-making.",
-    color: 260,
-  },
-  {
-    icon: Layers,
-    title: "Scalable Innovation",
-    desc: "Build systems that scale from individuals to enterprises.",
-    color: 170,
-  },
-];
-
-const ethics = [
-  {
-    icon: Eye,
-    title: "Transparency",
-    desc: "Open, explainable systems users and auditors can trust.",
-    color: 220,
-  },
-  {
-    icon: Lock,
-    title: "Privacy First",
-    desc: "Data minimization and security baked into every layer.",
-    color: 280,
-  },
-  {
-    icon: ShieldCheck,
-    title: "Bias Reduction",
-    desc: "Continuously audited models that are fair by design.",
-    color: 170,
-  },
-  {
-    icon: Check,
-    title: "Responsible AI",
-    desc: "Human-in-the-loop guardrails for every deployment.",
-    color: 210,
-  },
-];
-
-const stats = [
-  { value: 12000, suffix: "+", label: "Hours Automated" },
-  { value: 38, suffix: "+", label: "Enterprise Clients" },
-  { value: 96, suffix: "%", label: "Bias Reduction" },
-  { value: 24, suffix: "/7", label: "AI Uptime" },
-];
-
-const testimonials = [
-  {
-    quote: "Sanixor reshaped how we hire — fairer, faster, and 10× cheaper.",
-    author: "Aarav K.",
-    role: "Head of Talent, FinEdge",
-    color: 220,
-  },
-  {
-    quote: "Their AI agents replaced our manual ops queue in two weeks.",
-    author: "Mira S.",
-    role: "COO, NovaCloud",
-    color: 280,
-  },
-  {
-    quote: "The training program turned our analysts into AI engineers.",
-    author: "Rohit V.",
-    role: "VP Engineering, OrbitData",
-    color: 170,
-  },
-];
-
-const taglines = [
-  "Automating Intelligence, Empowering Future",
-  "Where AI Meets Efficiency",
-  "Smart Systems. Smarter Future.",
-  "Redefining Work with AI",
-  "We don't make fake promises — we teach at an architect level.",
-];
+/* ── Scroll-reveal wrapper ── */
+function Reveal({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("revealed");
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.07 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={`snx-reveal ${className}`}>
+      {children}
+    </div>
+  );
+}
 
 export default function Index() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <Layout>
-      {/* Hero */}
-      <section className="relative min-h-[90vh] overflow-hidden bg-hero">
-        <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
-        <div className="absolute top-1/4 -left-32 h-96 w-96 rounded-full bg-primary/10 blur-3xl animate-pulse" />
-        <div
-          className="absolute bottom-1/4 -right-32 h-80 w-80 rounded-full bg-accent/10 blur-3xl animate-pulse"
-          style={{ animationDelay: "1s" }}
-        />
+    <div className="snx-page">
 
-        <div className="relative mx-auto max-w-6xl px-6 pt-32">
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-sm font-medium mb-8 animate-fade-in">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
-              </span>
-              Now Enrolling for 2026
-            </div>
+      {/* ── NAV ── */}
+      <nav className="snx-nav">
+        <a href="#" className="nav-logo">
+          <img src={sanixorMark} alt="Sanixor" />
+          Sanixor<span>AI</span>
+        </a>
+        <ul className="nav-links">
+          <li><a href="#products">Products</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#event">Events</a></li>
+          <li><a href="#learn">Learn</a></li>
+        </ul>
+        <a href="#cta" className="nav-cta">Get Early Access</a>
+      </nav>
 
-            <h1 className="text-6xl md:text-8xl font-bold tracking-tight mb-6">
-              Automating <span className="text-gradient">Intelligence.</span>
-              <br />
-              Eliminating Bias.
-            </h1>
+      {/* ── HERO ── */}
+      <section className="hero">
+        <div className="hero-glow" />
+        <div className="hero-grid" />
 
-            <p className="mx-auto max-w-2xl text-xl text-muted-foreground mb-10">
-              We build the AI infrastructure that gives your time, decisions, and people back to
-              you. Bias-free automation for the modern enterprise.
+        <div className="hero-tag">Agent-First AI Platform</div>
+
+        <h1>
+          Intelligence<br />
+          <span className="grad">Built to Deploy.</span>
+        </h1>
+
+        <p className="hero-sub">
+          From code analysis to legal research — Sanixor AI builds production-grade AI agents
+          that actually work, for students, developers, and institutions.
+        </p>
+
+        <div className="hero-actions">
+          <a href="#products" className="snx-btn-primary">Explore Products →</a>
+          <a href="#event" className="snx-btn-ghost">AgentVerse 2.0 ↗</a>
+        </div>
+
+        <div className="hero-stats">
+          <div className="stat-item">
+            <div className="stat-num">95%+</div>
+            <div className="stat-label">Code Analysis Accuracy</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-num">6</div>
+            <div className="stat-label">AI Agent Products</div>
+          </div>
+          <div className="stat-item">
+            <div className="stat-num">Real</div>
+            <div className="stat-label">No Fake Promises</div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── PRODUCTS ── */}
+      <section id="products">
+        <div className="snx-container">
+          <Reveal className="section-intro">
+            <div className="section-label">Products</div>
+            <h2 className="section-head">Every tool is<br />an AI agent.</h2>
+            <p className="section-desc">
+              Six purpose-built AI products — each solving a real problem with real accuracy,
+              not demo-mode results.
             </p>
+          </Reveal>
 
-            <div className="flex flex-wrap justify-center gap-4 mb-16">
-              <Link
-                to="/products"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-glow transition-all duration-300 hover:scale-105 hover:shadow-xl"
-              >
-                Explore Products <ArrowRight className="h-5 w-5" />
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-3 rounded-full glass px-8 py-4 text-base font-semibold transition-all duration-300 hover:scale-105"
-              >
-                <Play className="h-5 w-5" /> Watch Demo
-              </Link>
+          <Reveal className="products-grid snx-stagger">
+            {/* HackEval — wide */}
+            <div className="prod-card wide">
+              <div className="prod-accent" />
+              <div className="prod-icon">
+                <Trophy size={22} strokeWidth={1.5} />
+              </div>
+              <span className="prod-badge live">Live</span>
+              <div className="prod-name">HackEval</div>
+              <div className="prod-desc">
+                The only agent-powered hackathon evaluation platform. Judges PPT decks with 5%+
+                accuracy improvement over manual review and dissects GitHub repositories
+                end-to-end with 95%+ code analysis precision.
+              </div>
+              <ul className="prod-features">
+                <li>Agent-based PPT evaluator — automated scoring with rubric intelligence</li>
+                <li>GitHub Agent — complete code analysis, dependency mapping, quality scoring</li>
+                <li>Automated leaderboard, team panel &amp; judge panel — zero manual overhead</li>
+                <li>Supports any AI-themed event with structured evaluation pipelines</li>
+              </ul>
+              <a href="#" className="prod-link">Learn more →</a>
             </div>
 
-            {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-8 md:gap-16">
-              {stats.map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="text-4xl md:text-5xl font-bold text-gradient">
-                    <Counter value={stat.value} suffix={stat.suffix} />
-                  </div>
-                  <div className="text-sm text-muted-foreground mt-2">{stat.label}</div>
+            {/* BitBenchmark — half */}
+            <div className="prod-card half">
+              <div className="prod-icon cyan">
+                <BarChart2 size={22} strokeWidth={1.5} />
+              </div>
+              <span className="prod-badge live">Live</span>
+              <div className="prod-name">BitBenchmark</div>
+              <div className="prod-desc">
+                Your complete developer progress dashboard. Connects GitHub and LeetCode into one
+                unified score — understand not just where you stand, but <em>why</em> and{" "}
+                <em>how</em> to level up.
+              </div>
+              <ul className="prod-features">
+                <li>Full GitHub profile analysis — commits, quality, consistency</li>
+                <li>LeetCode performance tracking &amp; pattern insights</li>
+                <li>Codeforces integration — coming soon</li>
+                <li>AI-powered search: "why am I stuck?" answered with a plan</li>
+              </ul>
+              <a href="#" className="prod-link">View Dashboard →</a>
+            </div>
+
+            {/* Sanixor Studio Story */}
+            <div className="prod-card third">
+              <div className="prod-icon amber">
+                <BookOpen size={22} strokeWidth={1.5} />
+              </div>
+              <span className="prod-badge live">Live</span>
+              <div className="prod-name">
+                Sanixor Studio
+                <br />
+                <span className="prod-sub-label">Story</span>
+              </div>
+              <div className="prod-desc">
+                One prompt. A fully generated story, complete with characters, arc, and
+                world-building. Create your favourite anime characters from scratch — just
+                describe them.
+              </div>
+              <ul className="prod-features">
+                <li>Story generation from a single prompt</li>
+                <li>Custom anime character creation</li>
+                <li>Narrative structure &amp; scene writing</li>
+              </ul>
+            </div>
+
+            {/* Sanixor Studio Image */}
+            <div className="prod-card third">
+              <div className="prod-icon green">
+                <Layers size={22} strokeWidth={1.5} />
+              </div>
+              <span className="prod-badge live">Live</span>
+              <div className="prod-name">
+                Sanixor Studio
+                <br />
+                <span className="prod-sub-label">Image</span>
+              </div>
+              <div className="prod-desc">
+                Bi-directional image intelligence. Go from image to prompt or prompt to image.
+                Plus a smart search engine that detects whether an image is AI-generated or real.
+              </div>
+              <ul className="prod-features">
+                <li>Image to Prompt reverse engineering</li>
+                <li>Prompt to Image generation</li>
+                <li>AI vs Real image detection engine</li>
+              </ul>
+            </div>
+
+            {/* LexAI */}
+            <div className="prod-card third">
+              <div className="prod-icon coral">
+                <Scale size={22} strokeWidth={1.5} />
+              </div>
+              <span className="prod-badge live">Live</span>
+              <div className="prod-name">
+                LexAI
+                <span className="prod-by-label"> by Sanixor</span>
+              </div>
+              <div className="prod-desc">
+                Constitutional AI for legal professionals. GST lawyers, criminal lawyers, and
+                more — access jurisdiction-aware legal research and document analysis instantly.
+              </div>
+              <ul className="prod-features">
+                <li>GST &amp; criminal law specialisation</li>
+                <li>Constitutional chatbot with citation</li>
+                <li>Built for practising lawyers</li>
+              </ul>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── SERVICES ── */}
+      <section id="services">
+        <div className="snx-container">
+          <Reveal className="section-intro">
+            <div className="section-label">Services</div>
+            <h2 className="section-head">Agents, on demand.</h2>
+            <p className="section-desc">
+              We don't just build our own agents — we build yours. Fully customised,
+              production-ready, and actually deployed.
+            </p>
+          </Reveal>
+
+          <Reveal className="services-grid snx-stagger">
+            <div className="service-card">
+              <div className="service-num">01</div>
+              <div className="service-title">Agent as a Service</div>
+              <div className="service-desc">
+                Deploy a Sanixor-built AI agent into your product, workflow, or event. We handle
+                the architecture, fine-tuning, and integration — you get a working agent from day
+                one. No vague roadmaps, no pilots that go nowhere.
+              </div>
+              <div className="service-tags">
+                <span className="snx-tag">API Integration</span>
+                <span className="snx-tag">Event Automation</span>
+                <span className="snx-tag">Custom Workflows</span>
+                <span className="snx-tag">Managed Hosting</span>
+              </div>
+            </div>
+            <div className="service-card">
+              <div className="service-num">02</div>
+              <div className="service-title">Custom Agent Development</div>
+              <div className="service-desc">
+                Have a problem that needs a tailored AI solution? We scope, design, and build
+                custom agents specific to your domain — whether it's legal, educational,
+                financial, or technical. Full handover with documentation.
+              </div>
+              <div className="service-tags">
+                <span className="snx-tag">Domain-Specific</span>
+                <span className="snx-tag">Full Ownership</span>
+                <span className="snx-tag">Docs &amp; Handover</span>
+                <span className="snx-tag">Institutional</span>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── EVENT ── */}
+      <section id="event">
+        <div className="snx-container">
+          <Reveal>
+            <div className="event-card">
+              <div className="event-glow" />
+              <div className="event-glow2" />
+              <div>
+                <div className="event-badge">
+                  <span className="dot" /> Open Registration
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Taglines Marquee */}
-      <section className="overflow-hidden border-y border-border/40 py-6 bg-muted/20">
-        <div className="flex animate-[marquee_30s_linear_infinite] gap-16 whitespace-nowrap">
-          {[...taglines, ...taglines, ...taglines].map((t, i) => (
-            <span key={i} className="text-lg md:text-xl font-medium text-muted-foreground">
-              <span className="text-primary">✦</span> {t}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      {/* About */}
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <div className="grid md:grid-cols-2 gap-16 items-center">
-          <div>
-            <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary mb-4">
-              About
-            </p>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">A complete AI ecosystem.</h2>
-            <p className="text-lg text-muted-foreground mb-4">
-              The name <em>Sanixor</em> comes from <strong>Sanskriti</strong> (culture) +{" "}
-              <strong>Work</strong> + <strong>Automation</strong> — a vision where technology
-              enhances human productivity.
-            </p>
-            <p className="text-muted-foreground mb-8">
-              We integrate AI-powered products, SaaS platforms, corporate tools, and career-focused
-              training into one intelligent ecosystem.
-            </p>
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="glass rounded-2xl p-5">
-                <p className="text-xs uppercase tracking-wider text-primary mb-2">Vision</p>
-                <p className="text-sm text-muted-foreground">
-                  A future where intelligent systems collaborate seamlessly with humans.
-                </p>
-              </div>
-              <div className="glass rounded-2xl p-5">
-                <p className="text-xs uppercase tracking-wider text-primary mb-2">Mission</p>
-                <p className="text-sm text-muted-foreground">
-                  Automate complex processes, eliminate inefficiencies, empower people.
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="relative">
-            <div className="absolute inset-0 rounded-3xl bg-gradient-accent opacity-20 blur-3xl" />
-            <div className="relative glass-strong rounded-3xl p-8 shadow-elegant">
-              <div className="grid grid-cols-3 gap-4">
-                {Array.from({ length: 9 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="aspect-square rounded-2xl animate-pulse"
-                    style={{
-                      background: `linear-gradient(135deg, oklch(0.6 0.15 ${200 + i * 20}), oklch(0.3 0.1 ${230 + i * 20}))`,
-                      animationDelay: `${i * 0.1}s`,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Offerings */}
-      <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">What we offer</h2>
-          <p className="text-muted-foreground">
-            Products, services, and training — one integrated ecosystem.
-          </p>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6">
-          {offerings.map((o) => (
-            <GlassCard key={o.title}>
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 shadow-glow"
-                style={{
-                  background: `linear-gradient(135deg, oklch(0.6 0.15 ${o.color}), oklch(0.4 0.12 ${o.color + 30}))`,
-                }}
-              >
-                <o.icon className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{o.title}</h3>
-              <p className="text-sm text-muted-foreground">{o.desc}</p>
-            </GlassCard>
-          ))}
-        </div>
-      </section>
-
-      {/* Philosophy */}
-      <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="text-center mb-16">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary mb-4">
-            Core Philosophy
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold">How we think.</h2>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6">
-          {philosophy.map((p) => (
-            <GlassCard key={p.title}>
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 shadow-glow"
-                style={{
-                  background: `linear-gradient(135deg, oklch(0.6 0.15 ${p.color}), oklch(0.4 0.12 ${p.color + 30}))`,
-                }}
-              >
-                <p.icon className="h-5 w-5 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{p.title}</h3>
-              <p className="text-sm text-muted-foreground">{p.desc}</p>
-            </GlassCard>
-          ))}
-        </div>
-      </section>
-
-      {/* Why */}
-      <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="text-center mb-16">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary mb-4">
-            Why Sanixor
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold">Built for the next decade.</h2>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6">
-          {why.map((w) => (
-            <GlassCard key={w.title} className="text-center">
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5"
-                style={{
-                  background: `linear-gradient(135deg, oklch(0.6 0.15 ${w.color}), oklch(0.4 0.12 ${w.color + 30}))`,
-                }}
-              >
-                <w.icon className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">{w.title}</h3>
-              <p className="text-sm text-muted-foreground">{w.desc}</p>
-            </GlassCard>
-          ))}
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold">Trusted by industry leaders</h2>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((t, i) => (
-            <GlassCard key={i}>
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, j) => (
-                  <Star key={j} className="h-4 w-4 fill-primary text-primary" />
-                ))}
-              </div>
-              <p className="text-base leading-relaxed mb-6">"{t.quote}"</p>
-              <div className="flex items-center gap-3">
-                <div
-                  className="h-10 w-10 rounded-full"
-                  style={{
-                    background: `linear-gradient(135deg, oklch(0.6 0.15 ${t.color}), oklch(0.4 0.12 ${t.color + 30}))`,
-                  }}
-                />
-                <div>
-                  <div className="text-sm font-semibold">{t.author}</div>
-                  <div className="text-xs text-muted-foreground">{t.role}</div>
+                <div className="event-title">
+                  AgentVerse<br /><span className="ver">2.0</span>
+                </div>
+                <div className="event-sub">
+                  India's only agent-exclusive AI event. Open to all students and colleges —
+                  collaborate, compete, and build real agents. We partner directly with
+                  institutions. No entry-level fluff, only production-grade agent challenges.
+                </div>
+                <div className="event-pills">
+                  <span className="pill">Agent-Based Only</span>
+                  <span className="pill">College Collaboration</span>
+                  <span className="pill">Open to All</span>
+                  <span className="pill">Institutional Partnership</span>
+                </div>
+                <div className="event-actions">
+                  <a href="#" className="snx-btn-primary">Register Your College →</a>
+                  <a href="#" className="snx-btn-ghost">View Details</a>
                 </div>
               </div>
-            </GlassCard>
-          ))}
-        </div>
-      </section>
-
-      {/* Ethics */}
-      <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="text-center mb-16">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary mb-4">
-            Ethical AI Commitment
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold">Responsible by design.</h2>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {ethics.map((e) => (
-            <GlassCard key={e.title} className="text-center">
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4"
-                style={{
-                  background: `linear-gradient(135deg, oklch(0.6 0.15 ${e.color}), oklch(0.4 0.12 ${e.color + 30}))`,
-                }}
-              >
-                <e.icon className="h-5 w-5 text-white" />
+              <div className="event-info">
+                <div className="event-stat-big">
+                  <div className="event-stat-num">2.0</div>
+                  <div className="event-stat-lbl">Season Two · Coming Soon</div>
+                </div>
+                <div className="event-stat-big">
+                  <div className="event-agents-label">Agents<br />Only</div>
+                  <div className="event-stat-lbl">No traditional hackathon categories</div>
+                </div>
               </div>
-              <h3 className="text-base font-semibold mb-2">{e.title}</h3>
-              <p className="text-sm text-muted-foreground">{e.desc}</p>
-            </GlassCard>
-          ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="mx-auto max-w-4xl px-6 py-20">
-        <div className="glass-strong rounded-[3rem] p-12 md:p-16 text-center shadow-elegant relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
-          <div className="relative">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Ready to transform your workflow?
-            </h2>
-            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              Join forward-thinking companies already using Sanixor.AI to automate and innovate.
+      {/* ── LEARN ── */}
+      <section id="learn">
+        <div className="snx-container">
+          <Reveal className="section-intro">
+            <div className="section-label">Reading &amp; Learning</div>
+            <h2 className="section-head">Architecture-level<br />AI fundamentals.</h2>
+            <p className="section-desc">
+              Not tutorials. Not shallow overviews. Deep, engineering-grade content on how AI
+              systems actually work — written for people who want to build, not just use.
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Link
-                to="/products"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-glow transition-all duration-300 hover:scale-105"
-              >
-                Get Started <ArrowRight className="h-5 w-5" />
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 rounded-full glass px-8 py-4 text-base font-semibold transition-all duration-300 hover:bg-muted"
-              >
-                Talk to Us
-              </Link>
+          </Reveal>
+
+          <Reveal className="learn-grid snx-stagger">
+            <div className="learn-card">
+              <div className="learn-icon">
+                <Cpu size={20} strokeWidth={1.5} />
+              </div>
+              <div className="learn-title">Transformer Architecture Deep Dives</div>
+              <div className="learn-text">
+                Attention mechanisms, positional encodings, multi-head attention — explained at
+                the implementation level, not the blog-post level.
+              </div>
             </div>
-          </div>
+            <div className="learn-card">
+              <div className="learn-icon">
+                <Network size={20} strokeWidth={1.5} />
+              </div>
+              <div className="learn-title">Agent System Design</div>
+              <div className="learn-text">
+                How to architect multi-agent systems, tool use, memory management, and
+                orchestration loops that don't break in production.
+              </div>
+            </div>
+            <div className="learn-card">
+              <div className="learn-icon">
+                <FlaskConical size={20} strokeWidth={1.5} />
+              </div>
+              <div className="learn-title">LLM Internals &amp; Evaluation</div>
+              <div className="learn-text">
+                RLHF, fine-tuning, RAG pipelines, benchmarking — the concepts that separate
+                engineers who understand the stack from those who don't.
+              </div>
+            </div>
+            <div className="learn-card">
+              <div className="learn-icon">
+                <GraduationCap size={20} strokeWidth={1.5} />
+              </div>
+              <div className="learn-title">Industry Readiness Tracks</div>
+              <div className="learn-text">
+                Structured learning paths aligned to what top companies actually hire for —
+                built with 1st and 2nd year engineering students in mind.
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
-    </Layout>
+
+      {/* ── CTA ── */}
+      <section id="cta">
+        <div className="snx-container">
+          <Reveal>
+            <div className="cta-wrap">
+              <div className="cta-glow" />
+              <h2>
+                Start building with<br />
+                <span className="cta-grad">Sanixor AI today.</span>
+              </h2>
+              <p>Real agents. Real accuracy. Real results — for students, institutions, and developers.</p>
+              <a
+                href="https://sanixor.space"
+                className="snx-btn-primary snx-btn-lg"
+              >
+                Open Sanixor.space →
+              </a>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer className="snx-footer">
+        <a href="https://sanixor.space" className="footer-logo">
+          <img src={sanixorMark} alt="Sanixor" className="footer-logo-mark" />
+          Sanixor<span>AI</span>
+        </a>
+        <div className="footer-links">
+          <a href="#products">Products</a>
+          <a href="#services">Services</a>
+          <a href="#event">AgentVerse</a>
+          <a href="#learn">Learn</a>
+          <a href="https://sanixor.space">sanixor.space</a>
+        </div>
+        <div className="footer-copy">© 2025 Sanixor AI. Built for the next generation.</div>
+      </footer>
+
+    </div>
   );
 }
