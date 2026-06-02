@@ -17,50 +17,59 @@ import { Layout } from "@/components/sanixor/Layout";
 
 const products = [
   {
-    id: "hackeval",
-    name: "HackEval",
-    tag: "AI Hackathon Evaluation",
+    id: "code-analyst",
+    name: "AI Code Analyst",
+    tag: "Code Intelligence",
     icon: Code2,
-    desc: "AI-powered multi-agent hackathon evaluation system — transparent, intelligent, and automated. Solves slow, biased, inconsistent manual judging.",
+    desc: "Deep codebase analysis for bug finding, refactoring guidance, and documentation generation. Built to scale from student projects to enterprise monorepos.",
     features: [
-      "AI-based project evaluation",
-      "Bias-free scoring",
-      "Real-time leaderboard",
-      "Automated judge assignment",
-      "Scalable for large events",
+      "Automated code auditing",
+      "Refactoring suggestions",
+      "Issue explanation",
+      "Repo-wide insights",
     ],
     color: 220,
-    stats: "10K+ events evaluated",
+    stats: "500+ agents deployed",
   },
   {
-    id: "bitbenchmark",
-    name: "BitBenchmark",
-    tag: "Performance Intelligence",
+    id: "legal-research",
+    name: "Legal Research Agent",
+    tag: "Document Intelligence",
     icon: Gauge,
-    desc: "Standardized AI-driven benchmarking platform for systems, models, and workflows — with real-time comparative analytics.",
-    features: [
-      "AI model performance benchmarking",
-      "System efficiency scoring",
-      "Comparative analytics dashboards",
-      "Real-time performance insights",
-    ],
+    desc: "Automates case research, statute lookup, and summarization with traceable citations — reducing hours of manual work into minutes.",
+    features: ["Case analysis", "Statute lookup", "Document summarization", "Traceable citations"],
     color: 280,
-    stats: "500+ models tracked",
+    stats: "12 enterprise clients",
   },
   {
-    id: "autodash",
-    name: "AutoDash",
-    tag: "Analytics & Dashboard Automation",
+    id: "document-intelligence",
+    name: "Document Intelligence",
+    tag: "Data Extraction",
     icon: BarChart3,
-    desc: "AI-powered analytics platform that auto-generates dashboards and predictive reports across your data stack.",
+    desc: "Upload contracts, reports, and forms to extract structured data, answer questions, and generate summaries on demand.",
     features: [
-      "Automated dashboard generation",
-      "Real-time data visualization",
-      "Power BI / Tableau / SQL integration",
-      "Predictive insights & reporting",
+      "Structured data extraction",
+      "Q&A on documents",
+      "Summary generation",
+      "Multi-format support",
     ],
     color: 170,
-    stats: "1M+ dashboards generated",
+    stats: "99.9% uptime SLA",
+  },
+  {
+    id: "custom-agents",
+    name: "Custom AI Agents",
+    tag: "Tailored Solutions",
+    icon: Bot,
+    desc: "Bespoke agents engineered for institutional workflows. From intake to output, we design agents that fit your system, not the other way around.",
+    features: [
+      "Custom workflow design",
+      "Domain-specific intelligence",
+      "API or embedded deployment",
+      "Maintenance and upgrades",
+    ],
+    color: 210,
+    stats: "Built for institutions",
   },
 ];
 
@@ -340,6 +349,7 @@ export default function ProductsPage() {
           >
             <button
               onClick={() => setActiveProduct(null)}
+              aria-label="Close modal"
               className="absolute right-6 top-6 grid h-10 w-10 place-items-center rounded-full glass hover:bg-muted"
             >
               <X className="h-4 w-4" />

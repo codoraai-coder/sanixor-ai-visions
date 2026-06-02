@@ -5,12 +5,10 @@ import { ThemePicker } from "./ThemePicker";
 import { X, Home, Sparkles, GraduationCap, Users, Briefcase, Mail } from "lucide-react";
 
 const links = [
-  { to: "/", label: "Home", icon: Home },
-  { to: "/products", label: "Products", icon: Sparkles },
-  { to: "/training", label: "Training", icon: GraduationCap },
-  { to: "/hiring", label: "Hiring", icon: Briefcase },
-  { to: "/team", label: "Team", icon: Users },
-  { to: "/contact", label: "Contact", icon: Mail },
+  { to: "#products", label: "Products", icon: Sparkles },
+  { to: "#services", label: "Services", icon: Briefcase },
+  { to: "#events", label: "Events", icon: Users },
+  { to: "#learn", label: "Learn", icon: GraduationCap },
 ];
 
 export function Navbar() {
@@ -39,15 +37,19 @@ export function Navbar() {
           <ul className="hidden items-center gap-1 lg:flex">
             {links.map((l) => (
               <li key={l.to}>
-                <Link
-                  to={l.to}
-                  className={`rounded-full px-4 py-2 text-sm transition-all duration-300 hover:bg-muted hover:text-foreground ${location.pathname === l.to ? "text-foreground bg-muted" : "text-muted-foreground"}`}
+                <a
+                  href={l.to}
+                  className={`rounded-full px-4 py-2 text-sm transition-all duration-300 hover:bg-muted hover:text-foreground text-muted-foreground`}
                 >
                   {l.label}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
+
+          <a href="#early-access" className="hidden lg:inline-flex rounded-full px-6 py-2 text-sm font-medium bg-primary text-primary-foreground transition-all duration-300 hover:shadow-glow">
+            Get Early Access
+          </a>
 
           <div className="flex items-center gap-2">
             <ThemePicker />
