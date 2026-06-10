@@ -1,12 +1,19 @@
-import { StrictMode } from "react";
+import { StrictMode, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./styles.css";
+import "lenis/dist/lenis.css";
 import { ThemeProvider } from "./components/sanixor/ThemeProvider";
+import { useSmoothScroll } from "./hooks/useSmoothScroll";
 import Index from "./routes/index";
 import Products from "./routes/products";
 import Team from "./routes/team";
 import Contact from "./routes/contact";
+
+function SmoothScrollProvider({ children }: { children: ReactNode }) {
+  useSmoothScroll();
+  return <>{children}</>;
+}
 
 function NotFound() {
   return (
@@ -25,15 +32,17 @@ function NotFound() {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/team" element={<Team />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <SmoothScrollProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/team" element={<Team />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </SmoothScrollProvider>
     </ThemeProvider>
   </StrictMode>,
 );

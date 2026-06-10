@@ -4,9 +4,9 @@ import { Footer } from "./Footer";
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="relative min-h-screen">
-      <Navbar />
-      <main className="pt-16">{children}</main>
+    <div className="relative min-h-screen bg-background">
+      <Navbar variant="page" />
+      <main className="pt-20">{children}</main>
       <Footer />
     </div>
   );
