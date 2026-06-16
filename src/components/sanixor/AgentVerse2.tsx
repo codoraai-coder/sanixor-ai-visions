@@ -308,7 +308,7 @@ export function AgentVerse2() {
       <div className="relative w-full overflow-hidden rounded-[clamp(16px,3vw,28px)]">
         <img
           src="https://kceggzvolonyqavvowwc.supabase.co/storage/v1/object/public/codoora/ChatGPT%20Image%20Jun%209,%202026,%2002_24_47%20AM.png"
-          alt=""
+          alt="AgentVerse 2.0 event background"
           className="absolute inset-0 h-full w-full object-cover"
           style={{ zIndex: 0 }}
         />

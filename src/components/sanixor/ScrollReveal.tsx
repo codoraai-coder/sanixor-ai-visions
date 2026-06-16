@@ -48,7 +48,7 @@ export function ScrollReveal({
       observer.unobserve(el);
       callbacks.delete(el);
     };
-  }, []);
+  }, [delay]);
 
   return (
     <div

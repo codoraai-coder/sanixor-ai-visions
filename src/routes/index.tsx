@@ -74,12 +74,12 @@ function SectionHeader({
 
 export default function Index() {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-background">
+    <div id="main-content" className="relative min-h-screen overflow-x-hidden bg-background">
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
       </div>
 
-      <Navbar variant="home" />
+      <Navbar />
       <HeroParallax />
 
       {/* Products */}

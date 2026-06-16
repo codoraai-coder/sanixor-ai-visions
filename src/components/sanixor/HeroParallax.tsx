@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import {
   motion,
   useScroll,
@@ -304,7 +304,7 @@ export function HeroParallax() {
     <div
       ref={ref}
       className="relative overflow-hidden antialiased py-20 md:py-40 flex flex-col self-auto"
-      style={{ perspective: "1000px", background: "#0A0612", transformStyle: "preserve-3d" }}
+      style={{ perspective: "1000px", background: "var(--background)", transformStyle: "preserve-3d" }}
     >
       <Header />
 

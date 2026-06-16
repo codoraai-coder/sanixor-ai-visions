@@ -6,6 +6,7 @@ import { ThemeProvider } from "./components/sanixor/ThemeProvider";
 import { useSmoothScroll } from "./hooks/useSmoothScroll";
 import ScrollToTop from "./components/ScrollToTop";
 import Contact from "./routes/contact";
+import Hiring from "./routes/hiring";
 import Index from "./routes/index";
 import Privacy from "./routes/privacy";
 import Products from "./routes/products";
@@ -36,8 +37,8 @@ function NotFound() {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
-      <SmoothScrollProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <SmoothScrollProvider>
           <ScrollToTop />
 
           <Routes>
@@ -48,10 +49,11 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/training" element={<Training />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/hiring" element={<Hiring />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
-      </SmoothScrollProvider>
+        </SmoothScrollProvider>
+      </BrowserRouter>
     </ThemeProvider>
   </StrictMode>,
 );

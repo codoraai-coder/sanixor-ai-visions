@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+/* Fonts loaded via index.html */
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -1516,30 +1516,7 @@ html { scroll-behavior: auto; }
   width: 100%;
 }
 .snx-footer .footer-copy { font-size: 13px; color: var(--muted2); }
-.snx-page {
-  position: relative;
-}
-
-.snx-page::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-
-  background:
-    radial-gradient(
-      circle at 20% 20%,
-      rgba(139,92,246,0.08),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 80% 80%,
-      rgba(255,255,255,0.02),
-      transparent 25%
-    );
-
-  z-index: 0;
-}
+/* (duplicate .snx-page removed — see L592) */
 /* ── PREMIUM ANIMATIONS ── */
 @keyframes snx-fadeUp {
   from { opacity: 0; transform: translateY(24px); }
@@ -1584,7 +1561,7 @@ html { scroll-behavior: auto; }
   50% { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(139, 92, 246, 0.25); }
 }
 
-.hero-tag { animation: snx-fadeUp 0.7s ease 0s both; }
+/* (duplicate .hero-tag animation removed — see L791) */
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 6px; }
@@ -1849,14 +1826,7 @@ html { scroll-behavior: auto; }
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
-.snx-page .hero h1 .grad {
-  background: linear-gradient(135deg, #a78bfa 0%, #c084fc 30%, #818cf8 60%, #a78bfa 100%);
-  background-size: 200% 200%;
-  animation: snx-grad-shift 5s ease infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+/* (duplicate .hero h1 .grad removed — see L805) */
 
 /* ── PRODUCT ICON SVG COLORS (via CSS currentColor, no inline style) ── */
 .prod-icon svg        { display: block; color: var(--purple-l); }

@@ -87,6 +87,15 @@ export default function ContactPage() {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
+                  const form = e.currentTarget;
+                  const formData = new FormData(form);
+                  const name = formData.get('name') as string;
+                  const email = formData.get('email') as string;
+                  const company = formData.get('company') as string;
+                  const message = formData.get('message') as string;
+                  const subject = selectedTopic ? `[${selectedTopic}] Contact from ${name}` : `Contact from ${name}`;
+                  const body = `Name: ${name}\nEmail: ${email}\nCompany: ${company || 'N/A'}\nTopic: ${selectedTopic || 'General'}\n\n${message}`;
+                  window.location.href = `mailto:team@sanixor.space?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                   setSent(true);
                   setTimeout(() => setSent(false), 3000);
                 }}
@@ -115,11 +124,13 @@ export default function ContactPage() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <input
+                    name="name"
                     required
                     placeholder="Your name"
                     className="w-full rounded-xl bg-muted/40 px-4 py-3 text-sm outline-none ring-1 ring-border focus:ring-primary"
                   />
                   <input
+                    name="email"
                     required
                     type="email"
                     placeholder="Email address"
@@ -127,11 +138,12 @@ export default function ContactPage() {
                   />
                 </div>
                 <input
-                  required
+                  name="company"
                   placeholder="Company (optional)"
                   className="w-full rounded-xl bg-muted/40 px-4 py-3 text-sm outline-none ring-1 ring-border focus:ring-primary"
                 />
                 <textarea
+                  name="message"
                   required
                   rows={5}
                   placeholder="Tell us more about what you're looking for..."
@@ -186,7 +198,7 @@ export default function ContactPage() {
             <div className="glass rounded-2xl overflow-hidden">
               <iframe
                 title="Sanixor.AI office"
-                src="https://www.openstreetmap.org/export/embed.html?bbox=77.55%2C12.93%2C77.65%2C13.02&layer=mapnik"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=77.29%2C28.52%2C77.40%2C28.62&layer=mapnik"
                 className="h-48 w-full border-0"
                 loading="lazy"
               />
@@ -196,10 +208,16 @@ export default function ContactPage() {
             <div className="glass rounded-2xl p-6">
               <p className="text-sm font-medium mb-4">Follow us</p>
               <div className="flex gap-3">
-                {[Twitter, Linkedin, Github].map((Icon, i) => (
+                {[
+                  { Icon: Twitter, href: "https://twitter.com/sanixorai" },
+                  { Icon: Linkedin, href: "https://www.linkedin.com/company/sanixor-ai/" },
+                  { Icon: Github, href: "https://github.com/codoraai-coder" },
+                ].map(({ Icon, href }) => (
                   <a
-                    key={i}
-                    href="#"
+                    key={href}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-11 h-11 rounded-xl glass flex items-center justify-center transition-all duration-300 hover:scale-110 hover:text-primary"
                   >
                     <Icon className="h-5 w-5" />
@@ -242,6 +260,7 @@ export default function ContactPage() {
             className={`transition-transform duration-300 ${
               openFaq === index ? "rotate-180" : ""
             }`}
+            aria-hidden="true"
           >
             ▼
           </div>

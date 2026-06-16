@@ -143,11 +143,16 @@ function ProductDetailModal({
       className={`modal-backdrop ${visible ? "modal-backdrop-active" : "modal-backdrop-enter"}`}
       style={{ background: "rgba(0,0,0,0.65)" }}
       onClick={handleClose}
+      onWheel={(e) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
+      onTouchMove={(e) => e.stopPropagation()}
+      onPointerDown={(e) => e.stopPropagation()}
     >
       <div
         className={`modal-card ${visible ? "modal-card-active" : "modal-card-enter"}`}
         style={{ background: "#0a0a0a" }}
         onClick={(e) => e.stopPropagation()}
+        data-lenis-prevent="true"
       >
         <div className="modal-card-visual">
           <video
@@ -343,6 +348,7 @@ export function ProductCarousel() {
     };
 
     const handleMouseDown = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest('.modal-backdrop')) return;
       if ((e.target as HTMLElement).closest('.card-wrapper')) {
         startDrag(e.clientX);
       }
@@ -356,14 +362,17 @@ export function ProductCarousel() {
     };
 
     const handleWheel = (e: WheelEvent) => {
+      if ((e.target as HTMLElement).closest('.modal-backdrop')) return;
       const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       targetProgress.current += delta * 0.0008;
     };
 
     const handleTouchStart = (e: TouchEvent) => {
+      if ((e.target as HTMLElement).closest('.modal-backdrop')) return;
       startDrag(e.touches[0].clientX);
     };
     const handleTouchMove = (e: TouchEvent) => {
+      if ((e.target as HTMLElement).closest('.modal-backdrop')) return;
       if (!drag.current.isDragging) return;
       e.preventDefault();
       onMove(e.touches[0].clientX);
@@ -538,7 +547,7 @@ export function ProductCarousel() {
         .modal-backdrop { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: flex-end; justify-content: center; transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .modal-backdrop-enter { opacity: 0; backdrop-filter: blur(0px); }
         .modal-backdrop-active { opacity: 1; backdrop-filter: blur(24px); }
-        .modal-card { position: relative; width: 98vw; max-width: 900px; border-radius: 24px 24px 0 0; overflow: hidden; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1); max-height: 92vh; overflow-y: auto; }
+        .modal-card { position: relative; width: 98vw; max-width: 900px; border-radius: 24px 24px 0 0; overflow: hidden; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1); max-height: 92vh; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
         .modal-card::-webkit-scrollbar { display: none; }
         .modal-card-enter { transform: translateY(100%); opacity: 0; }
         .modal-card-active { transform: translateY(0); opacity: 1; }
@@ -646,7 +655,7 @@ export function ProductCarousel() {
                           />
                           <img
                             src={p.image}
-                            alt=""
+                            alt={`${p.name} product preview`}
                             className="card-image-fallback"
                             style={{ zIndex: 0 }}
                           />

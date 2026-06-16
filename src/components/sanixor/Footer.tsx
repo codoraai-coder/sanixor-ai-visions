@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function CTASection({ className }: { className?: string }) {
   return (
@@ -350,11 +351,11 @@ export function Footer() {
           <div className="sx-footer-divider"></div>
 
           <div className="sx-footer-bottom">
-            <p className="sx-copyright">&copy; 2025 <span>Sanixor AI</span>. Built for the next generation.</p>
+            <p className="sx-copyright">&copy; {new Date().getFullYear()} <span>Sanixor AI</span>. Built for the next generation.</p>
             <div className="sx-footer-bottom-links">
-              <a href="/privacy">Privacy Policy</a>
-              <a href="/terms">Terms & Conditions</a>
-              <a href="/contact">Contact Us</a>
+              <Link to="/privacy">Privacy Policy</Link>
+              <Link to="/terms">Terms & Conditions</Link>
+              <Link to="/contact">Contact Us</Link>
             </div>
           </div>
         </div>
