@@ -183,23 +183,43 @@ export default function Index() {
               </Card>
             ))}
           </div>
-          <div className="glass-strong rounded-3xl p-10 text-center mt-12 mb-12">
-  <h3 className="text-2xl font-bold mb-3">
-    Want Structured AI Training?
-  </h3>
+          <div className="glass-strong relative overflow-hidden rounded-3xl p-10 text-center mt-12 mb-12 border border-primary/10 bg-card/40 backdrop-blur-xl shadow-[0_0_50px_-12px_rgba(124,58,237,0.15)] md:p-16">
+  {/* --- PREMIUM BACKGROUND EFFECTS LAYER --- */}
+  {/* Ambient background glow gradient */}
+  <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary-glow/10 opacity-70" />
+  
+  {/* Cybernetic Grid Mesh Effect */}
+  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(124,58,237,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(124,58,237,0.04)_1px,transparent_1px)] bg-[size:24px_24px]" />
+  
+  {/* Top-Left Deep Purple Radial Blur */}
+  <div className="pointer-events-none absolute -left-16 -top-16 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+  
+  {/* Bottom-Right Gold/Secondary Subtle Glow */}
+  <div className="pointer-events-none absolute -bottom-20 -right-20 h-72 w-72 rounded-full bg-secondary/5 blur-3xl" />
+  
+  {/* Top Edge Premium Neon Border Line */}
+  <div className="pointer-events-none absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+  {/* ---------------------------------------- */}
 
-  <p className="text-muted-foreground max-w-xl mx-auto mb-6">
-    Move beyond theory with curated AI, Agent Engineering,
-    LLM, RAG, and system design training tracks.
-  </p>
+  {/* Relative wrapper ensures content sits beautifully on top of backgrounds */}
+  <div className="relative z-10">
+    <h3 className="text-2xl font-bold mb-3 tracking-tight md:text-3xl bg-clip-text text-transparent bg-gradient-to-b from-[#f2f0f8] to-[#a78bfa]">
+      Want Structured AI Training?
+    </h3>
 
-  <Link
-    to="/training"
-    className="group inline-flex items-center gap-3 rounded-full bg-gradient-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-glow transition-all duration-300 hover:scale-105"
-  >
-    Explore Training Hub
-    <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-  </Link>
+    <p className="text-muted-foreground max-w-xl mx-auto mb-8 text-base md:text-lg leading-relaxed text-[#857fa3]">
+      Move beyond theory with curated AI, Agent Engineering,
+      LLM, RAG, and system design training tracks.
+    </p>
+
+    <Link
+      to="/training"
+      className="group inline-flex items-center gap-3 rounded-full bg-gradient-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-glow transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(124,58,237,0.4)]"
+    >
+      Explore Training Hub
+      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+    </Link>
+  </div>
 </div>
         </section>
       </ScrollReveal>
