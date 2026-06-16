@@ -12,6 +12,7 @@ import Products from "./routes/products";
 import Team from "./routes/team";
 import Terms from "./routes/terms";
 import Training from "./routes/training";
+import Hiring from "./routes/hiring";
 import "./styles.css";
 
 function SmoothScrollProvider({ children }: { children: ReactNode }) {
@@ -48,6 +49,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/training" element={<Training />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
+            {/* <Route path="/hiring" element={<Hiring />} /> */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
