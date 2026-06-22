@@ -8,6 +8,7 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [isSendingToSheet, setIsSendingToSheet] = useState(false); // Track database submission state
   const [userType, setUserType] = useState<"student" | "professional" | "institution" | "">("");
   const [form, setForm] = useState({
     name: "",
@@ -20,11 +21,54 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
     participants: "",
   });
 
+  // PLACE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxV4ammvBWGqdwV6UlZWNz_TkHiTd4jDA6sTHMzWH9slGVjzyFmoV8BS5hBRCv8lVRWxQ/exec";
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Central function to send dynamic form data to Google Sheet via Apps Script
+  const sendDataToGoogleSheet = async (currentForm: typeof form, type: string) => {
+    setIsSendingToSheet(true);
+    const formData = new FormData();
+
+    // Map state keys to match the exact Google Sheet column headers
+    if (type === "student") {
+      formData.append("Student Name", currentForm.name);
+      formData.append("Student Email", currentForm.email);
+      formData.append("Student Contact", currentForm.phone);
+      formData.append("Roll No", currentForm.rollNo);
+      formData.append("College", currentForm.college);
+    } else if (type === "professional") {
+      formData.append("Professional Name", currentForm.name);
+      formData.append("Professional Email", currentForm.email);
+      formData.append("Professional Contact", currentForm.phone);
+      formData.append("Year of Experience", currentForm.experience);
+      formData.append("Organization Name", currentForm.organization);
+    } else if (type === "institution") {
+      formData.append("Institution/Org Name", currentForm.organization);
+      formData.append("POC Name", currentForm.name);
+      formData.append("POC Email", currentForm.email);
+      formData.append("POC Contact Number", currentForm.phone);
+      formData.append("Number of Participants", currentForm.participants);
+    }
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: formData,
+        mode: "no-cors" // Required to bypass Cross-Origin (CORS) restrictions
+      });
+      console.log("Data successfully queued for Google Sheet!");
+    } catch (error) {
+      console.error("Error sending data to Google Sheet:", error);
+    } finally {
+      setIsSendingToSheet(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if ((userType === "student" || userType === "professional") && !isPaying) {
@@ -32,20 +76,26 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
       return;
     }
 
-    setSubmitted(true);
-    setTimeout(() => {
-      onClose();
-    }, 3000);
+    // Direct submission for institution profile (No payment process needed)
+    if (userType === "institution") {
+      await sendDataToGoogleSheet(form, userType);
+      setSubmitted(true);
+      setTimeout(() => {
+        onClose();
+      }, 3000);
+    }
   };
 
-  const handleDummyPayment = () => {
+  const handleDummyPayment = async () => {
     setIsProcessingPayment(true);
     
-    // TODO: Integrate payment gateway endpoint here for students
-    // Example endpoint usage:
-    // fetch('/api/payment', { method: 'POST', body: JSON.stringify({ amount: 500, userDetails: form }) })
+    // Captured the current userType securely before timeout execution
+    const currentUserType = userType;
+    
+    setTimeout(async () => {
+      // Send data to Google Sheet after successful payment completion
+      await sendDataToGoogleSheet(form, currentUserType);
 
-    setTimeout(() => {
       setIsProcessingPayment(false);
       setIsPaying(false);
       setSubmitted(true);
@@ -56,7 +106,9 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
   };
 
   const handleClose = () => {
-    onClose();
+    if (!isProcessingPayment && !isSendingToSheet) {
+      onClose();
+    }
   };
 
   return (
@@ -65,7 +117,7 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
         <div className="av2-modal-head">
           <h2>{submitted ? "Registration Complete" : "Register for AgentVerse"}</h2>
           {!submitted && (
-            <button className="av2-modal-close" onClick={handleClose}>
+            <button className="av2-modal-close" onClick={handleClose} disabled={isProcessingPayment || isSendingToSheet}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
               </svg>
@@ -102,11 +154,11 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
                 type="button" 
                 className="av2-submit" 
                 onClick={handleDummyPayment}
-                disabled={isProcessingPayment}
-                style={{ opacity: isProcessingPayment ? 0.7 : 1, cursor: isProcessingPayment ? 'wait' : 'pointer' }}
+                disabled={isProcessingPayment || isSendingToSheet}
+                style={{ opacity: (isProcessingPayment || isSendingToSheet) ? 0.7 : 1, cursor: (isProcessingPayment || isSendingToSheet) ? 'wait' : 'pointer' }}
               >
-                {isProcessingPayment ? "Processing Payment..." : `Pay ₹${userType === 'student' ? '500' : '1500'} & Complete`}
-                {!isProcessingPayment && (
+                {isProcessingPayment ? "Processing Payment..." : isSendingToSheet ? "Saving Registration..." : `Pay ₹${userType === 'student' ? '500' : '1500'} & Complete`}
+                {!isProcessingPayment && !isSendingToSheet && (
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" />
                   </svg>
@@ -118,7 +170,7 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
                 className="av2-back-btn" 
                 onClick={() => setIsPaying(false)}
                 style={{ marginTop: 20, justifyContent: 'center', width: '100%', marginLeft: 0 }}
-                disabled={isProcessingPayment}
+                disabled={isProcessingPayment || isSendingToSheet}
               >
                 Cancel Payment
               </button>
@@ -161,7 +213,7 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
             </>
           ) : (
             <form onSubmit={handleSubmit}>
-              <button type="button" className="av2-back-btn" onClick={() => setUserType("")}>
+              <button type="button" className="av2-back-btn" onClick={() => setUserType("")} disabled={isSendingToSheet}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 14, height: 14 }}><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                 Back to options
               </button>
@@ -251,14 +303,10 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
                 </>
               )}
 
-              <button type="submit" className="av2-submit">
-                {(userType === 'student' || userType === 'professional') ? 'Proceed to Payment' : 'Complete Registration'}
+              <button type="submit" className="av2-submit" disabled={isSendingToSheet}>
+                {isSendingToSheet ? 'Processing...' : (userType === 'student' || userType === 'professional') ? 'Proceed to Payment' : 'Complete Registration'}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  {(userType === 'student' || userType === 'professional') ? (
-                    <><path d="M5 12h14M12 5l7 7-7 7"/></>
-                  ) : (
-                    <><path d="M5 12h14M12 5l7 7-7 7"/></>
-                  )}
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
                 </svg>
               </button>
             </form>
