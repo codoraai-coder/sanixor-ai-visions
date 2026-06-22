@@ -292,6 +292,7 @@ export function ProductCarousel() {
     isScrolling: false,
   });
   const [metrics, setMetrics] = useState({ cardW: 336, cardH: 210 });
+  const [isMobile, setIsMobile] = useState(false);
   const [activeProduct, setActiveProduct] = useState<
     (typeof PRODUCTS)[number] | null
   >(null);
@@ -430,6 +431,7 @@ export function ProductCarousel() {
     const handleResize = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
+      setIsMobile(w < 800);
       let cardW = Math.round(w * 0.16 + 130);
       const heightFactor = Math.min(1.0, Math.max(0.65, h / 850));
       cardW = Math.round(cardW * heightFactor);
@@ -552,15 +554,25 @@ export function ProductCarousel() {
         .carousel-perspective { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; pointer-events: none; perspective: 1350px; }
         .carousel-viewport { position: absolute; transform-style: preserve-3d; }
         .card-wrapper { position: absolute; inset: 0; transform-style: preserve-3d; backface-visibility: visible; cursor: grab; pointer-events: auto; outline: none; }
-        .card-wrapper:focus-visible { outline: 2px solid #8B5CF6; outline-offset: 10px; border-radius: 16px; }
+        .card-wrapper:focus-visible { outline: 2px solid #8B5CF6; outline-offset: 10px; border-radius: 20px; }
         .card-wrapper:active { cursor: grabbing; }
-        .card-layer { position: absolute; inset: 0; border-radius: 16px; pointer-events: none; overflow: hidden; }
-        .card-layer-mid { background-color: #606060; border: 1px solid #707070; }
-        .card-layer-front { background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); backface-visibility: hidden; box-shadow: inset 0 1px 1px rgba(255,255,255,0.12); }
-        .card-layer-back { background-color: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); backface-visibility: hidden; box-shadow: inset 0 1px 1px rgba(255,255,255,0.12); }
-        .card-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 16px; }
-        .card-image-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 16px; }
+        .card-layer { position: absolute; inset: 0; border-radius: 20px; pointer-events: none; overflow: hidden; }
+        .card-layer-front { background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); backface-visibility: hidden; }
+        .card-layer-back { background: rgba(10, 10, 10, 0.8); backface-visibility: hidden; border-radius: 20px; }
+        .card-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+        .card-image-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
         .card-front-content { position: absolute; inset: 0; color: white; font-family: 'Inter', sans-serif; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end; }
+        
+        .card-sheen {
+          position: absolute; inset: 0; z-index: 20; mix-blend-mode: overlay; pointer-events: none;
+          background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.4) 25%, transparent 30%);
+          opacity: 0.5;
+        }
+
+        @keyframes pulseOpacity {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
 
         .modal-backdrop { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: flex-end; justify-content: center; transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .modal-backdrop-enter { opacity: 0; backdrop-filter: blur(0px); }
@@ -647,251 +659,298 @@ export function ProductCarousel() {
                     cardsRefs.current[i] = el;
                   }}
                   className="card-wrapper"
-                  style={{ width: metrics.cardW, height: metrics.cardH }}
                   tabIndex={0}
-                  role="button"
-                  aria-label={`View details for ${p.name}`}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
                       setActiveProduct(p);
                     }
                   }}
                   onClick={() => {
-                    if (Math.abs(drag.current.velocity) < 0.01 && !drag.current.isDragging) {
+                    if (!drag.current.hasMoved) {
                       setActiveProduct(p);
                     }
                   }}
+                  style={{
+                    width: `${metrics.cardW}px`,
+                    height: `${metrics.cardH}px`,
+                    visibility: "hidden",
+                    opacity: 0,
+                  }}
                 >
-                  {thicknessLayers.map((zOffset, layerIdx) => {
-                    const isFrontFace =
-                      layerIdx === thicknessLayers.length - 1;
-                    const isBackFace = layerIdx === 0;
-
-                    if (!isFrontFace && !isBackFace) {
-                      return (
+                  {isMobile ? (
+                    <div
+                      className="card-layer card-layer-front"
+                      style={{
+                        background: `rgba(5, 5, 5, 0.4)`,
+                        backdropFilter: "blur(20px)",
+                        WebkitBackdropFilter: "blur(20px)",
+                        border: `1px solid rgba(255,255,255,0.08)`,
+                        borderTop: `2px solid ${p.accent}`,
+                        boxShadow: `inset 0 20px 40px -20px ${p.accent}40, 0 10px 30px -10px rgba(0,0,0,0.8)`,
+                        overflow: "hidden",
+                      }}
+                    >
+                      {/* Static Image Background for Rich Blur (No GIFs to prevent lag) */}
+                      <img
+                        src={p.image}
+                        alt=""
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          opacity: 0.4,
+                          filter: "blur(15px)",
+                          transform: "scale(1.2)",
+                        }}
+                      />
+                      
+                      {/* Grid Pattern Overlay */}
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px)`,
+                          backgroundSize: "20px 20px",
+                          backgroundPosition: "center",
+                          opacity: 0.6,
+                          maskImage: "linear-gradient(to bottom, black 30%, transparent 90%)",
+                          WebkitMaskImage: "linear-gradient(to bottom, black 30%, transparent 90%)"
+                        }}
+                      />
+                      
+                      {/* Inner Content Container */}
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          padding: "1rem 0.8rem 2.2rem 0.8rem",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          textAlign: "center",
+                          zIndex: 10,
+                          background: `radial-gradient(circle at 50% 50%, transparent 40%, rgba(0,0,0,0.8) 100%)`
+                        }}
+                      >
+                        {/* High-tech Category Badge */}
                         <div
-                          key={layerIdx}
-                          className="card-layer card-layer-mid"
                           style={{
-                            transform: `translateZ(${zOffset}px)`,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "0.3rem",
+                            padding: "0.25rem 0.5rem",
+                            borderRadius: "4px",
+                            fontSize: "0.4rem",
+                            fontWeight: 800,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.2em",
+                            background: `linear-gradient(90deg, ${p.accent}20, transparent)`,
+                            color: p.accent,
+                            borderLeft: `2px solid ${p.accent}`,
+                            marginBottom: "0.4rem",
+                            boxShadow: `0 0 15px ${p.accent}15`,
+                          }}
+                        >
+                          {p.category}
+                        </div>
+
+                        {/* Product Name */}
+                        <div
+                          style={{
+                            width: "100%",
+                            fontSize: "0.85rem",
+                            lineHeight: 1.2,
+                            fontWeight: 800,
+                            color: "white",
+                            letterSpacing: "-0.02em",
+                            textShadow: "0 4px 15px rgba(0,0,0,0.9)",
+                            marginBottom: "0.3rem",
+                            wordBreak: "break-word",
+                          }}
+                        >
+                          {p.name}
+                        </div>
+                      </div>
+                      
+                      {/* Bottom "TAP" hint */}
+                      <div
+                        style={{
+                          position: "absolute",
+                          bottom: "0",
+                          left: "0",
+                          right: "0",
+                          padding: "0.6rem",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: "0.3rem",
+                          fontSize: "0.45rem",
+                          color: p.accent,
+                          fontWeight: 700,
+                          letterSpacing: "0.15em",
+                          background: `linear-gradient(to top, rgba(0,0,0,0.8), transparent)`,
+                          zIndex: 10,
+                          animation: "pulseOpacity 2.5s infinite"
+                        }}
+                      >
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M12 16v-4M12 8h.01" />
+                        </svg>
+                        EXPLORE
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {/* FRONT FACE (Holographic Glass) */}
+                      <div
+                        className="card-layer card-layer-front"
+                        style={{
+                          transform: `translateZ(0.5px)`,
+                          border: `1px solid ${p.accent}70`,
+                          boxShadow: `inset 0 0 20px ${p.accent}20, 0 15px 45px -10px ${p.accent}40, inset 0 1px 1px rgba(255,255,255,0.4)`,
+                        }}
+                      >
+                        <img
+                          src={p.video}
+                          alt={`${p.name} video`}
+                          className="card-video"
+                          style={{ opacity: 0.65, mixBlendMode: 'lighten' }}
+                        />
+                        <img
+                          src={p.image}
+                          alt={`${p.name} product preview`}
+                          className="card-image-fallback"
+                          style={{ zIndex: 0, opacity: 0.4 }}
+                        />
+                        
+                        {/* Dynamic Sheen overlay to simulate glass reflection */}
+                        <div className="card-sheen" />
+
+                        <div
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                            background: `linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.3) 60%, ${p.accent}15 100%)`,
+                            zIndex: 5,
                           }}
                         />
-                      );
-                    }
-
-                    if (isFrontFace) {
-                      return (
+                        
                         <div
-                          key={layerIdx}
-                          className="card-layer card-layer-front"
-                          style={{
-                            transform: `translateZ(${zOffset}px)`,
-                          }}
+                          className="card-front-content"
+                          style={{ padding: "1.5rem", zIndex: 10 }}
                         >
-                          <img
-                            src={p.video}
-                            alt={`${p.name} video`}
-                            className="card-video"
-                          />
-                          <img
-                            src={p.image}
-                            alt={`${p.name} product preview`}
-                            className="card-image-fallback"
-                            style={{ zIndex: 0 }}
-                          />
+                          {/* Category Badge */}
                           <div
                             style={{
                               position: "absolute",
-                              inset: 0,
-                              background:
-                                "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 40%, transparent 70%)",
-                              zIndex: 5,
-                            }}
-                          />
-                          <div
-                            className="card-front-content"
-                            style={{ padding: "1.25rem", zIndex: 10 }}
-                          >
-                            <div
-                              style={{
-                                position: "absolute",
-                                top: "1rem",
-                                left: "1rem",
-                                display: "inline-flex",
-                                padding: "0.2rem 0.55rem",
-                                borderRadius: 999,
-                                fontSize: "0.52rem",
-                                fontWeight: 700,
-                                textTransform: "uppercase",
-                                letterSpacing: "0.1em",
-                                background: `${p.accent}22`,
-                                color: p.accent,
-                                border: `1px solid ${p.accent}35`,
-                                backdropFilter: "blur(6px)",
-                              }}
-                            >
-                              {p.category}
-                            </div>
-
-                            <div
-                              style={{
-                                position: "absolute",
-                                top: "1rem",
-                                right: "1rem",
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.3rem",
-                                fontSize: "0.55rem",
-                                color: "rgba(255,255,255,0.5)",
-                                fontWeight: 500,
-                              }}
-                            >
-                              <svg
-                                width="10"
-                                height="10"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="rgba(255,255,255,0.5)"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                              >
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M12 16v-4M12 8h.01" />
-                              </svg>
-                              TAP
-                            </div>
-
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "0.25rem",
-                              }}
-                            >
-                              <div
-                                style={{
-                                  fontSize: "1.05rem",
-                                  fontWeight: 800,
-                                  letterSpacing: "-0.02em",
-                                  lineHeight: 1.1,
-                                }}
-                              >
-                                {p.name}
-                              </div>
-                              <div
-                                style={{
-                                  fontSize: "0.6rem",
-                                  color: "rgba(255,255,255,0.5)",
-                                  lineHeight: 1.4,
-                                  maxWidth: "90%",
-                                  display: "-webkit-box",
-                                  WebkitLineClamp: 2,
-                                  WebkitBoxOrient: "vertical",
-                                  overflow: "hidden",
-                                }}
-                              >
-                                {p.tagline}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    }
-
-                    if (isBackFace) {
-                      return (
-                        <div
-                          key={layerIdx}
-                          className="card-layer card-layer-back"
-                          style={{
-                            transform: `translateZ(${zOffset}px) rotateY(180deg)`,
-                          }}
-                        >
-                          <div
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              filter: "blur(16px)",
-                              transform: "scale(1.15)",
-                              pointerEvents: "none",
+                              top: "1.2rem",
+                              left: "1.2rem",
+                              display: "inline-flex",
+                              padding: "0.3rem 0.75rem",
+                              borderRadius: 999,
+                              fontSize: "0.55rem",
+                              fontWeight: 800,
+                              textTransform: "uppercase",
+                              letterSpacing: "0.15em",
+                              background: `${p.accent}15`,
+                              color: p.accent,
+                              border: `1px solid ${p.accent}50`,
+                              backdropFilter: "blur(12px)",
+                              boxShadow: `0 0 15px ${p.accent}30`
                             }}
                           >
-                            <img
-                              src={p.video}
-                              alt=""
-                              style={{
-                                position: "absolute",
-                                inset: 0,
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                              }}
-                            />
+                            {p.category}
                           </div>
+
+                          {/* TAP Pulse Indicator */}
                           <div
                             style={{
                               position: "absolute",
-                              inset: 0,
-                              background: "rgba(0,0,0,0.6)",
-                              zIndex: 1,
-                            }}
-                          />
-                          <div
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              padding: "1.25rem",
+                              top: "1.2rem",
+                              right: "1.2rem",
                               display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "space-between",
-                              zIndex: 10,
+                              alignItems: "center",
+                              gap: "0.35rem",
+                              fontSize: "0.55rem",
+                              color: "white",
+                              fontWeight: 700,
+                              letterSpacing: "0.15em",
+                              animation: "pulseOpacity 2.5s ease-in-out infinite"
                             }}
                           >
-                            <div>
-                              <div
-                                style={{
-                                  fontSize: "0.55rem",
-                                  fontWeight: 700,
-                                  color: p.accent,
-                                  textTransform: "uppercase",
-                                  letterSpacing: "0.12em",
-                                  marginBottom: "0.35rem",
-                                }}
-                              >
-                                {p.category}
-                              </div>
-                              <div
-                                style={{
-                                  fontSize: "1rem",
-                                  fontWeight: 800,
-                                  color: "white",
-                                  letterSpacing: "-0.02em",
-                                }}
-                              >
-                                {p.name}
-                              </div>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                              <circle cx="12" cy="12" r="10" />
+                              <path d="M12 16v-4M12 8h.01" />
+                            </svg>
+                            TAP
+                          </div>
+
+                          <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+                            <div
+                              style={{
+                                fontSize: "1.3rem",
+                                fontWeight: 800,
+                                letterSpacing: "-0.03em",
+                                lineHeight: 1.1,
+                                textShadow: "0 4px 12px rgba(0,0,0,0.9)"
+                              }}
+                            >
+                              {p.name}
                             </div>
                             <div
                               style={{
-                                fontSize: "0.6rem",
-                                color: "rgba(255,255,255,0.5)",
+                                fontSize: "0.65rem",
+                                color: "rgba(255,255,255,0.75)",
                                 lineHeight: 1.5,
+                                maxWidth: "95%",
                                 display: "-webkit-box",
-                                WebkitLineClamp: 3,
+                                WebkitLineClamp: 2,
                                 WebkitBoxOrient: "vertical",
                                 overflow: "hidden",
+                                textShadow: "0 2px 6px rgba(0,0,0,0.9)"
                               }}
                             >
                               {p.tagline}
                             </div>
                           </div>
                         </div>
-                      );
-                    }
+                      </div>
 
-                    return null;
-                  })}
+                      {/* BACK FACE */}
+                      <div
+                        className="card-layer card-layer-back"
+                        style={{
+                          transform: `translateZ(-0.5px) rotateY(180deg)`,
+                          border: `1px solid ${p.accent}50`,
+                          boxShadow: `inset 0 0 30px rgba(0,0,0,0.8)`
+                        }}
+                      >
+                        <div style={{ position: "absolute", inset: 0, filter: "blur(20px)", transform: "scale(1.2)", pointerEvents: "none" }}>
+                          <img src={p.video} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.4 }} />
+                        </div>
+                        <div style={{ position: "absolute", inset: 0, background: "rgba(5,5,5,0.9)", zIndex: 1 }} />
+                        
+                        <div style={{ position: "absolute", inset: 0, padding: "1.5rem", display: "flex", flexDirection: "column", justifyContent: "space-between", zIndex: 10 }}>
+                          <div>
+                            <div style={{ fontSize: "0.6rem", fontWeight: 800, color: p.accent, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "0.5rem" }}>
+                              {p.category}
+                            </div>
+                            <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "white", letterSpacing: "-0.02em" }}>
+                              {p.name}
+                            </div>
+                          </div>
+                          <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                            {p.description}
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               );
             })}

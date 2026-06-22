@@ -10,25 +10,71 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { ServiceDetailsModal, ServiceInfo } from "@/components/sanixor/ServiceDetailsModal";
 
 import { cn } from "@/lib/utils";
 
-const services = [
+const services: ServiceInfo[] = [
   {
     num: "01",
+    id: "agent-as-a-service",
     title: "Agent as a Service",
     description:
       "Deploy a Sanixor-built AI agent into your product, workflow, or event. We handle architecture, fine-tuning, and integration — you get a working agent from day one.",
     tags: ["API Integration", "Event Automation", "Custom Workflows", "Managed Hosting"],
-    image: "https://kceggzvolonyqavvowwc.supabase.co/storage/v1/object/public/codoora/growtika-nGoCBxiaRO0-unsplash.jpg",
+    image: "/service-1.png",
+    capabilities: [
+      { title: "Multi-Agent Systems", desc: "Deploy interconnected AI agents that collaborate." },
+      { title: "Task Automation", desc: "Automate repetitive workflows with zero downtime." },
+      { title: "Conversational AI", desc: "Engage users with context-aware capabilities." },
+      { title: "Zero Infrastructure", desc: "We manage the servers and scaling. You consume the API." },
+    ]
   },
   {
     num: "02",
+    id: "custom-agent-dev",
     title: "Custom Agent Development",
     description:
       "Have a problem that needs a tailored AI solution? We scope, design, and build custom agents for legal, educational, financial, or technical domains — with full handover.",
     tags: ["Domain-Specific", "Full Ownership", "Docs & Handover", "Institutional"],
-    image: "https://kceggzvolonyqavvowwc.supabase.co/storage/v1/object/public/codoora/mohammad-rahmani-_Fx34KeqIEw-unsplash.jpg",
+    image: "/service-2.png",
+    capabilities: [
+      { title: "Domain Fine-tuning", desc: "Train models on your proprietary datasets securely." },
+      { title: "Complex Integrations", desc: "Connect custom agents to your internal ERPs & CRMs." },
+      { title: "Rigorous Evaluation", desc: "Red-teaming and benchmark testing before deployment." },
+      { title: "Full Code Handover", desc: "Own the IP and the orchestration code entirely." },
+    ]
+  },
+  {
+    num: "03",
+    id: "api-integration",
+    title: "Enterprise API Integration",
+    description:
+      "AI is only as powerful as the systems it can interact with. Connect our advanced agentic capabilities directly to your internal tools, CRMs, ERPs, and legacy applications.",
+    tags: ["Comprehensive SDKs", "Webhooks", "Legacy Support", "REST/GraphQL"],
+    image: "/service-3.png",
+    capabilities: [
+      { title: "Official SDKs", desc: "Python, Node.js, and Go clients with deep typing." },
+      { title: "Legacy Adapters", desc: "On-premise database connectivity for AI." },
+      { title: "Real-time Webhooks", desc: "Event-driven updates on agent state and output." },
+      { title: "Sub-millisecond Latency", desc: "Engineered for high-throughput enterprise scale." },
+    ]
+  },
+  {
+    num: "04",
+    id: "event-automation",
+    title: "Autonomous Event Operations",
+    description:
+      "Transform how you run conferences, hackathons, and corporate events. Deploy agents that handle ticketing, attendee queries, and real-time scheduling autonomously.",
+    tags: ["Live Q&A Agents", "Ticketing", "Scheduling", "Analytics"],
+    image: "/service-4.png",
+    capabilities: [
+      { title: "Live Attendee Support", desc: "24/7 instant answers to logistical questions." },
+      { title: "Dynamic Scheduling", desc: "Agents that adapt itineraries based on delays." },
+      { title: "Post-Event Analytics", desc: "Automated sentiment and engagement reports." },
+      { title: "Speaker Coordination", desc: "Automated briefing and content collection." },
+    ]
   },
 ];
 
@@ -74,10 +120,12 @@ function SectionHeader({
 }
 
 export default function Index() {
+  const [selectedService, setSelectedService] = useState<ServiceInfo | null>(null);
+
   return (
-    <div id="main-content" className="relative min-h-screen overflow-x-hidden bg-background">
+    <div id="main-content" className="relative min-h-screen overflow-x-hidden elite-bg">
       <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
+        <div className="absolute inset-0 elite-grid" />
       </div>
 
       <Navbar />
@@ -85,7 +133,7 @@ export default function Index() {
 
       {/* Products */}
       <ScrollReveal>
-        <section id="products" className="relative z-10 bg-background py-20 md:py-28">
+        <section id="products" className="relative z-10 bg-transparent py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-4 md:px-6">
             <SectionHeader
               label="Products"
@@ -110,7 +158,9 @@ export default function Index() {
               {services.map((service) => (
                 <Card
                   key={service.num}
-                  className="group relative overflow-hidden border-border/50 bg-card/40 backdrop-blur-xl transition-all duration-500 hover:border-primary/25 hover:shadow-glow"
+                  onClick={() => setSelectedService(service)}
+                  className="group relative cursor-pointer overflow-hidden border-border/50 bg-card/40 backdrop-blur-md transition-[border-color,box-shadow,transform] duration-500 hover:border-primary/25 hover:shadow-glow hover:-translate-y-1"
+                  style={{ transform: "translateZ(0)", willChange: "transform, box-shadow" }}
                 >
                   {service.image && (
                     <div className="relative h-64 w-full overflow-hidden md:h-80">
@@ -170,9 +220,10 @@ export default function Index() {
               <Card
                 key={track.title}
                 className={cn(
-                  "border-border/50 bg-card/40 backdrop-blur-xl transition-all",
-                  "hover:border-primary/25 hover:shadow-glow",
+                  "border-border/50 bg-card/40 backdrop-blur-md transition-[border-color,box-shadow,transform] duration-300",
+                  "hover:border-primary/25 hover:shadow-glow hover:-translate-y-1",
                 )}
+                style={{ transform: "translateZ(0)", willChange: "transform, box-shadow" }}
               >
                 <CardHeader>
                   <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -209,6 +260,14 @@ export default function Index() {
         <InteractiveConsole className="pb-20" />
       </ScrollReveal>
       <Footer />
+      
+      {/* Services Popup Modal */}
+      {selectedService && (
+        <ServiceDetailsModal 
+          service={selectedService} 
+          onClose={() => setSelectedService(null)} 
+        />
+      )}
     </div>
   );
 }

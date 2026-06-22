@@ -373,6 +373,27 @@
       linear-gradient(90deg, oklch(1 0 0 / 0.06) 1px, transparent 1px);
     background-size: 60px 60px;
   }
+  .elite-bg {
+    background-color: #010003;
+    background-image: 
+      /* Core ambient top glow */
+      radial-gradient(ellipse 100% 100% at 50% -20%, rgba(120, 50, 240, 0.12) 0%, transparent 50%),
+      /* Deep space purple shift on the right */
+      radial-gradient(circle at 85% 75%, rgba(60, 20, 140, 0.08) 0%, transparent 50%),
+      /* Subtle edge lighting on the left */
+      radial-gradient(circle at -10% 40%, rgba(40, 10, 80, 0.08) 0%, transparent 50%),
+      /* Underlying depth */
+      linear-gradient(160deg, #04010a 0%, #000000 40%, #020005 100%);
+  }
+  .elite-grid {
+    background-image: 
+      linear-gradient(rgba(124, 58, 237, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    background-position: center top;
+    mask-image: linear-gradient(to bottom, black 10%, transparent 90%);
+    -webkit-mask-image: linear-gradient(to bottom, black 10%, transparent 90%);
+  }
   .clip-hexagon {
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   }

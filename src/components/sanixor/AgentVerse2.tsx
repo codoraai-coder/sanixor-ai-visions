@@ -1,10 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AgentVerseDetailsModal } from "./AgentVerseDetailsModal";
 import { AgentVerseRegistrationModal } from "./AgentVerseRegistrationModal";
 
 export function AgentVerse2() {
   const [showDetails, setShowDetails] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get('action');
+    
+    if (action === 'register' || action === 'details') {
+      // Scroll to the section manually since React router / modal-locking might prevent native hash scroll
+      const section = document.getElementById('event');
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      // Delay opening the modal just enough to let the smooth scroll start, preventing body-lock at the top of the page
+      setTimeout(() => {
+        if (action === 'register') setShowRegister(true);
+        if (action === 'details') setShowDetails(true);
+        window.history.replaceState({}, '', '/#event');
+      }, 300);
+    }
+  }, []);
 
   return (
     <>
