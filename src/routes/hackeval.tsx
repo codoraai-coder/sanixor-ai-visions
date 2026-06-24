@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ScrollReveal } from "@/components/sanixor/ScrollReveal";
 import { Footer } from "@/components/sanixor/Footer";
@@ -8,6 +9,7 @@ import { GlassCard } from "@/components/sanixor/GlassCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { BookDemoModal } from "@/components/sanixor/BookDemoModal";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -103,6 +105,9 @@ const customers = [
 ];
 
 export default function HackEval() {
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<"BitBenchmark" | "Hackathon Evaluation">("Hackathon Evaluation");
+
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background">
       <Navbar />
@@ -139,8 +144,16 @@ export default function HackEval() {
                 Explore Features <ArrowRight className="h-4 w-4" />
               </a>
             </Button>
-            <Button asChild size="lg" variant="outline" className="h-12 gap-2 rounded-xl border-white/10 bg-white/5 px-8 font-semibold text-foreground backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all">
-              <a href="#demo">Book a Demo <ArrowUpRight className="h-4 w-4" /></a>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="h-12 gap-2 rounded-xl border-white/10 bg-white/5 px-8 font-semibold text-foreground backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all"
+              onClick={() => {
+                setSelectedProduct("Hackathon Evaluation");
+                setIsDemoModalOpen(true);
+              }}
+            >
+              Book a Demo <ArrowUpRight className="h-4 w-4" />
             </Button>
           </div>
         </motion.div>
@@ -336,6 +349,12 @@ export default function HackEval() {
       <ScrollReveal>
         <InteractiveConsole className="py-20" />
       </ScrollReveal>
+
+      <BookDemoModal 
+        isOpen={isDemoModalOpen} 
+        onClose={() => setIsDemoModalOpen(false)} 
+        productType={selectedProduct} 
+      />
       <Footer />
     </div>
   );
