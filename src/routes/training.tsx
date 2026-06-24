@@ -1,211 +1,287 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
-  GraduationCap,
-  Rocket,
-  Compass,
   ArrowRight,
   Code2,
-  BarChart3,
-  Palette,
   Briefcase,
   Workflow,
-  Bot,
-  Play,
-  Star,
   Users,
   Trophy,
   Clock,
   Search,
-  Filter,
-  BookOpen,
   Target,
-  Sparkles,
+  Server,
+  Database,
+  Cpu,
+  Network
 } from "lucide-react";
 import { Layout } from "@/components/sanixor/Layout";
 
+// Updated authentic content
 const programs = [
   {
-    id: "bootcamp",
-    type: "Bootcamp",
-    title: "AI Engineering Bootcamp",
-    duration: "12 weeks",
-    cohort: "Cohort Based",
-    desc: "Ship a production-grade AI product. Mentorship from Sanixor engineers and weekly live builds.",
-    features: ["Weekly live projects", "1:1 mentorship", "Career support", "Certificate"],
-    color: 220,
-    level: "Intermediate",
+    id: "engineering",
+    type: "Engineering",
+    title: "Applied AI Engineering Architecture",
+    duration: "16 weeks",
+    cohort: "Cohort 24B",
+    desc: "Architect production-grade distributed AI systems. Focuses on orchestrating multi-agent environments, fine-tuning large models for edge deployment, and rigorous system design.",
+    features: ["Production deployments", "1:1 Senior Engineering Mentorship", "System Design Reviews", "Enterprise Certification"],
+    color: "#7c3aed", 
+    level: "Intermediate - Advanced",
+    price: "$3,499",
+  },
+  {
+    id: "residency",
+    type: "Residency",
+    title: "Sanixor Technical Residency",
+    duration: "6 months",
+    cohort: "Funded",
+    desc: "Embedded directly within our core infrastructure team. Ship features to real users. High conversion rate to full-time engineering roles.",
+    features: ["Core product contribution", "Direct PR reviews", "Monthly Stipend", "Priority hiring track"],
+    color: "#3b82f6", 
+    level: "Advanced",
+    price: "Funded",
+  },
+  {
+    id: "accelerator",
+    type: "Accelerator",
+    title: "Technical Career Accelerator",
+    duration: "8 weeks",
+    cohort: "1:1 Mentored",
+    desc: "Intensive preparation for senior technical interviews. System design mock interviews, deep architectural reviews, and algorithmic optimization.",
+    features: ["Whiteboard mock interviews", "Resume & GitHub audit", "Private hiring network", "Lifetime alumni access"],
+    color: "#b89830", 
+    level: "All Levels",
+    price: "$999",
+  },
+  {
+    id: "agentic-rag",
+    type: "Engineering",
+    title: "Advanced Agentic RAG Systems",
+    duration: "10 weeks",
+    cohort: "Cohort 24C",
+    desc: "Build highly autonomous Retrieval-Augmented Generation pipelines. Learn to construct self-correcting agents, semantic routing, and integrate complex vector database topologies.",
+    features: ["Self-Reflection Agents", "Vector DB Optimization", "Knowledge Graph RAG", "LangChain & LlamaIndex Core"],
+    color: "#10b981", 
+    level: "Advanced",
     price: "$2,499",
   },
   {
-    id: "internship",
-    type: "Internship",
-    title: "Internship Program",
-    duration: "3–6 months",
-    cohort: "Paid",
-    desc: "Work on real Sanixor products under senior engineers. Top performers convert to full-time.",
-    features: ["Real production work", "Senior mentorship", "Stipend", "Conversion opportunity"],
-    color: 280,
-    level: "Beginner",
-    price: "Paid",
-  },
-  {
-    id: "career",
-    type: "Career",
-    title: "Career Guidance",
-    duration: "Ongoing",
-    cohort: "1:1 Sessions",
-    desc: "Resume reviews, interview prep, and a private network of AI hiring managers.",
-    features: ["Resume review", "Mock interviews", "Network access", "Lifetime updates"],
-    color: 170,
-    level: "All Levels",
-    price: "$499",
-  },
-];
-
-const tracks = [
-  {
-    icon: GraduationCap,
-    title: "AI Engineering Bootcamp",
+    id: "aiml-core",
+    type: "Foundations",
+    title: "AI/ML Core Fundamentals",
     duration: "12 weeks",
-    cohort: "Cohort Based",
-    desc: "Ship a production-grade AI product. Mentorship from Sanixor engineers and weekly live builds.",
-    features: ["Weekly live projects", "1:1 mentorship", "Career support", "Certificate"],
-    color: 220,
+    cohort: "Cohort 24C",
+    desc: "A rigorous mathematical and algorithmic deep dive into machine learning. From backpropagation and gradient descent to transformer mechanics and latent space physics.",
+    features: ["Linear Algebra & Calculus", "Custom Neural Networks from scratch", "PyTorch Mastery", "Algorithmic Complexity"],
+    color: "#ec4899", 
+    level: "Intermediate",
+    price: "$1,999",
   },
   {
-    icon: Rocket,
-    title: "Internship Program",
-    duration: "3–6 months",
-    cohort: "Paid",
-    desc: "Work on real Sanixor products under senior engineers. Top performers convert to full-time.",
-    features: ["Real production work", "Senior mentorship", "Stipend", "Conversion opportunity"],
-    color: 280,
-  },
-  {
-    icon: Compass,
-    title: "Career Guidance",
-    duration: "Ongoing",
-    cohort: "1:1 Sessions",
-    desc: "Resume reviews, interview prep, and a private network of AI hiring managers.",
-    features: ["Resume review", "Mock interviews", "Network access", "Lifetime updates"],
-    color: 170,
+    id: "fullstack-ai",
+    type: "Engineering",
+    title: "Full-Stack AI Application Architecture",
+    duration: "14 weeks",
+    cohort: "Cohort 24B",
+    desc: "Bridge the gap between AI models and user interfaces. Build robust full-stack applications with streaming responses, real-time sockets, and scalable backend services.",
+    features: ["Next.js & React Server Components", "Streaming LLM Responses", "Database Architecture", "Edge Authentication"],
+    color: "#f59e0b", 
+    level: "Intermediate - Advanced",
+    price: "$2,899",
   },
 ];
 
 const domains = [
   {
-    icon: Code2,
-    title: "Technology & Development",
-    desc: "Full-stack engineering, modern frameworks, and production systems.",
-    color: 210,
+    icon: Cpu,
+    title: "Distributed Systems & Scalability",
+    desc: "Master horizontally scalable architectures necessary for high-throughput AI inference.",
+    color: "#7c3aed",
   },
   {
-    icon: BarChart3,
-    title: "Data Analytics & BI",
-    desc: "SQL, data warehousing, Power BI, Tableau — decisions from data.",
-    color: 260,
+    icon: Network,
+    title: "Multi-Agent Orchestration",
+    desc: "Design deterministic communication protocols for autonomous agent swarms.",
+    color: "#3b82f6",
   },
   {
-    icon: Palette,
-    title: "UI/UX & Product Design",
-    desc: "Design systems, prototyping, and shipping delightful products.",
-    color: 320,
+    icon: Server,
+    title: "Edge & On-Prem Deployment",
+    desc: "Optimize model weights and implement secure containerization for enterprise edge servers.",
+    color: "#b89830",
   },
   {
-    icon: Briefcase,
-    title: "Career Skills",
-    desc: "Resume, interview prep, communication — built for employability.",
-    color: 180,
+    icon: Database,
+    title: "High-Dimensional Vector Data",
+    desc: "Implement custom retrieval-augmented generation pipelines backed by robust vector DBs.",
+    color: "#10b981", 
   },
   {
     icon: Workflow,
-    title: "Automation & No-Code",
-    desc: "Modern automation tools to remove repetitive workflows.",
-    color: 240,
+    title: "CI/CD for Machine Learning",
+    desc: "Rigorous testing paradigms, automated evaluation pipelines, and blue/green model rollouts.",
+    color: "#ec4899", 
   },
   {
-    icon: Bot,
-    title: "Agentic AI",
-    desc: "Advanced multi-agent architectures and intelligent system design.",
-    color: 290,
+    icon: Code2,
+    title: "Systems Level Programming",
+    desc: "Memory management, concurrent processing, and highly optimized hardware interfacing.",
+    color: "#f59e0b", 
   },
 ];
 
 const stats = [
-  { value: "500+", label: "Graduates", icon: Users },
-  { value: "92%", label: "Placement Rate", icon: Trophy },
-  { value: "4.9", label: "Average Rating", icon: Star },
-  { value: "50+", label: "Hiring Partners", icon: Briefcase },
+  { value: "400+", label: "Engineers Certified", icon: Users },
+  { value: "96%", label: "Industry Placement", icon: Trophy },
+  { value: "0.2%", label: "Acceptance Rate", icon: Target },
+  { value: "30+", label: "Enterprise Partners", icon: Briefcase },
 ];
 
 const learningPath = [
   {
-    week: "Weeks 1-4",
-    title: "Foundation",
-    desc: "Python, ML fundamentals, neural networks",
-    progress: 33,
+    phase: "PHASE 01",
+    title: "Architectural Foundations",
+    desc: "Deep dive into state-of-the-art model architectures, memory management, and computational constraints.",
   },
   {
-    week: "Weeks 5-8",
-    title: "Deep Dive",
-    desc: "LLMs, agents, fine-tuning, deployment",
-    progress: 66,
+    phase: "PHASE 02",
+    title: "Agentic Engineering",
+    desc: "Building determinism into non-deterministic systems. Workflow orchestration and fault tolerance.",
   },
-  { week: "Weeks 9-11", title: "Build", desc: "Production project with team", progress: 90 },
-  { week: "Week 12", title: "Launch", desc: "Demo day, portfolio, interviews", progress: 100 },
+  {
+    phase: "PHASE 03",
+    title: "Production Infrastructure",
+    desc: "Containerization, horizontal scaling, edge deployment, and continuous evaluation pipelines.",
+  },
+  {
+    phase: "PHASE 04",
+    title: "Final Capstone",
+    desc: "Architect, build, and deploy an end-to-end enterprise AI product under rigorous code review.",
+  },
 ];
 
-const programTypes = ["All", "Bootcamp", "Internship", "Career"];
-const levels = ["All", "Beginner", "Intermediate", "Advanced", "All Levels"];
+const programTypes = ["All", "Engineering", "Residency", "Accelerator", "Foundations"];
 
 export default function TrainingPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState("All");
-  const [selectedLevel, setSelectedLevel] = useState("All");
-  const [activeTrack, setActiveTrack] = useState(0);
 
   const filteredPrograms = programs.filter((p) => {
     const matchesSearch =
       p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.desc.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesType = selectedType === "All" || p.type === selectedType;
-    const matchesLevel = selectedLevel === "All" || p.level === selectedLevel;
-    return matchesSearch && matchesType && matchesLevel;
+    return matchesSearch && matchesType;
   });
 
   return (
     <Layout>
-      {/* Hero */}
-      <section className="relative min-h-[70vh] overflow-hidden bg-hero">
-        <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
-        <div className="absolute top-1/3 -left-40 h-[500px] w-[500px] rounded-full bg-primary/10 blur-3xl animate-pulse" />
-        <div
-          className="absolute bottom-1/3 -right-40 h-[400px] w-[400px] rounded-full bg-accent/10 blur-3xl animate-pulse"
-          style={{ animationDelay: "1.5s" }}
-        />
+      <style>{`
+        /* Professional Elite Aesthetics */
+        .elite-bg {
+          background-color: #050505;
+          background-image: radial-gradient(circle at 50% 0%, rgba(45, 20, 80, 0.4) 0%, rgba(5, 5, 5, 1) 70%);
+        }
+        
+        .elite-grid {
+          background-image: 
+            linear-gradient(rgba(124, 58, 237, 0.08) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(124, 58, 237, 0.08) 1px, transparent 1px);
+          background-size: 40px 40px;
+          background-position: center top;
+          mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+          -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
+        }
 
-        <div className="relative mx-auto max-w-6xl px-6 pt-32">
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-sm font-medium mb-6">
-              <Sparkles className="h-4 w-4 text-primary" />
-              Now Enrolling for 2026
+        .prof-card {
+          background: linear-gradient(160deg, rgba(25, 18, 40, 0.8) 0%, #0a0a0b 100%);
+          border: 1px solid rgba(124, 58, 237, 0.1);
+          border-top: 1px solid rgba(124, 58, 237, 0.3);
+          box-shadow: 
+            inset 0 1px 0 rgba(124, 58, 237, 0.15),
+            0 10px 30px -10px rgba(0, 0, 0, 0.8);
+          border-radius: 16px;
+          position: relative;
+          overflow: hidden;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .prof-card::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at top left, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+          pointer-events: none;
+        }
+
+        .prof-card:hover {
+          transform: translateY(-4px);
+          border-top: 1px solid rgba(124, 58, 237, 0.6);
+          box-shadow: 
+            inset 0 1px 0 rgba(124, 58, 237, 0.3),
+            0 20px 40px -10px rgba(124, 58, 237, 0.2);
+        }
+
+        .timeline-line {
+          position: absolute;
+          left: 24px;
+          top: 0;
+          bottom: 0;
+          width: 2px;
+          background: linear-gradient(to bottom, rgba(124, 58, 237, 0.6) 0%, transparent 100%);
+          z-index: 0;
+        }
+
+        .timeline-node {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background: #0a0a0b;
+          border: 1px solid rgba(124, 58, 237, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          z-index: 10;
+          box-shadow: 0 0 15px rgba(124, 58, 237, 0.3), inset 0 0 10px rgba(124, 58, 237, 0.2);
+        }
+
+        .elite-text {
+          font-family: 'DM Mono', monospace;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.6);
+        }
+      `}</style>
+
+      {/* Hero */}
+      <section className="relative min-h-[60vh] elite-bg overflow-hidden flex flex-col justify-center">
+        <div className="absolute inset-0 elite-grid" />
+        
+        <div className="relative mx-auto max-w-6xl px-6 pt-32 pb-16 z-10">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-3 px-3 py-1 mb-8 border border-white/10 bg-white/5 rounded-full text-xs font-mono uppercase tracking-widest text-white/70">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Admissions Open: Cohort 24B
             </div>
-            <h1 className="text-6xl md:text-8xl font-bold tracking-tight mb-6">
-              Master <span className="text-gradient">AI.</span>
-              <br />
-              Build the Future.
+            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter mb-8 leading-tight">
+              Elite Engineering <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40">
+                Protocols.
+              </span>
             </h1>
-            <p className="mx-auto max-w-2xl text-xl text-muted-foreground mb-12">
-              Go from beginner to AI engineer in 12 weeks. Project-based learning with mentorship
-              from industry experts.
+            <p className="text-lg md:text-xl text-white/60 mb-12 max-w-2xl leading-relaxed">
+              Rigorous, production-focused technical training designed by core architects. Master distributed systems, agentic orchestration, and robust edge deployment.
             </p>
 
             {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 border-y border-white/10 py-8">
               {stats.map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="text-3xl font-bold text-gradient">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
+                <div key={stat.label}>
+                  <div className="text-2xl md:text-3xl font-bold text-white mb-1">{stat.value}</div>
+                  <div className="elite-text text-[0.65rem]">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -214,278 +290,181 @@ export default function TrainingPage() {
       </section>
 
       {/* Search & Filter */}
-      <section className="mx-auto max-w-6xl px-6 pt-16 pb-8">
-        <div className="glass-strong rounded-[2rem] p-6 shadow-elegant">
-          <div className="flex flex-col gap-4">
-            <div className="relative w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+      <section className="mx-auto max-w-6xl px-6 py-12">
+        <div className="prof-card p-6 border-white/5 border-t-white/10">
+          <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
+            <div className="relative w-full md:max-w-md">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white/40" />
               <input
                 type="text"
                 placeholder="Search programs..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl bg-muted/40 pl-12 pr-4 py-3 text-sm outline-none ring-1 ring-border focus:ring-primary"
+                className="w-full rounded-lg bg-black/50 border border-white/10 pl-12 pr-4 py-3 text-sm text-white placeholder-white/40 outline-none focus:border-white/30 transition-colors"
               />
             </div>
-            <div className="flex flex-wrap gap-3 items-center">
-              <span className="text-sm text-muted-foreground">Type:</span>
-              {programTypes.map((type) => (
-                <button
-                  key={type}
-                  onClick={() => setSelectedType(type)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${
-                    selectedType === type
-                      ? "bg-gradient-primary text-primary-foreground"
-                      : "glass hover:bg-muted"
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
-              <span className="text-sm text-muted-foreground ml-4">Level:</span>
-              {levels.slice(1).map((level) => (
-                <button
-                  key={level}
-                  onClick={() => setSelectedLevel(selectedLevel === level ? "All" : level)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 ${
-                    selectedLevel === level
-                      ? "bg-gradient-primary text-primary-foreground"
-                      : "glass hover:bg-muted"
-                  }`}
-                >
-                  {level}
-                </button>
-              ))}
+            <div className="flex flex-wrap gap-4 items-center">
+              <div className="flex gap-2">
+                {programTypes.map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => setSelectedType(type)}
+                    className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-300 ${
+                      selectedType === type
+                        ? "bg-white text-black"
+                        : "bg-white/5 text-white/60 hover:bg-white/10"
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Programs Grid */}
-      <section className="mx-auto max-w-6xl px-6 pb-16">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Programs Available</h2>
-          <p className="text-muted-foreground">{filteredPrograms.length} programs</p>
+      <section id="tracks" className="mx-auto max-w-6xl px-6 pb-24 scroll-mt-24">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-bold">Available Programs</h2>
+          <p className="elite-text">{filteredPrograms.length} active</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {filteredPrograms.map((program) => (
             <div
               key={program.id}
-              className="group glass rounded-[2rem] p-6 shadow-elegant transition-all duration-500 hover:shadow-glow hover:-translate-y-2 flex flex-col"
+              className="prof-card p-8 flex flex-col group cursor-pointer"
             >
-              <div className="flex items-center justify-between mb-4">
-                <span className="px-3 py-1 rounded-full glass text-xs font-medium">
-                  {program.type}
-                </span>
-                <span className="text-sm font-semibold text-primary">{program.price}</span>
+              <div className="flex items-start justify-between mb-6">
+                <div 
+                  className="w-12 h-12 rounded-lg flex items-center justify-center border border-white/10"
+                  style={{ background: `linear-gradient(135deg, ${program.color}20, transparent)` }}
+                >
+                  <Cpu className="h-5 w-5" style={{ color: program.color }} />
+                </div>
+                <div className="text-right">
+                  <div className="text-xs font-mono text-white/50 mb-1">{program.type}</div>
+                  <div className="text-sm font-semibold text-white">{program.price}</div>
+                </div>
               </div>
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 flex-shrink-0"
-                style={{
-                  background: `linear-gradient(135deg, oklch(0.6 0.15 ${program.color}), oklch(0.4 0.12 ${program.color + 30}))`,
-                }}
-              >
-                {program.type === "Bootcamp" && <GraduationCap className="h-5 w-5 text-white" />}
-                {program.type === "Internship" && <Rocket className="h-5 w-5 text-white" />}
-                {program.type === "Career" && <Compass className="h-5 w-5 text-white" />}
-              </div>
-              <h3 className="text-lg font-bold mb-2">{program.title}</h3>
-              <div className="flex flex-wrap gap-2 text-xs text-muted-foreground mb-3">
-                <span className="flex items-center gap-1">
+              
+              <h3 className="text-xl font-bold mb-3 tracking-tight">{program.title}</h3>
+              
+              <div className="flex flex-wrap gap-3 text-xs font-mono text-white/50 mb-4 border-b border-white/10 pb-4">
+                <span className="flex items-center gap-1.5">
                   <Clock className="h-3 w-3" /> {program.duration}
                 </span>
                 <span>·</span>
                 <span>{program.level}</span>
               </div>
-              <p className="text-sm text-muted-foreground mb-4 line-clamp-2 flex-grow">
+              
+              <p className="text-sm text-white/70 mb-6 flex-grow leading-relaxed">
                 {program.desc}
               </p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {program.features.slice(2).map((f) => (
-                  <span key={f} className="px-2 py-1 rounded-lg glass text-xs">
+              
+              <div className="flex flex-col gap-2 mb-8">
+                {program.features.slice(0, 3).map((f) => (
+                  <div key={f} className="flex items-center gap-2 text-xs text-white/60">
+                    <div className="w-1 h-1 rounded-full bg-white/30" />
                     {f}
-                  </span>
+                  </div>
                 ))}
               </div>
-              <button className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-gradient-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow transition-all duration-300 hover:scale-105 mt-auto">
-                Learn More <ArrowRight className="h-4 w-4" />
+              
+              <button className="w-full flex items-center justify-between px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium transition-colors mt-auto">
+                View Curriculum
+                <ArrowRight className="h-4 w-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
               </button>
             </div>
           ))}
         </div>
 
         {filteredPrograms.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-muted-foreground">
-              No programs match your criteria. Check back soon!
-            </p>
+          <div className="text-center py-24 prof-card">
+            <p className="text-white/50 font-mono">No matching protocols found.</p>
           </div>
         )}
       </section>
 
-      {/* Track Selector - Similar to hiring page */}
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Explore in Detail</h2>
-          <p className="text-muted-foreground">Click to learn more about each program</p>
-        </div>
+      {/* Competency Matrix (Skills) */}
+      <section id="design" className="border-y border-white/10 bg-[#050505] scroll-mt-24">
+        <div className="mx-auto max-w-6xl px-6 py-24">
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight">Competency Matrix</h2>
+            <p className="text-white/60 max-w-xl">
+              Rigorous, specialized domains engineered for immediate integration into enterprise environments.
+            </p>
+          </div>
 
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {tracks.map((track, i) => (
-            <button
-              key={track.title}
-              onClick={() => setActiveTrack(i)}
-              className={`group px-5 py-3 rounded-2xl transition-all duration-500 ${
-                activeTrack === i
-                  ? "bg-gradient-primary text-primary-foreground shadow-glow"
-                  : "glass hover:bg-muted"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <track.icon className="h-5 w-5" />
-                <span className="font-medium text-sm whitespace-nowrap">{track.title}</span>
-              </div>
-            </button>
-          ))}
-        </div>
-
-        <div className="glass-strong rounded-[3rem] p-8 md:p-16 shadow-elegant relative overflow-hidden">
-          <div
-            className="absolute inset-0 opacity-10"
-            style={{
-              background: `radial-gradient(circle at 80% 20%, oklch(0.6 0.15 ${tracks[activeTrack].color}), transparent 50%)`,
-            }}
-          />
-          <div className="relative grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                <Clock className="h-4 w-4" />
-                {tracks[activeTrack].duration} · {tracks[activeTrack].cohort}
-              </div>
-              <h3 className="text-3xl md:text-4xl font-bold mb-4">{tracks[activeTrack].title}</h3>
-              <p className="text-lg text-muted-foreground mb-8">{tracks[activeTrack].desc}</p>
-
-              <div className="flex flex-wrap gap-3 mb-8">
-                {tracks[activeTrack].features.map((f) => (
-                  <span key={f} className="px-4 py-2 rounded-full glass text-sm">
-                    {f}
-                  </span>
-                ))}
-              </div>
-
-              <div className="flex gap-4">
-                <button className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-glow transition-all duration-300 hover:scale-105">
-                  Apply Now <ArrowRight className="h-4 w-4" />
-                </button>
-                <button className="inline-flex items-center gap-2 rounded-full glass px-7 py-3.5 text-sm font-semibold transition-all duration-300 hover:bg-muted">
-                  <Play className="h-4 w-4" /> Preview
-                </button>
-              </div>
-            </div>
-
-            <div className="relative">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-[1px] bg-[#7c3aed]/20 border border-[#7c3aed]/20 rounded-2xl overflow-hidden">
+            {domains.map((d) => (
               <div
-                className="aspect-square rounded-3xl shadow-elegant"
-                style={{
-                  background: `linear-gradient(135deg, oklch(0.3 0.1 ${tracks[activeTrack].color}), oklch(0.15 0.05 ${tracks[activeTrack].color + 40}))`,
-                }}
+                key={d.title}
+                className="bg-[#0a0812] p-8 hover:bg-[#140f24] transition-colors"
               >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  {(() => {
-                    const Icon = tracks[activeTrack].icon;
-                    return <Icon className="h-32 w-32 text-white/30" />;
-                  })()}
+                <div className="flex items-center gap-4 mb-4">
+                  <d.icon className="h-5 w-5" style={{ color: d.color }} />
+                  <h3 className="text-sm font-semibold tracking-wide">{d.title}</h3>
                 </div>
+                <p className="text-sm text-white/50 leading-relaxed pl-9">
+                  {d.desc}
+                </p>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Learning Path */}
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Your Learning Journey</h2>
-          <p className="text-muted-foreground">12 weeks of intensive, hands-on training</p>
+      {/* Interactive Timeline (Learning Path) */}
+      <section id="architecture" className="mx-auto max-w-4xl px-6 py-24 relative scroll-mt-24">
+        <div className="mb-16 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight">Curriculum Architecture</h2>
+          <p className="text-white/60">A deterministic progression model.</p>
         </div>
 
-        <div className="grid md:grid-cols-4 gap-6">
-          {learningPath.map((step, i) => (
-            <div key={i} className="relative">
-              <div className="glass rounded-3xl p-6 h-full transition-all duration-500 hover:shadow-glow">
-                <div className="text-sm text-primary font-medium mb-2">{step.week}</div>
-                <h3 className="text-xl font-bold mb-2">{step.title}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{step.desc}</p>
-                <div className="h-1 bg-muted rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-primary rounded-full transition-all duration-1000"
-                    style={{ width: `${step.progress}%` }}
-                  />
+        <div className="relative pl-6 md:pl-0">
+          <div className="hidden md:block timeline-line left-1/2 -ml-px" />
+          <div className="md:hidden timeline-line" />
+          
+          <div className="flex flex-col gap-12">
+            {learningPath.map((step, i) => (
+              <div key={i} className={`relative flex items-center md:justify-between w-full ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+                <div className="hidden md:block w-[45%]" />
+                
+                <div className="absolute left-[-24px] md:left-1/2 md:-translate-x-1/2 timeline-node">
+                  <span className="text-xs font-mono text-white/40">{`0${i+1}`}</span>
+                </div>
+                
+                <div className="prof-card w-full md:w-[45%] ml-12 md:ml-0 p-6 border border-white/5">
+                  <div className="elite-text mb-2 text-white/40">{step.phase}</div>
+                  <h3 className="text-xl font-bold mb-3">{step.title}</h3>
+                  <p className="text-sm text-white/60 leading-relaxed">
+                    {step.desc}
+                  </p>
                 </div>
               </div>
-              {i < 3 && (
-                <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
-                  <ArrowRight className="h-5 w-5 text-primary" />
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Skills */}
-      <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Skills You'll Master</h2>
-          <p className="text-muted-foreground">Comprehensive training across all AI domains</p>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {domains.map((d) => (
-            <div
-              key={d.title}
-              className="group glass rounded-3xl p-8 transition-all duration-500 hover:shadow-glow hover:-translate-y-2"
-            >
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110"
-                style={{
-                  background: `linear-gradient(135deg, oklch(0.6 0.15 ${d.color}), oklch(0.4 0.12 ${d.color + 30}))`,
-                }}
-              >
-                <d.icon className="h-6 w-6 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{d.title}</h3>
-              <p className="text-muted-foreground text-sm">{d.desc}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="mx-auto max-w-4xl px-6 py-20">
-        <div className="glass-strong rounded-[3rem] p-12 md:p-16 text-center shadow-elegant relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
-          <div className="relative">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Career?</h2>
-            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              Join our next cohort and become job-ready in AI engineering. Limited seats available.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              {/* <a
-                href="/hiring"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-glow transition-all duration-300 hover:scale-105"
-              >
-                Apply Now <ArrowRight className="h-5 w-5" />
-              </a> */}
-              <a
-                href="/contact"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-glow transition-all duration-300 hover:scale-105"
-              >
-                Talk to Us
-              </a>
-            </div>
-          </div>
+      <section className="border-t border-white/10 bg-[#020202]">
+        <div className="mx-auto max-w-4xl px-6 py-32 text-center">
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tighter mb-6">
+            Ready to Compile?
+          </h2>
+          <p className="text-lg text-white/50 mb-10 max-w-xl mx-auto">
+            Admissions for the upcoming technical cohort are highly competitive. Initiate the technical screening process today.
+          </p>
+          <a
+            href="/contact"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-[#7c3aed] text-white rounded-lg font-bold hover:bg-[#6d28d9] transition-colors shadow-[0_0_20px_rgba(124,58,237,0.4)]"
+          >
+            Initiate Screening <ArrowRight className="h-4 w-4" />
+          </a>
         </div>
       </section>
     </Layout>

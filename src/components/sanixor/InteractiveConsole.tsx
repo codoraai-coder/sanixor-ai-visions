@@ -2,18 +2,18 @@ import { useState, useEffect, useRef } from "react";
 import { Terminal, Play, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import { useNavigate } from "react-router-dom";
+
 const LOG_SEQUENCE = [
-  { text: "Initializing agent runtime environment...", type: "info", delay: 800 },
-  { text: "Loading model weights (Sanixor-7B)...", type: "info", delay: 1200 },
-  { text: "Connecting to vector database...", type: "info", delay: 900 },
-  { text: "Vector DB connected. Indexed 4.2M documents.", type: "success", delay: 1500 },
-  { text: "Starting autonomous workflow execution...", type: "warning", delay: 1000 },
-  { text: "Analyzing input parameters...", type: "info", delay: 1200 },
-  { text: "Deploying edge functions to 14 regions...", type: "info", delay: 1800 },
-  { text: "Agent deployed successfully. Listening on port 8080.", type: "success", delay: 800 },
+  { text: "Resolving host...", type: "info", delay: 100 },
+  { text: "Establishing secure channel...", type: "info", delay: 150 },
+  { text: "Handshake successful. Key exchange verified.", type: "success", delay: 100 },
+  { text: "Initializing contact protocol...", type: "warning", delay: 100 },
+  { text: "Ready for transmission. Redirecting...", type: "success", delay: 150 },
 ];
 
 export function InteractiveConsole({ className }: { className?: string }) {
+  const navigate = useNavigate();
   const [logs, setLogs] = useState<{ text: string; type: string }[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
@@ -36,7 +36,8 @@ export function InteractiveConsole({ className }: { className?: string }) {
           setTimeout(() => {
             setIsRunning(false);
             setIsFinished(true);
-          }, 500);
+            navigate("/contact");
+          }, 300);
         }
       }, currentDelay);
     });
@@ -51,12 +52,12 @@ export function InteractiveConsole({ className }: { className?: string }) {
   return (
     <section className={cn("mx-auto max-w-5xl px-4 py-20 md:px-6 md:py-28", className)}>
       <div className="mx-auto mb-12 max-w-2xl text-center">
-        <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-primary">Interactive Demo</p>
+        <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-primary">Contact Us</p>
         <h2 className="text-3xl font-bold tracking-tight md:text-5xl">
-          See Sanixor AI in action.
+          Initialize connection.
         </h2>
         <p className="mt-4 text-muted-foreground md:text-lg">
-          Click the button below to simulate an agent deployment process in real-time.
+          Run the terminal to open a secure channel and get in touch with our team.
         </p>
       </div>
 
@@ -74,7 +75,7 @@ export function InteractiveConsole({ className }: { className?: string }) {
           </div>
           <div className="flex items-center gap-2 text-[10px] sm:text-xs font-medium text-muted-foreground">
             <Terminal className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span>agent-deploy.sh</span>
+            <span>sanixor-connect.sh</span>
           </div>
           <div className="w-10" /> {/* Spacer for centering */}
         </div>
@@ -85,8 +86,8 @@ export function InteractiveConsole({ className }: { className?: string }) {
           className="h-[250px] sm:h-[300px] overflow-y-auto p-4 sm:p-6 font-mono text-xs sm:text-sm"
         >
           <div className="mb-4 text-muted-foreground">
-            $ Welcome to Sanixor CLI v2.4.1<br/>
-            $ Ready to orchestrate autonomous agents.
+            $ Welcome to Sanixor Network v2.4.1<br/>
+            $ Ready to establish secure connection.
           </div>
 
           {logs.map((log, i) => (
@@ -117,7 +118,7 @@ export function InteractiveConsole({ className }: { className?: string }) {
                 className="group relative flex items-center gap-2 rounded-full border border-primary/50 bg-primary/10 px-6 py-3 font-sans text-sm font-medium text-primary transition-all hover:bg-primary/20 hover:shadow-[0_0_20px_rgba(124,58,237,0.3)]"
               >
                 <Play className="h-4 w-4 transition-transform group-hover:scale-110" />
-                Deploy Agent Workflow
+                Run Connection Protocol
               </button>
             </div>
           )}
@@ -126,7 +127,7 @@ export function InteractiveConsole({ className }: { className?: string }) {
             <div className="mt-8 flex justify-center">
               <div className="flex items-center gap-2 rounded-full border border-green-500/50 bg-green-500/10 px-6 py-3 font-sans text-sm font-medium text-green-400">
                 <CheckCircle2 className="h-4 w-4" />
-                Deployment Complete
+                Redirecting...
               </div>
             </div>
           )}

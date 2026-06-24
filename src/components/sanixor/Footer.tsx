@@ -265,13 +265,17 @@ export function Footer() {
         .sx-footer-bottom-links { display: flex; gap: clamp(12px, 2vw, 24px); }
         .sx-footer-bottom-links a {
           font-family: 'DM Mono', monospace;
-          font-size: clamp(9px, 1.2vw, 11px);
-          color: #4a4565;
+          font-size: clamp(10px, 1.2vw, 12px);
+          color: #f8fafc;
+          font-weight: 500;
           text-decoration: none;
-          transition: color 0.25s ease;
-          letter-spacing: 0.03em;
+          transition: all 0.25s ease;
+          letter-spacing: 0.05em;
         }
-        .sx-footer-bottom-links a:hover { color: #857fa3; }
+        .sx-footer-bottom-links a:hover { 
+          color: #ffffff; 
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
         
         /* EXACT MOBILE QUERIES FROM YOUR ORIGINAL SHIPPED GRAPHIC */
         @media (max-width: 375px) {
@@ -367,9 +371,9 @@ export function Footer() {
               <div className={cn("sx-link-col", revealedCols[3] && "is-revealed")}>
                 <h4 onClick={() => toggleColumnReveal(3)}>Agent Verse</h4>
                 <ul>
-                  <li><a href="#" data-highlight="true">AgentVerse 2.0</a></li>
-                  <li><a href="#" data-highlight="true">Register College</a></li>
-                  <li><a href="#">Event Details</a></li>
+                  <li><a href="/#event" data-highlight="true">AgentVerse 2.0</a></li>
+                  <li><a href="/?action=register#event" data-highlight="true">Register College</a></li>
+                  <li><a href="/?action=details#event">Event Details</a></li>
                 </ul>
               </div>
 
@@ -377,10 +381,9 @@ export function Footer() {
               <div className={cn("sx-link-col learn-col", revealedCols[4] && "is-revealed")}>
                 <h4 onClick={() => toggleColumnReveal(4)}>Learn</h4>
                 <ul>
-                  <li><a href="#">Transformer Architecture</a></li>
-                  <li><a href="#">Agent System Design</a></li>
-                  <li><a href="#">LLM Internals</a></li>
-                  <li><a href="#">Industry Tracks</a></li>
+                  <li><a href="/training#architecture">Core Curriculum & Architecture</a></li>
+                  <li><a href="/training#design">Engineering Competency Matrix</a></li>
+                  <li><a href="/training#tracks">Available Specialized Tracks</a></li>
                 </ul>
               </div>
             </div>
@@ -393,7 +396,6 @@ export function Footer() {
             <div className="sx-footer-bottom-links">
               <a href="/privacy">Privacy Policy</a>
               <a href="/terms">Terms & Conditions</a>
-              <a href="/contact">Contact Us</a>
             </div>
           </div>
         </div>

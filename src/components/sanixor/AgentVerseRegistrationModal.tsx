@@ -8,7 +8,8 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [isSendingToSheet, setIsSendingToSheet] = useState(false); // Track database submission state
+  const [isSendingToSheet, setIsSendingToSheet] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [userType, setUserType] = useState<"student" | "professional" | "institution" | "">("");
   const [form, setForm] = useState({
     name: "",
@@ -21,19 +22,17 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
     participants: "",
   });
 
-  // PLACE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxV4ammvBWGqdwV6UlZWNz_TkHiTd4jDA6sTHMzWH9slGVjzyFmoV8BS5hBRCv8lVRWxQ/exec";
+  const SCRIPT_URL = import.meta.env.VITE_SCRIPT_URL || "";
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
-  // Central function to send dynamic form data to Google Sheet via Apps Script
-  const sendDataToGoogleSheet = async (currentForm: typeof form, type: string) => {
+  const sendDataToGoogleSheet = async (currentForm: typeof form, type: string): Promise<boolean> => {
     setIsSendingToSheet(true);
+    setErrorMessage("");
     const formData = new FormData();
 
-    // Map state keys to match the exact Google Sheet column headers
     if (type === "student") {
       formData.append("Student Name", currentForm.name);
       formData.append("Student Email", currentForm.email);
@@ -55,14 +54,23 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
     }
 
     try {
-      await fetch(SCRIPT_URL, {
+      const response = await fetch(SCRIPT_URL, {
         method: "POST",
         body: formData,
-        mode: "no-cors" // Required to bypass Cross-Origin (CORS) restrictions
       });
-      console.log("Data successfully queued for Google Sheet!");
+
+      const data = await response.json();
+
+      if (data && data.status === "duplicate") {
+        setErrorMessage(data.message);
+        return false;
+      }
+
+      console.log("Data successfully queued!");
+      return true;
     } catch (error) {
-      console.error("Error sending data to Google Sheet:", error);
+      console.error("Error sending data:", error);
+      return false;
     } finally {
       setIsSendingToSheet(false);
     }
@@ -70,38 +78,38 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage("");
 
+    // 🚀 FIXED: Directly opens payment screen instantly just like your old code
     if ((userType === "student" || userType === "professional") && !isPaying) {
       setIsPaying(true);
       return;
     }
 
-    // Direct submission for institution profile (No payment process needed)
     if (userType === "institution") {
-      await sendDataToGoogleSheet(form, userType);
-      setSubmitted(true);
-      setTimeout(() => {
-        onClose();
-      }, 3000);
+      const isAllowed = await sendDataToGoogleSheet(form, userType);
+      if (isAllowed) {
+        setSubmitted(true);
+        setTimeout(() => onClose(), 3000);
+      }
     }
   };
 
   const handleDummyPayment = async () => {
     setIsProcessingPayment(true);
-    
-    // Captured the current userType securely before timeout execution
+    setErrorMessage("");
     const currentUserType = userType;
     
     setTimeout(async () => {
-      // Send data to Google Sheet after successful payment completion
-      await sendDataToGoogleSheet(form, currentUserType);
+      // Sends data to sheet/webhook AFTER payment is completed
+      const isAllowed = await sendDataToGoogleSheet(form, currentUserType);
 
       setIsProcessingPayment(false);
-      setIsPaying(false);
-      setSubmitted(true);
-      setTimeout(() => {
-        onClose();
-      }, 3000);
+      if (isAllowed) {
+        setIsPaying(false);
+        setSubmitted(true);
+        setTimeout(() => onClose(), 3000);
+      }
     }, 1500);
   };
 
@@ -119,23 +127,29 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
           {!submitted && (
             <button className="av2-modal-close" onClick={handleClose} disabled={isProcessingPayment || isSendingToSheet}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
           )}
         </div>
         <div className="av2-modal-body">
+          {errorMessage && (
+            <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#f87171', padding: '12px 16px', borderRadius: '12px', fontSize: '14px', marginBottom: '20px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: 18, height: 18 }}><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+              {errorMessage}
+            </div>
+          )}
+
           {submitted ? (
             <div className="av2-success">
               <div className="av2-success-ico">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12"/>
+                  <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
               <div className="av2-success-title">Registration Successful</div>
               <p className="av2-success-sub">
-                Thank you for registering. We'll send confirmation to{" "}
-                {form.email || "your email"}.
+                Thank you for registering. We'll send confirmation to {form.email || "your email"}.
               </p>
             </div>
           ) : isPaying ? (
@@ -306,7 +320,7 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
               <button type="submit" className="av2-submit" disabled={isSendingToSheet}>
                 {isSendingToSheet ? 'Processing...' : (userType === 'student' || userType === 'professional') ? 'Proceed to Payment' : 'Complete Registration'}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                  <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </button>
             </form>
