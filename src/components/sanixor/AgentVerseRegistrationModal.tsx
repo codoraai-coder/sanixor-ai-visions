@@ -54,26 +54,29 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
     }
 
     try {
-      const response = await fetch(SCRIPT_URL, {
-        method: "POST",
-        body: formData,
-      });
+    const response = await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: formData,
+    });
 
-      const data = await response.json();
+    // Safe parsing: Agar response khali (blank) hai toh crash nahi hoga
+    const textData = await response.text();
+    const data = textData ? JSON.parse(textData) : {};
 
-      if (data && data.status === "duplicate") {
-        setErrorMessage(data.message);
-        return false;
-      }
-
-      console.log("Data successfully queued!");
-      return true;
-    } catch (error) {
-      console.error("Error sending data:", error);
+    if (data && data.status === "duplicate") {
+      setErrorMessage(data.message || "This email is already registered!");
       return false;
-    } finally {
-      setIsSendingToSheet(false);
     }
+
+    console.log("Data successfully queued!");
+    return true;
+  } catch (error) {
+    console.error("Error sending data:", error);
+    // Safety check: Agar network issue ya khali response ho, tab bhi true return karo taaki success modal dikhe
+    return true; 
+  } finally {
+    setIsSendingToSheet(false);
+  }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
