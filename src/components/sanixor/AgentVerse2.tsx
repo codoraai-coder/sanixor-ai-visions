@@ -9,7 +9,7 @@ export function AgentVerse2() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const action = params.get('action');
-    
+
     if (action === 'register' || action === 'details') {
       // Scroll to the section manually since React router / modal-locking might prevent native hash scroll
       const section = document.getElementById('event');
@@ -32,49 +32,70 @@ export function AgentVerse2() {
         .av2-root {
           position: relative;
           width: 100%;
-          min-height: 560px;
-          background: linear-gradient(135deg, #0d0b1e 0%, #150f30 50%, #0d0b1e 100%);
+          min-height: 400px;
+          background: color-mix(in srgb, var(--card) 80%, transparent);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+          box-shadow: 0 30px 60px color-mix(in srgb, var(--foreground) 10%, transparent), inset 0 1px 1px color-mix(in srgb, var(--foreground) 5%, transparent);
           border-radius: clamp(16px, 3vw, 24px);
           overflow: hidden;
-          padding: clamp(32px, 5vw, 52px) clamp(28px, 5vw, 52px) clamp(28px, 4vw, 44px);
+          padding: clamp(30px, 6vw, 100px) clamp(20px, 5vw, 120px) clamp(40px, 6vw, 100px);
           display: flex;
           align-items: center;
+          transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .av2-root:hover {
+          background: color-mix(in srgb, var(--card) 95%, transparent);
+          border-color: rgba(167, 139, 250, 0.4);
+          box-shadow: 0 40px 80px color-mix(in srgb, var(--foreground) 15%, transparent), 0 0 40px rgba(139, 92, 246, 0.15), inset 0 1px 1px color-mix(in srgb, var(--foreground) 10%, transparent);
+          transform: translateY(-4px);
         }
         .av2-grid {
           position: absolute;
-          inset: 0;
-          background-image:
-            linear-gradient(rgba(139,92,246,.055) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(139,92,246,.055) 1px, transparent 1px);
-          background-size: 44px 44px;
+          inset: -10%;
+          background-image: url('/av2-wave.png');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          opacity: 0.5;
+          mix-blend-mode: screen;
           pointer-events: none;
           z-index: 0;
+          filter: url('#wave-filter');
+          animation: waveBreathe 15s ease-in-out infinite alternate;
+        }
+        @keyframes waveBreathe {
+          0% { transform: scale(1); }
+          100% { transform: scale(1.05); }
         }
         .av2-glow1 {
           position: absolute;
-          top: -100px; left: -80px;
-          width: 420px; height: 420px;
-          background: radial-gradient(circle, rgba(124,58,237,.2) 0%, transparent 70%);
+          top: -150px; left: -100px;
+          width: 500px; height: 500px;
+          background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+          filter: blur(40px);
           pointer-events: none; z-index: 0;
         }
         .av2-glow2 {
           position: absolute;
-          bottom: -80px; right: -60px;
-          width: 340px; height: 340px;
-          background: radial-gradient(circle, rgba(245,197,66,.09) 0%, transparent 70%);
+          bottom: -150px; right: -100px;
+          width: 450px; height: 450px;
+          background: radial-gradient(circle, rgba(245, 197, 66, 0.08) 0%, transparent 70%);
+          filter: blur(40px);
           pointer-events: none; z-index: 0;
         }
         .av2-wm {
           position: absolute;
-          top: 20px; right: 32px;
-          font-size: clamp(72px, 14vw, 128px);
-          font-weight: 800;
+          top: 0px; right: 20px;
+          font-size: clamp(80px, 20vw, 200px);
+          font-weight: 900;
           line-height: 1;
-          letter-spacing: -4px;
-          background: linear-gradient(180deg, rgba(139,92,246,.32) 0%, rgba(139,92,246,.07) 100%);
+          letter-spacing: -6px;
+          background: linear-gradient(180deg, color-mix(in srgb, var(--foreground) 3%, transparent) 0%, transparent 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          background-clip: text;
+          -webkit-text-stroke: 1px rgba(139, 92, 246, 0.1);
           user-select: none;
           pointer-events: none;
           z-index: 0;
@@ -82,221 +103,278 @@ export function AgentVerse2() {
         .av2-body {
           position: relative;
           z-index: 2;
-          max-width: 600px;
           width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: clamp(32px, 5vw, 60px);
+        }
+        @media (min-width: 768px) {
+          .av2-body {
+            display: grid;
+            grid-template-columns: 1fr 1.15fr;
+            align-items: center;
+          }
+        }
+        .av2-body-left {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .av2-body-right {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
         }
         .av2-badges {
           display: flex;
-          gap: 8px;
+          gap: 10px;
           flex-wrap: wrap;
-          margin-bottom: 22px;
+          margin-bottom: 24px;
           opacity: 0;
-          animation: av2-up .5s .1s ease forwards;
+          animation: av2-up .6s .1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .av2-badge {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          padding: 5px 14px;
+          padding: 6px 16px;
           border-radius: 100px;
-          font-size: 10px;
-          font-weight: 600;
-          letter-spacing: .1em;
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: .12em;
           text-transform: uppercase;
+          backdrop-filter: blur(8px);
         }
         .av2-badge-gold {
-          background: rgba(245,197,66,.12);
+          background: rgba(245, 197, 66, 0.08);
           color: #f5c542;
-          border: 1px solid rgba(245,197,66,.26);
+          border: 1px solid rgba(245, 197, 66, 0.2);
+          box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
         }
         .av2-badge-gold::before {
           content: '';
           width: 6px; height: 6px;
           border-radius: 50%;
           background: #f5c542;
+          box-shadow: 0 0 8px #f5c542;
           animation: av2-blink 2s ease-in-out infinite;
           flex-shrink: 0;
         }
-        @keyframes av2-blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+        @keyframes av2-blink { 0%,100%{opacity:1; box-shadow: 0 0 8px #f5c542;} 50%{opacity:.4; box-shadow: 0 0 2px #f5c542;} }
         .av2-badge-purple {
-          background: rgba(139,92,246,.12);
-          color: #a78bfa;
-          border: 1px solid rgba(139,92,246,.2);
+          background: rgba(139, 92, 246, 0.1);
+          color: #c4b5fd;
+          border: 1px solid rgba(139, 92, 246, 0.25);
+          box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
         }
         .av2-eyebrow {
-          font-size: 10px;
-          font-weight: 600;
+          font-size: 14px;
+          font-weight: 700;
           color: #c084fc;
           text-transform: uppercase;
-          letter-spacing: .14em;
-          margin-bottom: 8px;
+          letter-spacing: .15em;
+          margin-bottom: 12px;
           opacity: 0;
-          animation: av2-up .5s .18s ease forwards;
+          animation: av2-up .6s .18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .av2-divider {
-          width: 48px; height: 2px;
-          background: linear-gradient(90deg, #7c3aed, transparent);
+          width: 60px; height: 2px;
+          background: linear-gradient(90deg, #9333ea, transparent);
           border-radius: 2px;
-          margin-bottom: 14px;
+          margin-bottom: 18px;
           opacity: 0;
-          animation: av2-up .5s .22s ease forwards;
+          animation: av2-up .6s .22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .av2-title {
-          font-size: clamp(32px, 6vw, 54px);
+          font-size: clamp(44px, 7.5vw, 76px);
           font-weight: 800;
-          line-height: 1.08;
-          color: #f0ecff;
-          letter-spacing: -.025em;
-          margin-bottom: 14px;
+          line-height: 1.05;
+          color: var(--foreground);
+          letter-spacing: -.03em;
+          margin-bottom: 16px;
           opacity: 0;
-          animation: av2-up .5s .26s ease forwards;
+          animation: av2-up .6s .26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          text-shadow: 0 10px 30px color-mix(in srgb, var(--foreground) 15%, transparent);
         }
         .av2-title em {
           font-style: normal;
-          background: linear-gradient(120deg, #f5c542 0%, #fde68a 50%, #f5c542 100%);
+          background: linear-gradient(135deg, #f5c542 0%, #fef08a 50%, #f5c542 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+          filter: drop-shadow(0 2px 10px rgba(245, 197, 66, 0.2));
         }
         .av2-desc {
-          font-size: clamp(12px, 1.8vw, 14px);
-          line-height: 1.8;
-          color: #b8b0d8;
-          margin-bottom: 28px;
-          max-width: 480px;
+          font-size: clamp(16px, 2.2vw, 20px);
+          line-height: 1.7;
+          color: #c4b5fd;
+          margin-bottom: 32px;
+          max-width: 600px;
           opacity: 0;
-          animation: av2-up .5s .32s ease forwards;
+          animation: av2-up .6s .32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .av2-features {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 10px;
-          margin-bottom: 24px;
+          gap: 12px;
+          margin-bottom: 32px;
           opacity: 0;
-          animation: av2-up .5s .38s ease forwards;
+          animation: av2-up .6s .38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .av2-feat {
           display: flex;
           align-items: center;
-          gap: 10px;
-          padding: 11px 14px;
-          background: rgba(139,92,246,.07);
-          border: 1px solid rgba(139,92,246,.13);
-          border-radius: 12px;
-          font-size: clamp(10px, 1.5vw, 12px);
-          color: #d0c8f0;
-          transition: all .25s cubic-bezier(.22,1,.36,1);
+          gap: 12px;
+          padding: 12px 16px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border-radius: 14px;
+          font-size: clamp(14px, 1.8vw, 17px);
+          font-weight: 500;
+          color: #e2e8f0;
+          transition: all .3s cubic-bezier(0.16, 1, 0.3, 1);
           cursor: default;
         }
         .av2-feat:hover {
-          background: rgba(139,92,246,.14);
-          border-color: rgba(139,92,246,.26);
+          background: rgba(139, 92, 246, 0.08);
+          border-color: rgba(139, 92, 246, 0.3);
           transform: translateY(-2px);
+          box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
         }
         .av2-feat-ico {
-          width: 26px; height: 26px;
+          width: 36px; height: 36px;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(139,92,246,.18);
+          background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.05));
+          border: 1px solid rgba(139, 92, 246, 0.2);
           border-radius: 8px;
           flex-shrink: 0;
-          color: #a78bfa;
+          color: #c4b5fd;
+          transition: all .3s ease;
+        }
+        .av2-feat:hover .av2-feat-ico {
+          color: #fff;
+          background: rgba(139, 92, 246, 0.4);
+          transform: scale(1.05) rotate(5deg);
         }
         .av2-feat-ico svg {
-          width: 14px; height: 14px;
+          width: 18px; height: 18px;
         }
         .av2-callout {
           display: flex;
           align-items: center;
-          gap: 14px;
-          padding: 16px 18px;
-          background: linear-gradient(135deg, rgba(139,92,246,.1) 0%, rgba(245,197,66,.05) 100%);
-          border: 1px solid rgba(139,92,246,.16);
-          border-radius: 14px;
-          margin-bottom: 28px;
+          gap: 16px;
+          padding: 18px 20px;
+          background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(0, 0, 0, 0.2) 100%);
+          border: 1px solid rgba(139, 92, 246, 0.15);
+          border-left: 4px solid #a855f7;
+          border-radius: 16px;
+          backdrop-filter: blur(12px);
+          margin-bottom: 32px;
           opacity: 0;
-          animation: av2-up .5s .44s ease forwards;
+          animation: av2-up .6s .44s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         .av2-callout-ico {
-          width: 40px; height: 40px;
-          border-radius: 10px;
-          background: linear-gradient(135deg, #7c3aed, #5b21b6);
+          width: 52px; height: 52px;
+          border-radius: 12px;
+          background: linear-gradient(135deg, #7c3aed, #4c1d95);
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
+          box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), 0 4px 12px rgba(124, 58, 237, 0.3);
         }
-        .av2-callout-ico svg { width: 20px; height: 20px; color: white; }
+        .av2-callout-ico svg { width: 26px; height: 26px; color: white; }
         .av2-callout-title {
-          font-size: 13px;
+          font-size: 18px;
           font-weight: 700;
-          color: #f0ecff;
-          margin-bottom: 3px;
+          color: #ffffff;
+          margin-bottom: 4px;
+          letter-spacing: 0.01em;
         }
         .av2-callout-sub {
-          font-size: 11px;
-          color: #b8b0d8;
+          font-size: 15px;
+          color: #a78bfa;
           line-height: 1.5;
         }
         .av2-actions {
           display: flex;
-          gap: 12px;
+          gap: 16px;
           opacity: 0;
-          animation: av2-up .5s .5s ease forwards;
+          animation: av2-up .6s .5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .av2-btn {
           flex: 1;
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 8px;
-          padding: clamp(11px, 2vw, 14px) clamp(14px, 2.5vw, 22px);
-          border-radius: 12px;
-          font-size: clamp(10px, 1.5vw, 12px);
-          font-weight: 600;
-          letter-spacing: .06em;
+          gap: 10px;
+          padding: clamp(16px, 2vw, 20px) clamp(20px, 2.5vw, 32px);
+          border-radius: 14px;
+          font-size: clamp(14px, 1.8vw, 16px);
+          font-weight: 700;
+          letter-spacing: .08em;
           text-transform: uppercase;
           border: none;
           cursor: pointer;
-          transition: all .3s cubic-bezier(.22,1,.36,1);
+          transition: all .3s cubic-bezier(0.16, 1, 0.3, 1);
           position: relative;
           overflow: hidden;
           text-decoration: none;
         }
-        .av2-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+        .av2-btn svg { width: 20px; height: 20px; flex-shrink: 0; transition: transform .3s; }
+        .av2-btn:hover svg { transform: translateX(3px); }
         .av2-btn-primary {
-          background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%);
+          background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
           color: white;
-          box-shadow: 0 8px 28px rgba(124,58,237,.38);
+          box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4), inset 0 1px 1px rgba(255,255,255,0.3);
+        }
+        .av2-btn-primary::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+          transform: translateX(-100%);
+          transition: transform .6s ease;
         }
         .av2-btn-primary:hover {
           transform: translateY(-3px);
-          box-shadow: 0 16px 44px rgba(124,58,237,.55);
+          box-shadow: 0 15px 40px rgba(124, 58, 237, 0.6), inset 0 1px 1px rgba(255,255,255,0.4);
+        }
+        .av2-btn-primary:hover::after {
+          transform: translateX(100%);
         }
         .av2-btn-primary:active { transform: translateY(0); }
         .av2-btn-outline {
-          background: rgba(139,92,246,.08);
-          color: #a78bfa;
-          border: 1.5px solid rgba(139,92,246,.22);
+          background: rgba(139, 92, 246, 0.05);
+          color: #c4b5fd;
+          border: 1px solid rgba(139, 92, 246, 0.3);
+          backdrop-filter: blur(10px);
         }
         .av2-btn-outline:hover {
-          background: rgba(139,92,246,.16);
-          border-color: rgba(139,92,246,.38);
+          background: rgba(139, 92, 246, 0.15);
+          border-color: #a855f7;
+          color: #fff;
           transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(139, 92, 246, 0.15);
         }
         .av2-ribbon {
-          margin-top: 20px;
-          font-size: 10px;
-          color: #5a527a;
-          letter-spacing: .05em;
-          text-align: right;
+          margin-top: 24px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #8b5cf6;
+          letter-spacing: .08em;
+          text-align: left;
           opacity: 0;
-          animation: av2-up .5s .62s ease forwards;
+          animation: av2-up .6s .62s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          padding-left: 4px;
         }
-        .av2-ribbon span { color: #c9a227; }
+        .av2-ribbon span { color: #f5c542; }
         @keyframes av2-up {
-          from { opacity: 0; transform: translateY(14px); }
+          from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
         }
 
@@ -630,6 +708,10 @@ export function AgentVerse2() {
         .av2-success-title { font-size: 18px; font-weight: 700; color: #f0ecff; margin-bottom: 8px; }
         .av2-success-sub { font-size: 13px; color: #b8b0d8; }
 
+        @media (max-width: 960px) {
+          .av2-body { grid-template-columns: 1fr; gap: 40px; }
+          .av2-desc { margin-bottom: 0; }
+        }
         @media (max-width: 768px) {
           .av2-root {
             min-height: auto;
@@ -706,76 +788,88 @@ export function AgentVerse2() {
 
       {/* ── HERO ── */}
       <div className="av2-root">
+        <svg style={{ position: 'absolute', width: 0, height: 0 }} aria-hidden="true">
+          <filter id="wave-filter" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.005 0.01" numOctaves="2" result="warp">
+              <animate attributeName="baseFrequency" dur="20s" values="0.005 0.01; 0.008 0.015; 0.005 0.01" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="warp" scale="40" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </svg>
+
         <div className="av2-grid" />
         <div className="av2-glow1" />
         <div className="av2-glow2" />
         <div className="av2-wm">2.0</div>
 
         <div className="av2-body">
-          <div className="av2-badges">
-            <span className="av2-badge av2-badge-gold">Open Registration</span>
-            <span className="av2-badge av2-badge-purple">Season Two</span>
+          <div className="av2-body-left">
+            <div className="av2-badges">
+              <span className="av2-badge av2-badge-gold">Open Registration</span>
+              <span className="av2-badge av2-badge-purple">Season Two</span>
+            </div>
+
+            <div className="av2-eyebrow">The Arena for the Next Generation of AI Builders</div>
+            <div className="av2-divider" />
+
+            <div className="av2-title">
+              Agent<em>Verse</em> 2.0
+            </div>
+
+            <p className="av2-desc">
+              The world is not waiting for AI to arrive. It already has. The only question is — are you building it, or watching it happen? AgentVerse 2.0 is a live, pressured environment for Agentic AI Swarms & MCP Servers.
+            </p>
           </div>
 
-          <div className="av2-eyebrow">India's only agent-exclusive AI event</div>
-          <div className="av2-divider" />
-
-          <div className="av2-title">
-            Agent<em>Verse</em> 2.0
-          </div>
-
-          <p className="av2-desc">
-            A revolutionary competition where students collaborate, compete, and build
-            autonomous AI agents that solve real-world problems — backed by institutional partnerships.
-          </p>
-
-          <div className="av2-features">
-            {[
-              { label: "Agent-Based Only", icon: <path d="M13 10V3L4 14h7v7l9-11h-7z" /> },
-              { label: "College Collaboration", icon: <><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></> },
-              { label: "Open to All", icon: <><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></> },
-              { label: "Institutional Partners", icon: <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></> },
-            ].map(({ label, icon }) => (
-              <div className="av2-feat" key={label}>
-                <div className="av2-feat-ico">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    {icon}
-                  </svg>
+          <div className="av2-body-right">
+            <div className="av2-features">
+              {[
+                { label: "Agentic AI Swarms", icon: <path d="M13 10V3L4 14h7v7l9-11h-7z" /> },
+                { label: "MCP Servers", icon: <><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></> },
+                { label: "Full-Day Offline", icon: <><circle cx="12" cy="12" r="10" /><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></> },
+                { label: "Real Competition", icon: <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></> },
+              ].map(({ label, icon }) => (
+                <div className="av2-feat" key={label}>
+                  <div className="av2-feat-ico">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      {icon}
+                    </svg>
+                  </div>
+                  {label}
                 </div>
-                {label}
+              ))}
+            </div>
+
+            <div className="av2-callout">
+              <div className="av2-callout-ico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="8" width="20" height="8" rx="2" />
+                  <path d="M6 20v-4M18 20v-4M8 12h.01M16 12h.01M12 8V4H8" />
+                </svg>
               </div>
-            ))}
-          </div>
-
-          <div className="av2-callout">
-            <div className="av2-callout-ico">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="8" width="20" height="8" rx="2"/>
-                <path d="M6 20v-4M18 20v-4M8 12h.01M16 12h.01M12 8V4H8"/>
-              </svg>
+              <div>
+                <div className="av2-callout-title">A Capability Event, Not Just a Certificate</div>
+                <div className="av2-callout-sub">Top 3 win exclusive prizes. One outstanding builder secures a guaranteed internship.</div>
+              </div>
             </div>
-            <div>
-              <div className="av2-callout-title">Agents Only — No Traditional Hackathon Categories</div>
-              <div className="av2-callout-sub">Build autonomous agents that solve real-world problems at scale</div>
+
+            <div className="av2-actions">
+              <button className="av2-btn av2-btn-primary" onClick={() => setShowRegister(true)}>
+                Register Now
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+              <button className="av2-btn av2-btn-outline" onClick={() => setShowDetails(true)}>
+                View Details
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" /><polyline points="12 16 16 12 12 8" /><line x1="8" y1="12" x2="16" y2="12" />
+                </svg>
+              </button>
             </div>
-          </div>
 
-          <div className="av2-actions">
-            <button className="av2-btn av2-btn-primary" onClick={() => setShowRegister(true)}>
-              Register Now
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </button>
-            <button className="av2-btn av2-btn-outline" onClick={() => setShowDetails(true)}>
-              View Details
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/><polyline points="12 16 16 12 12 8"/><line x1="8" y1="12" x2="16" y2="12"/>
-              </svg>
-            </button>
+            <div className="av2-ribbon">Season Two · <span>Coming Soon</span></div>
           </div>
-
-          <div className="av2-ribbon">Season Two · <span>Coming Soon</span></div>
         </div>
       </div>
 

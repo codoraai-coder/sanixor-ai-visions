@@ -28,8 +28,8 @@ export function Footer() {
           position: relative;
           z-index: 1;
           width: 100%;
-          background: linear-gradient(178deg, rgba(12, 10, 26, 0.95) 0%, rgba(6, 5, 15, 0.99) 100%);
-          border-top: 1px solid rgba(124, 58, 237, 0.15);
+          background: linear-gradient(178deg, color-mix(in srgb, var(--card) 95%, transparent) 0%, color-mix(in srgb, var(--background) 99%, transparent) 100%);
+          border-top: 1px solid color-mix(in srgb, var(--primary) 15%, transparent);
           padding: clamp(36px, 6vw, 72px) clamp(20px, 5vw, 64px) clamp(20px, 3vw, 36px);
           overflow: hidden;
         }
@@ -60,15 +60,19 @@ export function Footer() {
           flex-wrap: wrap;
           align-items: flex-start;
           justify-content: space-between;
-          gap: clamp(20px, 4vw, 48px);
+          gap: clamp(40px, 6vw, 80px);
           margin-bottom: clamp(28px, 5vw, 56px);
         }
-        .sx-brand { max-width: 320px; }
+        .sx-brand { 
+          flex: 1; 
+          min-width: 280px; 
+          padding-right: clamp(20px, 4vw, 60px);
+        }
         .sx-brand-name {
           font-family: 'Syne', sans-serif;
           font-size: clamp(20px, 3vw, 28px);
           font-weight: 800;
-          color: #f2f0f8;
+          color: var(--foreground);
           letter-spacing: -0.02em;
           margin-bottom: 8px;
           display: flex;
@@ -98,18 +102,18 @@ export function Footer() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          font-family: 'DM Mono', monospace;
-          font-size: clamp(11px, 1.3vw, 13px);
+          font-family: 'Inter', sans-serif;
+          font-size: clamp(14px, 1.5vw, 16px);
           font-weight: 500;
           color: #a78bfa;
           text-decoration: none;
-          letter-spacing: 0.02em;
+          letter-spacing: 0.01em;
           transition: color 0.25s ease;
         }
         .sx-brand-link:hover { color: #f5c542; }
         .sx-brand-link svg {
-          width: clamp(12px, 1.5vw, 14px);
-          height: clamp(12px, 1.5vw, 14px);
+          width: clamp(14px, 1.5vw, 16px);
+          height: clamp(14px, 1.5vw, 16px);
           transition: transform 0.25s ease;
         }
         .sx-brand-link:hover svg { transform: translate(2px, -2px); }
@@ -147,15 +151,17 @@ export function Footer() {
         
         /* ORIGINAL GRID LAYOUT HELD PERFECTLY BOUNDED */
         .sx-link-columns {
+          flex: 2;
+          min-width: 300px;
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(3, 1fr);
           gap: clamp(20px, 3vw, 40px);
         }
         .sx-link-col h4 {
           font-family: 'Syne', sans-serif;
           font-size: clamp(10px, 1.2vw, 12px);
           font-weight: 700;
-          color: #f2f0f8;
+          color: var(--foreground);
           letter-spacing: 0.12em;
           text-transform: uppercase;
           margin-bottom: clamp(12px, 2vw, 20px);
@@ -220,25 +226,15 @@ export function Footer() {
           font-family: 'DM Mono', monospace;
           font-size: clamp(10px, 1.3vw, 13px);
           font-weight: 400;
-          color: #857fa3;
+          color: color-mix(in srgb, var(--foreground) 60%, transparent);
           text-decoration: none;
           transition: all 0.25s ease;
           display: inline-flex;
           align-items: center;
-          gap: 5px;
           position: relative;
         }
-        .sx-link-col li a::before {
-          content: '';
-          width: 0;
-          height: 1px;
-          background: #a78bfa;
-          transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-          flex-shrink: 0;
-        }
-        .sx-link-col li a:hover { color: #f2f0f8; }
-        .sx-link-col li a:hover::before { width: 12px; }
-        .sx-link-col li a[data-highlight="true"] { color: #a78bfa; }
+        .sx-link-col li a:hover { color: var(--foreground); }
+        .sx-link-col li a[data-highlight="true"] { color: var(--primary); }
         .sx-link-col li a[data-highlight="true"]:hover { color: #f5c542; }
         
         .sx-footer-divider {
@@ -258,7 +254,7 @@ export function Footer() {
         .sx-copyright {
           font-family: 'DM Mono', monospace;
           font-size: clamp(9px, 1.2vw, 12px);
-          color: #4a4565;
+          color: color-mix(in srgb, var(--foreground) 50%, transparent);
           letter-spacing: 0.03em;
         }
         .sx-copyright span { color: #b89830; }
@@ -266,15 +262,15 @@ export function Footer() {
         .sx-footer-bottom-links a {
           font-family: 'DM Mono', monospace;
           font-size: clamp(10px, 1.2vw, 12px);
-          color: #f8fafc;
+          color: color-mix(in srgb, var(--foreground) 80%, transparent);
           font-weight: 500;
           text-decoration: none;
           transition: all 0.25s ease;
           letter-spacing: 0.05em;
         }
         .sx-footer-bottom-links a:hover { 
-          color: #ffffff; 
-          text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+          color: var(--foreground); 
+          text-shadow: 0 0 10px color-mix(in srgb, var(--foreground) 80%, transparent);
         }
         
         /* EXACT MOBILE QUERIES FROM YOUR ORIGINAL SHIPPED GRAPHIC */
@@ -310,16 +306,16 @@ export function Footer() {
                 Sanixor AI <span className="sx-brand-dot"></span>
               </div>
               <p className="sx-brand-tagline">Intelligence Built to Deploy.</p>
-              <a href="https://sanixor.space" className="sx-brand-link" target="_blank" rel="noopener noreferrer">
-                sanixor.space
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+              <a href="mailto:team@sanixor.space" className="sx-brand-link">
+                team@sanixor.space
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M7 7h10v10" /></svg>
               </a>
-              <div className="flex gap-4 mt-4">
+              <div className="flex gap-4 mt-6">
                 {/* Twitter / X */}
                 <a
                   href="https://twitter.com/sanixorai"
                   aria-label="Twitter / X"
-                  className="w-14 h-14 rounded-[1.5rem] border border-slate-800/60 bg-[#0d0d12] flex items-center justify-center text-slate-400 transition-all duration-300 outline-none hover:-translate-y-1 hover:text-purple-400 hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+                  className="w-14 h-14 rounded-[1.5rem] border border-border bg-card flex items-center justify-center text-muted-foreground transition-all duration-300 outline-none hover:-translate-y-1 hover:text-primary hover:bg-primary/10 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]"
                 >
                   <Twitter className="h-5 w-5" strokeWidth={1.5} />
                 </a>
@@ -328,7 +324,7 @@ export function Footer() {
                 <a
                   href="https://www.linkedin.com/company/sanixor-ai/"
                   aria-label="LinkedIn"
-                  className="w-14 h-14 rounded-[1.5rem] border border-slate-800/60 bg-[#0d0d12] flex items-center justify-center text-slate-400 transition-all duration-300 transform outline-none hover:-translate-y-1 hover:text-purple-400 hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+                  className="w-14 h-14 rounded-[1.5rem] border border-border bg-card flex items-center justify-center text-muted-foreground transition-all duration-300 transform outline-none hover:-translate-y-1 hover:text-primary hover:bg-primary/10 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]"
                 >
                   <Linkedin className="h-5 w-5" strokeWidth={1.5} />
                 </a>
@@ -337,7 +333,7 @@ export function Footer() {
                 <a
                   href="https://www.instagram.com/sanixorai/"
                   aria-label="Instagram"
-                  className="w-14 h-14 rounded-[1.5rem] border border-slate-800/60 bg-[#0d0d12] flex items-center justify-center text-slate-400 transition-all duration-300 transform outline-none hover:-translate-y-1 hover:text-purple-400 hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+                  className="w-14 h-14 rounded-[1.5rem] border border-border bg-card flex items-center justify-center text-muted-foreground transition-all duration-300 transform outline-none hover:-translate-y-1 hover:text-primary hover:bg-primary/10 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]"
                 >
                   <Instagram className="h-5 w-5" strokeWidth={1.5} />
                 </a>
@@ -350,9 +346,9 @@ export function Footer() {
                 <h4 onClick={() => toggleColumnReveal(1)}>Products</h4>
                 <ul>
                   <li><a href="/hackeval">HackEval</a></li>
-                  <li><a href="/bitbenchmark">BitBenchmark</a></li>
+                  <li><a href="/bitbench">BitBench</a></li>
                   <li><a href="/sanixor-studio">Sanixor Studio</a></li>
-                  <li><a href="/lexai">LexAI by Sanixor</a></li>
+                  <li><a href="/lexai">LexAI</a></li>
                 </ul>
               </div>
 
@@ -367,7 +363,7 @@ export function Footer() {
                 </ul>
               </div>
 
-              {/* Column 3 */}
+              {/* Column 3 
               <div className={cn("sx-link-col", revealedCols[3] && "is-revealed")}>
                 <h4 onClick={() => toggleColumnReveal(3)}>Agent Verse</h4>
                 <ul>
@@ -376,6 +372,7 @@ export function Footer() {
                   <li><a href="/?action=details#event">Event Details</a></li>
                 </ul>
               </div>
+              */}
 
               {/* Column 4 */}
               <div className={cn("sx-link-col learn-col", revealedCols[4] && "is-revealed")}>
@@ -394,6 +391,7 @@ export function Footer() {
           <div className="sx-footer-bottom">
             <p className="sx-copyright">&copy; 2025 <span>Sanixor AI</span>. Built for the next generation.</p>
             <div className="sx-footer-bottom-links">
+              <a href="/contact">Contact Us</a>
               <a href="/privacy">Privacy Policy</a>
               <a href="/terms">Terms & Conditions</a>
             </div>

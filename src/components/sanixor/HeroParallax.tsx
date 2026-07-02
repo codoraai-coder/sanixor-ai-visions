@@ -16,31 +16,31 @@ interface Product {
 
 export const Header = () => {
   return (
-    <div className="max-w-7xl relative mx-auto py-24 md:py-40 px-6 w-full left-0 top-0 z-10">
+    <div className="max-w-7xl relative mx-auto py-24 md:py-32 px-6 w-full left-0 top-0 z-10">
       <div className="flex items-center gap-3 mb-6">
         <div
           className="w-10 h-[2px] rounded-full"
           style={{
-            background: "linear-gradient(90deg, #6B46C1, #3B82F6)",
+            background: "linear-gradient(90deg, #6B46C1, #9333ea)",
           }}
         />
         <span
           className="text-xs font-medium tracking-[0.2em] uppercase"
           style={{ color: "rgba(255,255,255,0.5)" }}
         >
-          Sanixor AI &mdash; AgentVerse 2.0
+          Sanixor AI
         </span>
       </div>
 
       <h1
-        className="text-4xl md:text-7xl lg:text-[5.5rem] font-extrabold leading-[0.95] tracking-[-0.04em]"
+        className="text-5xl sm:text-6xl md:text-7xl lg:text-[6rem] font-extrabold leading-[0.95] tracking-[-0.04em]"
         style={{ fontFamily: "'Space Grotesk', 'Syne', sans-serif", color: "#FFFFFF" }}
       >
         The Ultimate
         <br />
         <span
           style={{
-            background: "linear-gradient(135deg, #6B46C1, #3B82F6)",
+            background: "linear-gradient(135deg, #9333ea, #000000)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
@@ -71,10 +71,10 @@ export const ProductCard = ({
   return (
     <motion.div
       style={{ x: translate }}
-      whileHover={{ y: -14, scale: 1.02 }}
+      whileHover={{ y: -12, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 200, damping: 25 }}
       key={product.title}
-      className="group/product h-[15rem] w-[20rem] md:h-[22rem] md:w-[28rem] relative flex-shrink-0 rounded-[1.2rem] overflow-hidden cursor-pointer"
+      className="group/product h-[8rem] w-[12rem] sm:h-[10rem] sm:w-[15rem] md:h-[14rem] md:w-[21rem] lg:h-[15rem] lg:w-[23rem] relative flex-shrink-0 rounded-3xl overflow-hidden cursor-pointer"
     >
       <img
         src={product.thumbnail}
@@ -93,11 +93,11 @@ export const ProductCard = ({
       />
 
       <div
-        className="absolute inset-0 rounded-[1.2rem] pointer-events-none opacity-0 group-hover/product:opacity-100 transition-opacity duration-500"
+        className="absolute inset-0 rounded-3xl pointer-events-none opacity-0 group-hover/product:opacity-100 transition-opacity duration-500"
         style={{
           padding: "1.5px",
           background:
-            "linear-gradient(180deg, rgba(107,70,193,0) 0%, rgba(107,70,193,0) 30%, rgba(107,70,193,0.35) 70%, rgba(59,130,246,0.35) 100%)",
+            "linear-gradient(180deg, rgba(107,70,193,0) 0%, rgba(107,70,193,0) 30%, rgba(107,70,193,0.35) 70%, rgba(107,70,193,0.35) 100%)",
           WebkitMask:
             "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           WebkitMaskComposite: "xor",
@@ -106,10 +106,10 @@ export const ProductCard = ({
       />
 
       <div
-        className="absolute inset-0 rounded-[1.2rem] pointer-events-none opacity-0 group-hover/product:opacity-100 transition-opacity duration-500"
+        className="absolute inset-0 rounded-3xl pointer-events-none opacity-0 group-hover/product:opacity-100 transition-opacity duration-500"
         style={{
           boxShadow:
-            "0 25px 60px rgba(107,70,193,0.18), 0 0 100px rgba(59,130,246,0.04)",
+            "0 25px 60px rgba(107,70,193,0.18), 0 0 100px rgba(107,70,193,0.04)",
         }}
       />
 
@@ -303,7 +303,7 @@ export function HeroParallax() {
   return (
     <div
       ref={ref}
-      className="relative overflow-hidden antialiased py-20 md:py-40 flex flex-col self-auto"
+      className="relative overflow-hidden antialiased py-24 md:py-32 flex flex-col self-auto"
       style={{ perspective: "1000px", background: "transparent", transformStyle: "preserve-3d" }}
     >
       <Header />
@@ -317,7 +317,7 @@ export function HeroParallax() {
         }}
         className=""
       >
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-6 mb-6">
+        <motion.div className="flex flex-row-reverse space-x-reverse space-x-4 md:space-x-6 mb-4 md:mb-6">
           {firstRow.map((product) => (
             <ProductCard
               product={product}
@@ -327,7 +327,7 @@ export function HeroParallax() {
           ))}
         </motion.div>
 
-        <motion.div className="flex flex-row space-x-6 mb-6">
+        <motion.div className="flex flex-row space-x-4 md:space-x-6 mb-4 md:mb-6">
           {secondRow.map((product) => (
             <ProductCard
               product={product}
@@ -337,7 +337,7 @@ export function HeroParallax() {
           ))}
         </motion.div>
 
-        <motion.div className="flex flex-row-reverse space-x-reverse space-x-6">
+        <motion.div className="flex flex-row-reverse space-x-reverse space-x-4 md:space-x-6">
           {thirdRow.map((product) => (
             <ProductCard
               product={product}

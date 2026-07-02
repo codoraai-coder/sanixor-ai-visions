@@ -2,7 +2,7 @@ import { Activity, CheckCircle2, GitBranch, Scale, Trophy } from "lucide-react";
 
 const agents = [
   { name: "HackEval", status: "Running", icon: Trophy, progress: 94 },
-  { name: "BitBenchmark", status: "Active", icon: Activity, progress: 78 },
+  { name: "BitBench", status: "Active", icon: Activity, progress: 78 },
   { name: "LexAI", status: "Ready", icon: Scale, progress: 100 },
   { name: "GitHub Agent", status: "Analyzing", icon: GitBranch, progress: 62 },
 ];

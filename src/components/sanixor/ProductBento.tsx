@@ -1,4 +1,4 @@
-import type { ElementType } from "react";
+import type { LucideIcon } from "lucide-react";
 import {
   ArrowUpRight,
   BarChart2,
@@ -31,7 +31,7 @@ function ProductCard({
   accent = "primary",
   className,
 }: {
-  icon: ElementType;
+  icon: LucideIcon;
   title: string;
   description: string;
   features?: string[];
@@ -127,7 +127,7 @@ export function ProductBento() {
       trackers={
         <ProductCard
           icon={BarChart2}
-          title="BitBenchmark"
+          title="BitBench"
           description="Your complete developer progress dashboard. GitHub and LeetCode unified into one score."
           accent="cyan"
           cta="View Dashboard"

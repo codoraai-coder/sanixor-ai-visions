@@ -32,8 +32,8 @@ const products = [
     stats: "500+ hackathons evaluated",
   },
   {
-    id: "bitbenchmark",
-    name: "BitBenchmark",
+    id: "bitbench",
+    name: "BitBench",
     tag: "Performance Intelligence",
     icon: Gauge,
     desc: "Benchmarks AI models, applications, and infrastructure using standardized metrics and comparative analytics.",
@@ -218,7 +218,7 @@ export default function ProductsPage() {
                       background: `linear-gradient(135deg, oklch(0.6 0.15 ${p.color}), oklch(0.4 0.12 ${p.color + 30}))`,
                     }}
                   >
-                    <p.icon className="h-6 w-6 text-white" />
+                    <p.icon className="h-6 w-6 text-foreground" />
                   </div>
                   <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1" />
                 </div>
@@ -251,7 +251,7 @@ export default function ProductsPage() {
                     background: `linear-gradient(135deg, oklch(0.6 0.15 ${s.color}), oklch(0.4 0.12 ${s.color + 30}))`,
                   }}
                 >
-                  <s.icon className="h-6 w-6 text-white" />
+                  <s.icon className="h-6 w-6 text-foreground" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold mb-2">{s.name}</h3>
@@ -361,7 +361,7 @@ export default function ProductsPage() {
                   background: `linear-gradient(135deg, oklch(0.6 0.15 ${active.color}), oklch(0.4 0.12 ${active.color + 30}))`,
                 }}
               >
-                <active.icon className="h-8 w-8 text-white" />
+                <active.icon className="h-8 w-8 text-foreground" />
               </div>
               <div>
                 <h3 className="text-2xl font-bold">{active.name}</h3>

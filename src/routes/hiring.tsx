@@ -185,7 +185,7 @@ export default function HiringPage() {
                       background: `linear-gradient(135deg, oklch(0.6 0.15 ${job.color}), oklch(0.4 0.12 ${job.color + 30}))`,
                     }}
                   >
-                    <Briefcase className="h-5 w-5 text-white" />
+                    <Briefcase className="h-5 w-5 text-foreground" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">

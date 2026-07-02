@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const PRODUCTS = [
   {
@@ -23,17 +24,17 @@ const PRODUCTS = [
     stats: { speed: "50x", accuracy: "98.7%", events: "200+" },
   },
   {
-    id: "bitbenchmark",
-    name: "BITBENCHMARK",
+    id: "bitbench",
+    name: "BITBENCH",
     tagline:
       "Comprehensive benchmarking suite for evaluating AI models against industry-standard metrics.",
     category: "Analytics",
     accent: "#10B981",
-    video: "/videos/bitbenchmark.gif",
+    video: "/videos/bitbench.gif",
     image:
-      "https://kceggzvolonyqavvowwc.supabase.co/storage/v1/object/public/codoora/BitBenchmark%20image.png",
+      "https://kceggzvolonyqavvowwc.supabase.co/storage/v1/object/public/codoora/BitBench%20image.png",
     description:
-      "Stop guessing which model works best. BitBenchmark runs your AI models through rigorous, standardized tests and gives you clear, actionable performance reports.",
+      "Stop guessing which model works best. BitBench runs your AI models through rigorous, standardized tests and gives you clear, actionable performance reports.",
     features: [
       "Standardized cross-model comparison",
       "Performance tracking over time",
@@ -273,307 +274,41 @@ function ProductDetailModal({
 }
 
 export function ProductCarousel() {
-  const cardCount = PRODUCTS.length;
-  const containerRef = useRef<HTMLDivElement>(null);
-  const cardsRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const frameId = useRef(0);
-  const progress = useRef(0);
-  const targetProgress = useRef(0);
-  const mouse = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
-  const drag = useRef({
-    isDragging: false,
-    startX: 0,
-    startY: 0,
-    startProgress: 0,
-    velocity: 0,
-    lastX: 0,
-    lastTime: 0,
-    hasMoved: false,
-    isScrolling: false,
-  });
-  const [metrics, setMetrics] = useState({ cardW: 336, cardH: 210 });
-  const [isMobile, setIsMobile] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [activeProduct, setActiveProduct] = useState<
     (typeof PRODUCTS)[number] | null
   >(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [spinAngles, setSpinAngles] = useState<Record<number, number>>({});
 
   useEffect(() => {
-    const onMove = (clientX: number) => {
-      if (!drag.current.isDragging) return;
-      const now = performance.now();
-      const dx = clientX - drag.current.lastX;
-      const dt = now - drag.current.lastTime;
-      if (dt > 0) {
-        const rawV = dx / dt;
-        drag.current.velocity = drag.current.velocity * 0.85 + rawV * 0.15;
-      }
-      drag.current.lastX = clientX;
-      drag.current.lastTime = now;
-      if (Math.abs(clientX - drag.current.startX) > 5) {
-        drag.current.hasMoved = true;
-      }
-      const sensitivity = 0.0018;
-      targetProgress.current = drag.current.startProgress - (clientX - drag.current.startX) * sensitivity;
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (drag.current.isDragging) {
-        e.preventDefault();
-        onMove(e.clientX);
-      } else {
-        const rx = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
-        const ry = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
-        mouse.current.targetX = Math.max(-1, Math.min(1, rx));
-        mouse.current.targetY = Math.max(-1, Math.min(1, ry));
-      }
-    };
-
-    const startDrag = (clientX: number, clientY: number = 0) => {
-      drag.current.isDragging = true;
-      drag.current.hasMoved = false;
-      drag.current.isScrolling = false;
-      drag.current.startX = clientX;
-      drag.current.startY = clientY;
-      drag.current.startProgress = progress.current;
-      drag.current.velocity = 0;
-      drag.current.lastX = clientX;
-      drag.current.lastTime = performance.now();
-      document.body.style.cursor = 'grabbing';
-    };
-
-    const endDrag = () => {
-      if (!drag.current.isDragging) return;
-      drag.current.isDragging = false;
-      document.body.style.cursor = '';
-      targetProgress.current = progress.current - drag.current.velocity * 6;
-    };
-
-    const handleMouseDown = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest('.modal-backdrop')) return;
-      if ((e.target as HTMLElement).closest('.card-wrapper')) {
-        startDrag(e.clientX, e.clientY);
-      }
-    };
-
-    const handleMouseUp = () => endDrag();
-    const handleMouseLeave = () => {
-      mouse.current.targetX = 0;
-      mouse.current.targetY = 0;
-      endDrag();
-    };
-
-    const handleWheel = (e: WheelEvent) => {
-      if ((e.target as HTMLElement).closest('.modal-backdrop')) return;
-      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      targetProgress.current += delta * 0.0008;
-    };
-
-    const handleTouchStart = (e: TouchEvent) => {
-      if ((e.target as HTMLElement).closest('.modal-backdrop')) return;
-      startDrag(e.touches[0].clientX, e.touches[0].clientY);
-    };
-    const handleTouchMove = (e: TouchEvent) => {
-      if ((e.target as HTMLElement).closest('.modal-backdrop')) return;
-      if (!drag.current.isDragging) return;
-
-      const touch = e.touches[0];
-      const dx = Math.abs(touch.clientX - drag.current.startX);
-      const dy = Math.abs(touch.clientY - drag.current.startY);
-
-      if (!drag.current.hasMoved && !drag.current.isScrolling) {
-        if (dy > dx && dy > 5) {
-          drag.current.isScrolling = true;
-          drag.current.isDragging = false;
-          return;
-        }
-      }
-
-      if (drag.current.isScrolling) return;
-
-      if (e.cancelable) {
-        e.preventDefault();
-      }
-      onMove(touch.clientX);
-    };
-    const handleTouchEnd = () => endDrag();
-
-    const container = containerRef.current;
-
-    // Global listeners for drag continuation outside the carousel
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("mouseleave", handleMouseLeave);
-
-    // Scoped listeners — only respond when interacting inside the carousel
-    if (container) {
-      container.addEventListener("mousedown", handleMouseDown);
-      container.addEventListener("wheel", handleWheel, { passive: true });
-      container.addEventListener("touchstart", handleTouchStart, { passive: true });
-      container.addEventListener("touchmove", handleTouchMove, { passive: false });
-      container.addEventListener("touchend", handleTouchEnd);
-    }
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-      document.removeEventListener("mouseleave", handleMouseLeave);
-      if (container) {
-        container.removeEventListener("mousedown", handleMouseDown);
-        container.removeEventListener("wheel", handleWheel);
-        container.removeEventListener("touchstart", handleTouchStart);
-        container.removeEventListener("touchmove", handleTouchMove);
-        container.removeEventListener("touchend", handleTouchEnd);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      setIsMobile(w < 800);
-      let cardW = Math.round(w * 0.16 + 130);
-      const heightFactor = Math.min(1.0, Math.max(0.65, h / 850));
-      cardW = Math.round(cardW * heightFactor);
-      cardW = Math.min(340, Math.max(160, cardW));
-      const cardH = Math.round(cardW / 1.6);
-      setMetrics({ cardW, cardH });
-    };
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const renderLoop = () => {
-    if (!drag.current.isDragging) {
-      targetProgress.current += 0.004;
-      drag.current.velocity *= 0.92;
-      if (Math.abs(drag.current.velocity) > 0.0001) {
-        targetProgress.current += drag.current.velocity;
-      }
-      progress.current += (targetProgress.current - progress.current) * 0.2;
-    } else {
-      progress.current += (targetProgress.current - progress.current) * 0.4;
-    }
-    mouse.current.x +=
-      (mouse.current.targetX - mouse.current.x) * 0.2;
-    mouse.current.y +=
-      (mouse.current.targetY - mouse.current.y) * 0.2;
-
-    const cards = cardsRefs.current;
-    const w = window.innerWidth;
-    const { cardW } = metrics;
-    const continuousProgress = progress.current;
-    const roundedIndex = Math.round(continuousProgress);
-    const diffFromRound = continuousProgress - roundedIndex;
-    const easedDiff =
-      (Math.sign(diffFromRound) *
-        Math.pow(Math.abs(diffFromRound) * 2, 1.6)) /
-      2;
-    const virtualActiveIndex = roundedIndex + easedDiff;
-
-    for (let i = 0; i < cardCount; i++) {
-      const card = cards[i];
-      if (!card) continue;
-
-      let offset = i - virtualActiveIndex;
-      const halfCount = cardCount / 2;
-      while (offset > halfCount) offset -= cardCount;
-      while (offset < -halfCount) offset += cardCount;
-
-      const absOffset = Math.abs(offset);
-      const sign = Math.sign(offset);
-
-      if (absOffset > 3.0) {
-        card.style.visibility = "hidden";
-        continue;
-      } else {
-        card.style.visibility = "visible";
-      }
-
-      const gap = 36;
-      const peekAmount = -55;
-      const D = 1350;
-      let x = 0,
-        z = 0,
-        rot = 0;
-
-      if (absOffset <= 1) {
-        const t = absOffset;
-        const easedT = t * t * (3 - 2 * t);
-        x = sign * (easedT * (cardW + gap));
-        z = 400 + easedT * (220 - 400);
-        rot = easedT * 132;
-      } else if (absOffset <= 2) {
-        const t = absOffset - 1;
-        const easedT = t * t * (3 - 2 * t);
-        const xStart = cardW + gap;
-        const zEnd = -60;
-        const sEnd = D / (D - zEnd);
-        const xEnd = (w / 2 - peekAmount) / sEnd - cardW / 2;
-        x = sign * (xStart + easedT * (xEnd - xStart));
-        z = 220 + easedT * (-60 - 220);
-        rot = 132 + easedT * (175 - 132);
-      } else {
-        const t = Math.min(absOffset - 2, 1);
-        const easedT = t * t * (3 - 2 * t);
-        const sEnd2 = D / (D - -60);
-        const xEnd2 = (w / 2 - peekAmount) / sEnd2 - cardW / 2;
-        const sEnd3 = D / (D - -250);
-        const xEnd3 = (w / 2 + 100) / sEnd3 + cardW / 2;
-        x = sign * (xEnd2 + easedT * (xEnd3 - xEnd2));
-        z = -60 + easedT * (-250 - -60);
-        rot = 175 + easedT * (195 - 175);
-      }
-
-      const localCardRotation = sign * rot;
-      const centerFactor = Math.max(0, 1 - absOffset);
-      const totalRotX = -mouse.current.y * 12 * centerFactor;
-      const totalRotY =
-        localCardRotation + mouse.current.x * 15 * centerFactor;
-
-      card.style.zIndex = Math.round(z).toString();
-      card.style.opacity = "1";
-      card.style.transform = `translateX(${x.toFixed(2)}px) translateZ(${z.toFixed(2)}px) rotateX(${totalRotX.toFixed(2)}deg) rotateY(${totalRotY.toFixed(2)}deg) rotateZ(-3deg)`;
-    }
+  const next = () => {
+    setActiveIndex((prev) => {
+      const nextIdx = (prev + 1) % PRODUCTS.length;
+      setSpinAngles(s => ({ ...s, [nextIdx]: (s[nextIdx] || 0) - 360 }));
+      return nextIdx;
+    });
   };
 
-  useEffect(() => {
-    const tick = () => {
-      renderLoop();
-      frameId.current = requestAnimationFrame(tick);
-    };
-    frameId.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frameId.current);
-  }, [metrics]);
+  const prev = () => {
+    setActiveIndex((prev) => {
+      const nextIdx = (prev - 1 + PRODUCTS.length) % PRODUCTS.length;
+      setSpinAngles(s => ({ ...s, [nextIdx]: (s[nextIdx] || 0) + 360 }));
+      return nextIdx;
+    });
+  };
 
   return (
     <>
       <style>{`
-        .carousel-root { position: relative; width: 100%; height: 100%; overflow: hidden; user-select: none; }
-        .carousel-perspective { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; pointer-events: none; perspective: 1350px; }
-        .carousel-viewport { position: absolute; transform-style: preserve-3d; }
-        .card-wrapper { position: absolute; inset: 0; transform-style: preserve-3d; backface-visibility: visible; cursor: grab; pointer-events: auto; outline: none; }
-        .card-wrapper:focus-visible { outline: 2px solid #8B5CF6; outline-offset: 10px; border-radius: 20px; }
-        .card-wrapper:active { cursor: grabbing; }
-        .card-layer { position: absolute; inset: 0; border-radius: 20px; pointer-events: none; overflow: hidden; }
-        .card-layer-front { background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); backface-visibility: hidden; }
-        .card-layer-back { background: rgba(10, 10, 10, 0.8); backface-visibility: hidden; border-radius: 20px; }
-        .card-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
-        .card-image-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
-        .card-front-content { position: absolute; inset: 0; color: white; font-family: 'Inter', sans-serif; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end; }
-        
-        .card-sheen {
-          position: absolute; inset: 0; z-index: 20; mix-blend-mode: overlay; pointer-events: none;
-          background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.4) 25%, transparent 30%);
-          opacity: 0.5;
-        }
-
-        @keyframes pulseOpacity {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-
         .modal-backdrop { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: flex-end; justify-content: center; transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .modal-backdrop-enter { opacity: 0; backdrop-filter: blur(0px); }
         .modal-backdrop-active { opacity: 1; backdrop-filter: blur(24px); }
@@ -585,25 +320,25 @@ export function ProductCarousel() {
         
         .modal-card-visual { position: relative; width: 100%; aspect-ratio: 16/9; flex-shrink: 0; overflow: hidden; }
         .modal-card-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-        .modal-close { position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; transition: background 0.2s, transform 0.2s; backdrop-filter: blur(8px); }
+        .modal-close { position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px; border-radius: 50%; background: color-mix(in srgb, var(--background) 50%, transparent); border: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent); color: var(--foreground); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; transition: background 0.2s, transform 0.2s; backdrop-filter: blur(8px); }
         .modal-close:hover { background: rgba(255,255,255,0.15); transform: scale(1.1); }
         
-        .modal-body { padding: 1.5rem; overflow-y: auto; flex-grow: 1; }
+        .modal-body { padding: 1.5rem; overflow-y: auto; flex-grow: 1; background: var(--card); }
         .modal-body::-webkit-scrollbar { display: none; }
         .modal-category { display: inline-flex; align-items: center; padding: 0.35rem 0.8rem; border-radius: 999px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
-        .modal-title { font-size: 1.5rem; font-weight: 800; color: white; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 0.5rem; }
-        .modal-tagline { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 1.5rem; }
+        .modal-title { font-size: 1.5rem; font-weight: 800; color: var(--foreground); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 0.5rem; }
+        .modal-tagline { font-size: 0.9rem; color: color-mix(in srgb, var(--foreground) 60%, transparent); line-height: 1.5; margin-bottom: 1.5rem; }
         
-        .modal-section { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 1.25rem; margin-bottom: 1rem; }
-        .modal-section-title { font-size: 0.7rem; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
+        .modal-section { background: color-mix(in srgb, var(--foreground) 3%, transparent); border: 1px solid color-mix(in srgb, var(--foreground) 6%, transparent); border-radius: 16px; padding: 1.25rem; margin-bottom: 1rem; }
+        .modal-section-title { font-size: 0.7rem; font-weight: 700; color: color-mix(in srgb, var(--foreground) 40%, transparent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
         .modal-feature { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.4rem 0; }
         .modal-feature-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
-        .modal-feature-text { font-size: 0.85rem; color: rgba(255,255,255,0.8); line-height: 1.5; }
+        .modal-feature-text { font-size: 0.85rem; color: color-mix(in srgb, var(--foreground) 80%, transparent); line-height: 1.5; }
         
         .modal-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
-        .modal-stat { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; }
-        .modal-stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; color: white; }
-        .modal-stat-label { font-size: 0.55rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.3rem; }
+        .modal-stat { background: color-mix(in srgb, var(--foreground) 3%, transparent); border: 1px solid color-mix(in srgb, var(--foreground) 6%, transparent); border-radius: 14px; padding: 1rem 0.5rem; text-align: center; }
+        .modal-stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; color: var(--foreground); }
+        .modal-stat-label { font-size: 0.55rem; color: color-mix(in srgb, var(--foreground) 40%, transparent); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.3rem; }
         
         .modal-cta { display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 1rem; border-radius: 14px; border: none; font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: transform 0.2s, opacity 0.2s; letter-spacing: 0.02em; margin-top: 1.5rem; }
         .modal-cta:hover { transform: scale(1.02); }
@@ -615,7 +350,7 @@ export function ProductCarousel() {
           .modal-card { 
             flex-direction: row;
             border-radius: 24px; 
-            max-height: 85vh; 
+            max-height: 92vh; 
             width: 94vw; 
             max-width: 1000px; 
           }
@@ -623,13 +358,17 @@ export function ProductCarousel() {
           .modal-card-active { transform: scale(1) translateY(0); opacity: 1; }
           
           .modal-card-visual { width: 45%; aspect-ratio: auto; border-right: 1px solid rgba(255,255,255,0.08); }
-          .modal-body { width: 55%; padding: 2.5rem; }
+          .modal-body { width: 55%; padding: 1.75rem 2rem; display: flex; flex-direction: column; }
           
-          .modal-title { font-size: 1.75rem; }
-          .modal-tagline { font-size: 0.88rem; margin-bottom: 1.25rem; }
-          .modal-section { padding: 1.25rem; margin-bottom: 0.85rem; }
-          .modal-stat { padding: 0.9rem 0.75rem; }
-          .modal-stat-value { font-size: 1rem; }
+          .modal-title { font-size: 1.5rem; }
+          .modal-tagline { font-size: 0.85rem; margin-bottom: 0.75rem; }
+          .modal-section { padding: 1rem; margin-bottom: 0.75rem; }
+          .modal-section-title { margin-bottom: 0.5rem; }
+          .modal-feature { padding: 0.2rem 0; }
+          .modal-stat { padding: 0.75rem 0.5rem; }
+          .modal-stat-value { font-size: 0.9rem; }
+          .modal-stats { gap: 0.5rem; margin-bottom: 0.75rem; }
+          .modal-cta { margin-top: auto; padding: 0.8rem; }
         }
 
         @keyframes fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -640,330 +379,154 @@ export function ProductCarousel() {
         .animate-in-4 { animation-delay: 0.2s; opacity: 0; }
         .animate-in-5 { animation-delay: 0.25s; opacity: 0; }
       `}</style>
-
-      <div ref={containerRef} className="carousel-root" style={{ height: "520px", background: "var(--background)" }}>
-        <div
-          className="carousel-perspective"
-          style={{ perspective: "1350px" }}
+    <div className="relative w-full h-[600px] flex flex-col items-center justify-center overflow-hidden py-12 group">
+      {/* Navigation Buttons */}
+      <div className="absolute inset-y-0 left-2 md:left-8 flex items-center z-50 pointer-events-none">
+        <button 
+          onClick={prev} 
+          className="p-3 md:p-4 rounded-full bg-background/40 border border-foreground/10 text-foreground backdrop-blur-xl hover:bg-foreground/10 transition-all hover:scale-110 pointer-events-auto md:opacity-0 group-hover:opacity-100 md:-translate-x-4 group-hover:translate-x-0 duration-300"
+          aria-label="Previous product"
         >
-          <div
-            className="carousel-viewport"
-            style={{ width: metrics.cardW, height: metrics.cardH }}
-          >
-            {Array.from({ length: cardCount }).map((_, i) => {
-              const p = PRODUCTS[i];
-              return (
-                <div
-                  key={i}
-                  ref={(el) => {
-                    cardsRefs.current[i] = el;
-                  }}
-                  className="card-wrapper"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setActiveProduct(p);
-                    }
-                  }}
-                  onClick={() => {
-                    if (!drag.current.hasMoved) {
-                      setActiveProduct(p);
-                    }
-                  }}
-                  style={{
-                    width: `${metrics.cardW}px`,
-                    height: `${metrics.cardH}px`,
-                    visibility: "hidden",
-                    opacity: 0,
-                  }}
-                >
-                  {isMobile ? (
-                    <div
-                      className="card-layer card-layer-front"
-                      style={{
-                        background: `rgba(5, 5, 5, 0.4)`,
-                        backdropFilter: "blur(20px)",
-                        WebkitBackdropFilter: "blur(20px)",
-                        border: `1px solid rgba(255,255,255,0.08)`,
-                        borderTop: `2px solid ${p.accent}`,
-                        boxShadow: `inset 0 20px 40px -20px ${p.accent}40, 0 10px 30px -10px rgba(0,0,0,0.8)`,
-                        overflow: "hidden",
-                      }}
-                    >
-                      {/* Static Image Background for Rich Blur (No GIFs to prevent lag) */}
-                      <img
-                        src={p.image}
-                        alt=""
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          opacity: 0.4,
-                          filter: "blur(15px)",
-                          transform: "scale(1.2)",
-                        }}
-                      />
-                      
-                      {/* Grid Pattern Overlay */}
-                      <div
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px)`,
-                          backgroundSize: "20px 20px",
-                          backgroundPosition: "center",
-                          opacity: 0.6,
-                          maskImage: "linear-gradient(to bottom, black 30%, transparent 90%)",
-                          WebkitMaskImage: "linear-gradient(to bottom, black 30%, transparent 90%)"
-                        }}
-                      />
-                      
-                      {/* Inner Content Container */}
-                      <div
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          padding: "1rem 0.8rem 2.2rem 0.8rem",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          textAlign: "center",
-                          zIndex: 10,
-                          background: `radial-gradient(circle at 50% 50%, transparent 40%, rgba(0,0,0,0.8) 100%)`
-                        }}
-                      >
-                        {/* High-tech Category Badge */}
-                        <div
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "0.3rem",
-                            padding: "0.25rem 0.5rem",
-                            borderRadius: "4px",
-                            fontSize: "0.4rem",
-                            fontWeight: 800,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.2em",
-                            background: `linear-gradient(90deg, ${p.accent}20, transparent)`,
-                            color: p.accent,
-                            borderLeft: `2px solid ${p.accent}`,
-                            marginBottom: "0.4rem",
-                            boxShadow: `0 0 15px ${p.accent}15`,
-                          }}
-                        >
-                          {p.category}
-                        </div>
-
-                        {/* Product Name */}
-                        <div
-                          style={{
-                            width: "100%",
-                            fontSize: "0.85rem",
-                            lineHeight: 1.2,
-                            fontWeight: 800,
-                            color: "white",
-                            letterSpacing: "-0.02em",
-                            textShadow: "0 4px 15px rgba(0,0,0,0.9)",
-                            marginBottom: "0.3rem",
-                            wordBreak: "break-word",
-                          }}
-                        >
-                          {p.name}
-                        </div>
-                      </div>
-                      
-                      {/* Bottom "TAP" hint */}
-                      <div
-                        style={{
-                          position: "absolute",
-                          bottom: "0",
-                          left: "0",
-                          right: "0",
-                          padding: "0.6rem",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          gap: "0.3rem",
-                          fontSize: "0.45rem",
-                          color: p.accent,
-                          fontWeight: 700,
-                          letterSpacing: "0.15em",
-                          background: `linear-gradient(to top, rgba(0,0,0,0.8), transparent)`,
-                          zIndex: 10,
-                          animation: "pulseOpacity 2.5s infinite"
-                        }}
-                      >
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                          <circle cx="12" cy="12" r="10" />
-                          <path d="M12 16v-4M12 8h.01" />
-                        </svg>
-                        EXPLORE
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      {/* FRONT FACE (Holographic Glass) */}
-                      <div
-                        className="card-layer card-layer-front"
-                        style={{
-                          transform: `translateZ(0.5px)`,
-                          border: `1px solid ${p.accent}70`,
-                          boxShadow: `inset 0 0 20px ${p.accent}20, 0 15px 45px -10px ${p.accent}40, inset 0 1px 1px rgba(255,255,255,0.4)`,
-                        }}
-                      >
-                        <img
-                          src={p.video}
-                          alt={`${p.name} video`}
-                          className="card-video"
-                          style={{ opacity: 0.65, mixBlendMode: 'lighten' }}
-                        />
-                        <img
-                          src={p.image}
-                          alt={`${p.name} product preview`}
-                          className="card-image-fallback"
-                          style={{ zIndex: 0, opacity: 0.4 }}
-                        />
-                        
-                        {/* Dynamic Sheen overlay to simulate glass reflection */}
-                        <div className="card-sheen" />
-
-                        <div
-                          style={{
-                            position: "absolute",
-                            inset: 0,
-                            background: `linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.3) 60%, ${p.accent}15 100%)`,
-                            zIndex: 5,
-                          }}
-                        />
-                        
-                        <div
-                          className="card-front-content"
-                          style={{ padding: "1.5rem", zIndex: 10 }}
-                        >
-                          {/* Category Badge */}
-                          <div
-                            style={{
-                              position: "absolute",
-                              top: "1.2rem",
-                              left: "1.2rem",
-                              display: "inline-flex",
-                              padding: "0.3rem 0.75rem",
-                              borderRadius: 999,
-                              fontSize: "0.55rem",
-                              fontWeight: 800,
-                              textTransform: "uppercase",
-                              letterSpacing: "0.15em",
-                              background: `${p.accent}15`,
-                              color: p.accent,
-                              border: `1px solid ${p.accent}50`,
-                              backdropFilter: "blur(12px)",
-                              boxShadow: `0 0 15px ${p.accent}30`
-                            }}
-                          >
-                            {p.category}
-                          </div>
-
-                          {/* TAP Pulse Indicator */}
-                          <div
-                            style={{
-                              position: "absolute",
-                              top: "1.2rem",
-                              right: "1.2rem",
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "0.35rem",
-                              fontSize: "0.55rem",
-                              color: "white",
-                              fontWeight: 700,
-                              letterSpacing: "0.15em",
-                              animation: "pulseOpacity 2.5s ease-in-out infinite"
-                            }}
-                          >
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                              <circle cx="12" cy="12" r="10" />
-                              <path d="M12 16v-4M12 8h.01" />
-                            </svg>
-                            TAP
-                          </div>
-
-                          <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-                            <div
-                              style={{
-                                fontSize: "1.3rem",
-                                fontWeight: 800,
-                                letterSpacing: "-0.03em",
-                                lineHeight: 1.1,
-                                textShadow: "0 4px 12px rgba(0,0,0,0.9)"
-                              }}
-                            >
-                              {p.name}
-                            </div>
-                            <div
-                              style={{
-                                fontSize: "0.65rem",
-                                color: "rgba(255,255,255,0.75)",
-                                lineHeight: 1.5,
-                                maxWidth: "95%",
-                                display: "-webkit-box",
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: "vertical",
-                                overflow: "hidden",
-                                textShadow: "0 2px 6px rgba(0,0,0,0.9)"
-                              }}
-                            >
-                              {p.tagline}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* BACK FACE */}
-                      <div
-                        className="card-layer card-layer-back"
-                        style={{
-                          transform: `translateZ(-0.5px) rotateY(180deg)`,
-                          border: `1px solid ${p.accent}50`,
-                          boxShadow: `inset 0 0 30px rgba(0,0,0,0.8)`
-                        }}
-                      >
-                        <div style={{ position: "absolute", inset: 0, filter: "blur(20px)", transform: "scale(1.2)", pointerEvents: "none" }}>
-                          <img src={p.video} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.4 }} />
-                        </div>
-                        <div style={{ position: "absolute", inset: 0, background: "rgba(5,5,5,0.9)", zIndex: 1 }} />
-                        
-                        <div style={{ position: "absolute", inset: 0, padding: "1.5rem", display: "flex", flexDirection: "column", justifyContent: "space-between", zIndex: 10 }}>
-                          <div>
-                            <div style={{ fontSize: "0.6rem", fontWeight: 800, color: p.accent, textTransform: "uppercase", letterSpacing: "0.15em", marginBottom: "0.5rem" }}>
-                              {p.category}
-                            </div>
-                            <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "white", letterSpacing: "-0.02em" }}>
-                              {p.name}
-                            </div>
-                          </div>
-                          <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.65)", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                            {p.description}
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {activeProduct && (
-          <ProductDetailModal
-            product={activeProduct}
-            onClose={() => setActiveProduct(null)}
-          />
-        )}
+          <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2.5} />
+        </button>
       </div>
+      <div className="absolute inset-y-0 right-2 md:right-8 flex items-center z-50 pointer-events-none">
+        <button 
+          onClick={next} 
+          className="p-3 md:p-4 rounded-full bg-background/40 border border-foreground/10 text-foreground backdrop-blur-xl hover:bg-foreground/10 transition-all hover:scale-110 pointer-events-auto md:opacity-0 group-hover:opacity-100 md:translate-x-4 group-hover:translate-x-0 duration-300"
+          aria-label="Next product"
+        >
+          <ChevronRight className="w-5 h-5 md:w-6 md:h-6" strokeWidth={2.5} />
+        </button>
+      </div>
+
+      {/* Track */}
+      <div className="relative flex items-center justify-center w-full h-full max-w-6xl mx-auto" style={{ perspective: '1200px' }}>
+        {PRODUCTS.map((p, i) => {
+          let offset = i - activeIndex;
+          if (offset > PRODUCTS.length / 2) offset -= PRODUCTS.length;
+          if (offset < -PRODUCTS.length / 2) offset += PRODUCTS.length;
+          
+          const isActive = offset === 0;
+          const absOffset = Math.abs(offset);
+          const zIndex = 50 - absOffset;
+          const opacity = Math.max(0, 1 - absOffset * (isMobile ? 0.6 : 0.4));
+          const scale = Math.max(0.6, 1 - absOffset * (isMobile ? 0.2 : 0.15));
+          const translateX = offset * (isMobile ? 220 : 400); 
+          
+          // Mouse 3D Tilt for active card
+          const tiltX = isActive && isHovered ? mousePos.y * -15 : 0;
+          const tiltY = isActive && isHovered ? mousePos.x * 15 : 0;
+          
+          const extraSpin = spinAngles[i] || 0;
+          const rotateY = (offset * (isMobile ? -15 : -20)) + tiltY + extraSpin; 
+          const rotateX = tiltX;
+          const translateZ = -absOffset * (isMobile ? 120 : 150);
+
+          const cardWidth = isMobile ? '280px' : '500px';
+          const cardHeight = isMobile ? '380px' : '320px';
+
+          if (absOffset > (isMobile ? 1.5 : 2.5)) return null;
+
+          return (
+            <div
+              key={p.id}
+              className="absolute transition-all duration-700 ease-[cubic-bezier(0.25,1,0.3,1)] cursor-pointer"
+              style={{
+                zIndex,
+                opacity,
+                transform: `translateX(${translateX}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`,
+                width: cardWidth,
+                height: cardHeight,
+                transformStyle: 'preserve-3d',
+              }}
+              onClick={() => {
+                if (isActive) {
+                  setActiveProduct(p);
+                } else {
+                  setActiveIndex(i);
+                  setSpinAngles(s => ({ ...s, [i]: (s[i] || 0) + (offset > 0 ? -360 : 360) }));
+                }
+              }}
+              onMouseMove={(e) => {
+                if (!isActive) return;
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                setMousePos({ x, y });
+              }}
+              onMouseEnter={() => {
+                if (isActive) setIsHovered(true);
+              }}
+              onMouseLeave={() => {
+                if (isActive) {
+                  setIsHovered(false);
+                  setMousePos({ x: 0, y: 0 });
+                }
+              }}
+            >
+              <div
+                className="w-full h-full rounded-[24px] overflow-hidden relative transition-all duration-500 group/card"
+                style={{
+                  background: 'color-mix(in srgb, var(--card) 60%, transparent)',
+                  backdropFilter: 'blur(24px)',
+                  WebkitBackdropFilter: 'blur(24px)',
+                  border: `1px solid ${p.accent}50`,
+                  boxShadow: isActive ? `0 20px 50px -10px ${p.accent}40, inset 0 1px 1px rgba(255,255,255,0.1)` : 'none',
+                  clipPath: 'inset(0 0 0 0 round 24px)',
+                  WebkitClipPath: 'inset(0 0 0 0 round 24px)',
+                  transform: 'translateZ(0)',
+                }}
+              >
+                {/* Fallback image + Video */}
+                <img src={p.image} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-lighten rounded-[24px]" />
+                <img src={p.video} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-lighten rounded-[24px]" />
+                
+                {/* Elegant gradient overlay for text readability */}
+                <div 
+                  className="absolute inset-0 rounded-[24px]" 
+                  style={{ background: `linear-gradient(to top, var(--background) 0%, transparent 60%, ${p.accent}10 100%)` }}
+                />
+                
+                {/* Content */}
+                <div className="absolute inset-0 p-6 flex flex-col justify-end z-10 text-foreground">
+                  <div 
+                    className="mb-auto mt-2 inline-flex self-start px-3 py-1.5 text-[0.65rem] font-bold uppercase tracking-widest rounded-full backdrop-blur-md transition-all duration-300" 
+                    style={{ background: `${p.accent}15`, color: p.accent, border: `1px solid ${p.accent}40` }}
+                  >
+                    {p.category}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-extrabold tracking-tight" style={{ textShadow: '0 4px 12px color-mix(in srgb, var(--foreground) 30%, transparent)' }}>
+                      {p.name}
+                    </h3>
+                    <p className="text-sm opacity-80 line-clamp-2 leading-relaxed" style={{ textShadow: '0 2px 6px color-mix(in srgb, var(--foreground) 30%, transparent)' }}>
+                      {p.tagline}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Interaction indicator */}
+                {isActive && (
+                  <div className="absolute top-7 right-7 flex items-center gap-2 text-[0.6rem] font-bold tracking-[0.2em] text-foreground opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
+                     <span className="w-2 h-2 rounded-full bg-foreground animate-ping" /> 
+                     <span className="relative">EXPLORE</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {activeProduct && (
+        <ProductDetailModal
+          product={activeProduct}
+          onClose={() => setActiveProduct(null)}
+        />
+      )}
+    </div>
     </>
   );
 }

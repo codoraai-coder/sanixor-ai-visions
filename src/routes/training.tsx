@@ -262,7 +262,7 @@ export default function TrainingPage() {
         
         <div className="relative mx-auto max-w-6xl px-6 pt-32 pb-16 z-10">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-3 px-3 py-1 mb-8 border border-white/10 bg-white/5 rounded-full text-xs font-mono uppercase tracking-widest text-white/70">
+            <div className="inline-flex items-center gap-3 px-3 py-1 mb-8 border border-foreground/10 bg-foreground/5 rounded-full text-xs font-mono uppercase tracking-widest text-foreground/70">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Admissions Open: Cohort 24B
             </div>
@@ -272,15 +272,15 @@ export default function TrainingPage() {
                 Protocols.
               </span>
             </h1>
-            <p className="text-lg md:text-xl text-white/60 mb-12 max-w-2xl leading-relaxed">
+            <p className="text-lg md:text-xl text-foreground/60 mb-12 max-w-2xl leading-relaxed">
               Rigorous, production-focused technical training designed by core architects. Master distributed systems, agentic orchestration, and robust edge deployment.
             </p>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 border-y border-white/10 py-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 border-y border-foreground/10 py-8">
               {stats.map((stat) => (
                 <div key={stat.label}>
-                  <div className="text-2xl md:text-3xl font-bold text-white mb-1">{stat.value}</div>
+                  <div className="text-2xl md:text-3xl font-bold text-foreground mb-1">{stat.value}</div>
                   <div className="elite-text text-[0.65rem]">{stat.label}</div>
                 </div>
               ))}
@@ -291,16 +291,16 @@ export default function TrainingPage() {
 
       {/* Search & Filter */}
       <section className="mx-auto max-w-6xl px-6 py-12">
-        <div className="prof-card p-6 border-white/5 border-t-white/10">
+        <div className="prof-card p-6 border-foreground/5 border-t-white/10">
           <div className="flex flex-col md:flex-row gap-6 md:items-center justify-between">
             <div className="relative w-full md:max-w-md">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white/40" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/40" />
               <input
                 type="text"
                 placeholder="Search programs..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg bg-black/50 border border-white/10 pl-12 pr-4 py-3 text-sm text-white placeholder-white/40 outline-none focus:border-white/30 transition-colors"
+                className="w-full rounded-lg bg-black/50 border border-foreground/10 pl-12 pr-4 py-3 text-sm text-foreground placeholder-white/40 outline-none focus:border-foreground/30 transition-colors"
               />
             </div>
             <div className="flex flex-wrap gap-4 items-center">
@@ -312,7 +312,7 @@ export default function TrainingPage() {
                     className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-300 ${
                       selectedType === type
                         ? "bg-white text-black"
-                        : "bg-white/5 text-white/60 hover:bg-white/10"
+                        : "bg-foreground/5 text-foreground/60 hover:bg-foreground/10"
                     }`}
                   >
                     {type}
@@ -339,20 +339,20 @@ export default function TrainingPage() {
             >
               <div className="flex items-start justify-between mb-6">
                 <div 
-                  className="w-12 h-12 rounded-lg flex items-center justify-center border border-white/10"
+                  className="w-12 h-12 rounded-lg flex items-center justify-center border border-foreground/10"
                   style={{ background: `linear-gradient(135deg, ${program.color}20, transparent)` }}
                 >
                   <Cpu className="h-5 w-5" style={{ color: program.color }} />
                 </div>
                 <div className="text-right">
-                  <div className="text-xs font-mono text-white/50 mb-1">{program.type}</div>
-                  <div className="text-sm font-semibold text-white">{program.price}</div>
+                  <div className="text-xs font-mono text-foreground/50 mb-1">{program.type}</div>
+                  <div className="text-sm font-semibold text-foreground">{program.price}</div>
                 </div>
               </div>
               
               <h3 className="text-xl font-bold mb-3 tracking-tight">{program.title}</h3>
               
-              <div className="flex flex-wrap gap-3 text-xs font-mono text-white/50 mb-4 border-b border-white/10 pb-4">
+              <div className="flex flex-wrap gap-3 text-xs font-mono text-foreground/50 mb-4 border-b border-foreground/10 pb-4">
                 <span className="flex items-center gap-1.5">
                   <Clock className="h-3 w-3" /> {program.duration}
                 </span>
@@ -360,20 +360,20 @@ export default function TrainingPage() {
                 <span>{program.level}</span>
               </div>
               
-              <p className="text-sm text-white/70 mb-6 flex-grow leading-relaxed">
+              <p className="text-sm text-foreground/70 mb-6 flex-grow leading-relaxed">
                 {program.desc}
               </p>
               
               <div className="flex flex-col gap-2 mb-8">
                 {program.features.slice(0, 3).map((f) => (
-                  <div key={f} className="flex items-center gap-2 text-xs text-white/60">
-                    <div className="w-1 h-1 rounded-full bg-white/30" />
+                  <div key={f} className="flex items-center gap-2 text-xs text-foreground/60">
+                    <div className="w-1 h-1 rounded-full bg-foreground/30" />
                     {f}
                   </div>
                 ))}
               </div>
               
-              <button className="w-full flex items-center justify-between px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium transition-colors mt-auto">
+              <button className="w-full flex items-center justify-between px-4 py-3 bg-foreground/5 hover:bg-foreground/10 border border-foreground/10 rounded-lg text-sm font-medium transition-colors mt-auto">
                 View Curriculum
                 <ArrowRight className="h-4 w-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
               </button>
@@ -383,17 +383,17 @@ export default function TrainingPage() {
 
         {filteredPrograms.length === 0 && (
           <div className="text-center py-24 prof-card">
-            <p className="text-white/50 font-mono">No matching protocols found.</p>
+            <p className="text-foreground/50 font-mono">No matching protocols found.</p>
           </div>
         )}
       </section>
 
       {/* Competency Matrix (Skills) */}
-      <section id="design" className="border-y border-white/10 bg-[#050505] scroll-mt-24">
+      <section id="design" className="border-y border-foreground/10 bg-[#050505] scroll-mt-24">
         <div className="mx-auto max-w-6xl px-6 py-24">
           <div className="mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight">Competency Matrix</h2>
-            <p className="text-white/60 max-w-xl">
+            <p className="text-foreground/60 max-w-xl">
               Rigorous, specialized domains engineered for immediate integration into enterprise environments.
             </p>
           </div>
@@ -408,7 +408,7 @@ export default function TrainingPage() {
                   <d.icon className="h-5 w-5" style={{ color: d.color }} />
                   <h3 className="text-sm font-semibold tracking-wide">{d.title}</h3>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed pl-9">
+                <p className="text-sm text-foreground/50 leading-relaxed pl-9">
                   {d.desc}
                 </p>
               </div>
@@ -418,31 +418,43 @@ export default function TrainingPage() {
       </section>
 
       {/* Interactive Timeline (Learning Path) */}
-      <section id="architecture" className="mx-auto max-w-4xl px-6 py-24 relative scroll-mt-24">
-        <div className="mb-16 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight">Curriculum Architecture</h2>
-          <p className="text-white/60">A deterministic progression model.</p>
+      <section id="architecture" className="mx-auto max-w-5xl px-6 py-32 relative scroll-mt-24">
+        <div className="mb-20 text-center relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-400 text-xs font-mono uppercase tracking-widest">
+            <Target className="w-3 h-3" />
+            Progression Model
+          </div>
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">Curriculum <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">Architecture</span></h2>
+          <p className="text-lg text-foreground/50 max-w-2xl mx-auto">A deterministic, engineering-grade progression model designed to take you from foundational concepts to architecting enterprise AI systems.</p>
         </div>
 
-        <div className="relative pl-6 md:pl-0">
-          <div className="hidden md:block timeline-line left-1/2 -ml-px" />
-          <div className="md:hidden timeline-line" />
+        <div className="relative pl-8 md:pl-0 mt-10">
+          {/* Glowing center line */}
+          <div className="hidden md:block absolute left-1/2 -ml-[1px] top-0 bottom-0 w-[2px] bg-gradient-to-b from-purple-500/0 via-purple-500/50 to-purple-500/0" />
+          <div className="md:hidden absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-purple-500/0 via-purple-500/50 to-purple-500/0" />
           
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-16 md:gap-24 relative z-10">
             {learningPath.map((step, i) => (
-              <div key={i} className={`relative flex items-center md:justify-between w-full ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+              <div key={i} className={`relative flex items-center md:justify-between w-full group ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
                 <div className="hidden md:block w-[45%]" />
                 
-                <div className="absolute left-[-24px] md:left-1/2 md:-translate-x-1/2 timeline-node">
-                  <span className="text-xs font-mono text-white/40">{`0${i+1}`}</span>
+                {/* Node */}
+                <div className="absolute left-[-40px] md:left-1/2 md:-translate-x-1/2 w-12 h-12 rounded-full bg-[#050505] border-2 border-purple-500/30 flex items-center justify-center transition-all duration-500 group-hover:border-purple-500 group-hover:bg-purple-500/10 group-hover:shadow-[0_0_30px_rgba(168,85,247,0.4)] group-hover:scale-110">
+                  <span className="text-sm font-mono font-bold text-foreground/50 group-hover:text-purple-300 transition-colors">{`0${i+1}`}</span>
                 </div>
                 
-                <div className="prof-card w-full md:w-[45%] ml-12 md:ml-0 p-6 border border-white/5">
-                  <div className="elite-text mb-2 text-white/40">{step.phase}</div>
-                  <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                  <p className="text-sm text-white/60 leading-relaxed">
-                    {step.desc}
-                  </p>
+                {/* Card */}
+                <div className="w-full md:w-[45%] ml-4 md:ml-0">
+                  <div className="prof-card p-8 border border-foreground/5 bg-gradient-to-br from-white/[0.03] to-transparent hover:border-purple-500/30 transition-all duration-500">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="elite-text text-purple-400 font-semibold">{step.phase}</div>
+                      <div className="h-[1px] flex-1 bg-gradient-to-r from-purple-500/30 to-transparent" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-4 text-foreground group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-purple-200 transition-all">{step.title}</h3>
+                    <p className="text-base text-foreground/60 leading-relaxed">
+                      {step.desc}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -451,17 +463,17 @@ export default function TrainingPage() {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-white/10 bg-[#020202]">
+      <section className="border-t border-foreground/10 bg-[#020202]">
         <div className="mx-auto max-w-4xl px-6 py-32 text-center">
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tighter mb-6">
             Ready to Compile?
           </h2>
-          <p className="text-lg text-white/50 mb-10 max-w-xl mx-auto">
+          <p className="text-lg text-foreground/50 mb-10 max-w-xl mx-auto">
             Admissions for the upcoming technical cohort are highly competitive. Initiate the technical screening process today.
           </p>
           <a
             href="/contact"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-[#7c3aed] text-white rounded-lg font-bold hover:bg-[#6d28d9] transition-colors shadow-[0_0_20px_rgba(124,58,237,0.4)]"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-[#7c3aed] text-foreground rounded-lg font-bold hover:bg-[#6d28d9] transition-colors shadow-[0_0_20px_rgba(124,58,237,0.4)]"
           >
             Initiate Screening <ArrowRight className="h-4 w-4" />
           </a>

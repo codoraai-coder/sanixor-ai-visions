@@ -175,7 +175,7 @@ export default function AgentAsAService() {
                   className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
                 />
                 <div className="absolute inset-0 bg-gradient-to-tr from-background via-background/80 to-transparent p-10 flex flex-col justify-end">
-                  <h3 className="text-3xl font-bold mb-3 text-white">Value Proposition</h3>
+                  <h3 className="text-3xl font-bold mb-3 text-foreground">Value Proposition</h3>
                   <p className="text-xl text-gray-300 font-light">
                     Deploy intelligent AI agents in minutes instead of months.
                   </p>

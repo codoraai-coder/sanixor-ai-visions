@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 600" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="rgba(139, 92, 246, 0.4)" />
+      <stop offset="50%" stop-color="rgba(167, 139, 250, 0.5)" />
+      <stop offset="100%" stop-color="rgba(124, 58, 237, 0.4)" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Wave 1 (Back) -->
+  <path fill="rgba(124, 58, 237, 0.2)" filter="url(#glow)">
+    <animate attributeName="d" 
+             dur="15s" 
+             repeatCount="indefinite" 
+             values="M0,300 C320,100 420,500 720,300 C1020,100 1120,500 1440,300 L1440,600 L0,600 Z;
+                     M0,300 C320,500 420,100 720,300 C1020,500 1120,100 1440,300 L1440,600 L0,600 Z;
+                     M0,300 C320,100 420,500 720,300 C1020,100 1120,500 1440,300 L1440,600 L0,600 Z" />
+  </path>
+  
+  <!-- Wave 2 (Middle) -->
+  <path fill="rgba(139, 92, 246, 0.3)" filter="url(#glow)">
+    <animate attributeName="d" 
+             dur="20s" 
+             repeatCount="indefinite" 
+             values="M0,350 C240,550 480,150 720,350 C960,550 1200,150 1440,350 L1440,600 L0,600 Z;
+                     M0,350 C240,150 480,550 720,350 C960,150 1200,550 1440,350 L1440,600 L0,600 Z;
+                     M0,350 C240,550 480,150 720,350 C960,550 1200,150 1440,350 L1440,600 L0,600 Z" />
+  </path>
+
+  <!-- Wave 3 (Front) -->
+  <path fill="url(#grad)" filter="url(#glow)">
+    <animate attributeName="d" 
+             dur="25s" 
+             repeatCount="indefinite" 
+             values="M0,400 C400,200 600,600 900,400 C1100,266 1200,533 1440,400 L1440,600 L0,600 Z;
+                     M0,400 C400,600 600,200 900,400 C1100,533 1200,266 1440,400 L1440,600 L0,600 Z;
+                     M0,400 C400,200 600,600 900,400 C1100,266 1200,533 1440,400 L1440,600 L0,600 Z" />
+  </path>
+</svg>

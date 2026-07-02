@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MenuToggle } from "./MenuToggle";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme, THEMES } from "./ThemeProvider";
+
 
 const homeLinks = [
   { href: "/#products", label: "Products", icon: Box, gradientFrom: "#a955ff", gradientTo: "#ea51ff" },
@@ -22,15 +22,40 @@ const socialLinks = [
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const { theme, setTheme } = useTheme();
+
   const [menuOpen, setMenuOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [activeSection, setActiveSection] = useState<string>("");
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 20);
+
+      const sections = homeLinks.map(link => link.href.replace("/#", ""));
+      let currentActive = "";
+      
+      const threshold = window.innerHeight * 0.4; // 40% from top of screen
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+
+          if (rect.top <= threshold && rect.bottom > threshold) {
+            currentActive = section;
+            break;
+          }
+        }
+      }
+      
+      setActiveSection(currentActive);
+    };
+    
     window.addEventListener("scroll", onScroll);
+    onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -80,8 +105,8 @@ export function Navbar() {
           menuOpen 
             ? "py-4 bg-transparent border-transparent shadow-none" 
             : scrolled
-            ? "border-b border-white/10 bg-[#090911]/70 py-3 backdrop-blur-2xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.7)]"
-            : "border-b border-white/[0.03] bg-gradient-to-b from-[#030307] via-[#030307]/90 to-transparent backdrop-blur-md py-4",
+            ? "border-b border-foreground/10 bg-background/70 py-3 backdrop-blur-2xl shadow-[0_10px_30px_-10px_rgba(0,0,0,0.7)]"
+            : "border-b border-foreground/[0.03] bg-gradient-to-b from-background via-background/90 to-transparent backdrop-blur-md py-4",
         )}
       >
         <Link to="/" className={cn("flex items-center gap-2.5 text-lg font-bold tracking-tight hover:opacity-80 transition-all duration-300", menuOpen && "blur-sm")}>
@@ -91,48 +116,69 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-3 md:flex md:absolute md:left-1/2 md:-translate-x-1/2">
-          {homeLinks.map(({ href, label, icon: Icon, gradientFrom, gradientTo }) => (
+          {homeLinks.map(({ href, label, icon: Icon, gradientFrom, gradientTo }) => {
+            const isActive = activeSection === href.replace("/#", "");
+            return (
             <a
               key={href}
               href={href}
               onClick={(e) => handleHashClick(e, href)}
               style={{ '--gradient-from': gradientFrom, '--gradient-to': gradientTo } as React.CSSProperties}
-              className="relative w-[48px] h-[48px] bg-white/5 border border-white/10 shadow-lg rounded-full flex items-center justify-center transition-all duration-500 hover:w-[130px] hover:shadow-none group cursor-pointer"
+              className={cn(
+                "relative h-[48px] bg-foreground/5 border border-foreground/10 shadow-lg rounded-full flex items-center justify-center transition-all duration-500 hover:shadow-none group cursor-pointer",
+                isActive ? "w-[130px]" : "w-[48px] hover:w-[130px]"
+              )}
             >
               {/* Gradient background on hover */}
-              <span className="absolute inset-0 rounded-full bg-[linear-gradient(45deg,var(--gradient-from),var(--gradient-to))] opacity-0 transition-all duration-500 group-hover:opacity-100"></span>
+              <span className={cn(
+                "absolute inset-0 rounded-full bg-[linear-gradient(45deg,var(--gradient-from),var(--gradient-to))] transition-all duration-500",
+                isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+              )}></span>
               
               {/* Blur glow */}
-              <span className="absolute top-[8px] inset-x-0 h-full rounded-full bg-[linear-gradient(45deg,var(--gradient-from),var(--gradient-to))] blur-[15px] opacity-0 -z-10 transition-all duration-500 group-hover:opacity-40"></span>
+              <span className={cn(
+                "absolute top-[8px] inset-x-0 h-full rounded-full bg-[linear-gradient(45deg,var(--gradient-from),var(--gradient-to))] blur-[15px] -z-10 transition-all duration-500",
+                isActive ? "opacity-40" : "opacity-0 group-hover:opacity-40"
+              )}></span>
 
               {/* Icon */}
-              <span className="relative z-10 transition-all duration-500 group-hover:scale-0 flex items-center justify-center">
-                <Icon className="h-[22px] w-[22px] text-white/70" />
+              <span className={cn(
+                "relative z-10 transition-all duration-500 flex items-center justify-center",
+                isActive ? "scale-0" : "group-hover:scale-0"
+              )}>
+                <Icon className={cn("h-[22px] w-[22px] transition-colors", isActive ? "text-foreground" : "text-foreground/70")} />
               </span>
 
               {/* Title */}
-              <span className="absolute text-white font-bold tracking-wide text-sm transition-all duration-500 scale-0 group-hover:scale-100 delay-75">
+              <span className={cn(
+                "absolute text-foreground font-bold tracking-wide text-sm transition-all duration-500 delay-75",
+                isActive ? "scale-100" : "scale-0 group-hover:scale-100"
+              )}>
                 {label}
               </span>
             </a>
-          ))}
+          )})}
+          
+          {/* Theme Toggle removed */}
         </nav>
 
-
-
-        {/* Placeholder to keep flex-between layout on mobile */}
-        <div className="h-10 w-10 md:hidden" />
+        {/* Right side actions (desktop) - empty since toggle moved */}
+        <div className="flex items-center gap-3 relative z-10 md:mr-0 mr-12">
+        </div>
       </header>
 
-      {/* Mobile Menu Trigger (Standalone so it sits above drawer) */}
+      {/* Mobile Menu Actions (Standalone so it sits above drawer) */}
       <div
         className={cn(
-          "fixed z-[102] flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-all duration-500 md:hidden",
+          "fixed z-[102] flex items-center gap-3 transition-all duration-500 md:hidden",
           "right-4",
           menuOpen || !scrolled ? "top-4" : "top-3"
         )}
       >
-        <MenuToggle open={menuOpen} onOpenChange={setMenuOpen} className="h-5 w-5" />
+
+        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-foreground/10 bg-foreground/5">
+          <MenuToggle open={menuOpen} onOpenChange={setMenuOpen} className="h-5 w-5" />
+        </div>
       </div>
 
       {/* Mobile Drawer */}
@@ -156,14 +202,14 @@ export function Navbar() {
               exit={{ x: "100%" }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               ref={drawerRef}
-              className="fixed top-0 right-0 z-[101] h-[100dvh] w-[85vw] max-w-sm bg-background/95 backdrop-blur-xl border-l border-white/10 md:hidden flex flex-col"
+              className="fixed top-0 right-0 z-[101] h-[100dvh] w-[85vw] max-w-sm bg-background/95 backdrop-blur-xl border-l border-foreground/10 md:hidden flex flex-col"
               role="dialog"
               aria-modal="true"
               aria-label="Navigation menu"
               tabIndex={-1}
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-foreground/10">
                 <Link to="/" className="flex items-center gap-2.5 text-lg font-bold tracking-tight hover:opacity-80 transition-all duration-300" onClick={() => setMenuOpen(false)}>
                   <img src={sanixorMark} alt="Sanixor" className="h-8 w-8 rounded-lg shadow-lg" />
                   Sanixor<span className="text-gradient animate-pulse">AI</span>
@@ -188,44 +234,20 @@ export function Navbar() {
                           href={href}
                           onClick={(e) => handleHashClick(e, href)}
                           style={{ '--gradient-from': gradientFrom, '--gradient-to': gradientTo } as React.CSSProperties}
-                          className="group flex items-center gap-4 rounded-xl p-3 bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300"
+                          className="group flex items-center gap-4 rounded-xl p-3 bg-foreground/5 border border-foreground/10 hover:bg-foreground/10 transition-all duration-300"
                         >
                           <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-transform duration-300 group-hover:scale-110">
                             <span className="absolute inset-0 rounded-lg bg-[linear-gradient(45deg,var(--gradient-from),var(--gradient-to))] opacity-0 transition-opacity duration-300 group-hover:opacity-20"></span>
-                            <Icon className="relative z-10 h-5 w-5 text-white/70 transition-colors duration-300 group-hover:text-white" />
+                            <Icon className="relative z-10 h-5 w-5 text-foreground/70 transition-colors duration-300 group-hover:text-foreground" />
                           </span>
-                          <span className="font-medium text-white transition-colors group-hover:text-foreground">{label}</span>
+                          <span className="font-medium text-foreground transition-colors group-hover:text-foreground">{label}</span>
                         </a>
                       </motion.div>
                     ))}
                   </div>
                 </div>
 
-                {/* Theme Picker */}
-                <div>
-                  <h3 className="px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">Theme</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {THEMES.map((t) => {
-                      const isActive = theme === t.id;
-                      return (
-                        <button
-                          key={t.id}
-                          onClick={() => setTheme(t.id)}
-                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ring-2 transition-all duration-300 ${
-                            isActive
-                              ? "ring-primary scale-110"
-                              : "ring-white/10 hover:ring-primary/50 hover:scale-105"
-                          }`}
-                          style={{ background: t.swatch }}
-                          aria-label={t.label}
-                          aria-pressed={isActive}
-                        >
-                          {isActive && <svg className="h-5 w-5 text-white/90" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
+
 
                 {/* Social Links */}
                 <div>
@@ -238,7 +260,7 @@ export function Navbar() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={label}
-                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/5 border border-white/10 text-slate-400 transition-all duration-300 hover:bg-primary/10 hover:border-primary/30 hover:text-purple-400 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-foreground/5 border border-foreground/10 text-muted-foreground transition-all duration-300 hover:bg-primary/10 hover:border-primary/30 hover:text-purple-400 hover:shadow-[0_0_20px_rgba(168,85,247,0.2)]"
                       >
                         <Icon className="h-5 w-5" strokeWidth={1.5} />
                       </a>

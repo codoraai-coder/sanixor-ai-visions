@@ -14,7 +14,7 @@ import Team from "./routes/team";
 import Terms from "./routes/terms";
 import Training from "./routes/training";
 import HackEval from "./routes/hackeval";
-import BitBenchmark from "./routes/bitbenchmark";
+import BitBench from "./routes/bitbench";
 import SanixorStudio from "./routes/sanixor-studio";
 import LexAI from "./routes/lexai";
 import AgentAsAService from "./routes/agent-as-a-service";
@@ -25,9 +25,16 @@ import AutoDash from "./routes/autodash";
 import About from "./routes/about";
 import "./styles.css";
 
+import StandardScrollToTop from "./components/sanixor/StandardScrollToTop";
+
 function SmoothScrollProvider({ children }: { children: ReactNode }) {
   useSmoothScroll();
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <StandardScrollToTop />
+    </>
+  );
 }
 
 function NotFound() {
@@ -61,7 +68,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/terms" element={<Terms />} />
             <Route path="/hiring" element={<Hiring />} />
             <Route path="/hackeval" element={<HackEval />} />
-            <Route path="/bitbenchmark" element={<BitBenchmark />} />
+            <Route path="/bitbench" element={<BitBench />} />
             <Route path="/sanixor-studio" element={<SanixorStudio />} />
             <Route path="/lexai" element={<LexAI />} />
             <Route path="/autodash" element={<AutoDash />} />

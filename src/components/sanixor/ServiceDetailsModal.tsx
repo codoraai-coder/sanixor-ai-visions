@@ -23,7 +23,7 @@ export function ServiceDetailsModal({ service, onClose }: ServiceDetailsModalPro
         .sd-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(3, 3, 10, 0.85);
+          background: color-mix(in srgb, var(--background) 85%, transparent);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
           z-index: 1000;
@@ -36,10 +36,10 @@ export function ServiceDetailsModal({ service, onClose }: ServiceDetailsModalPro
         @keyframes sd-fadeIn { from{opacity:0; backdrop-filter: blur(0px);} to{opacity:1; backdrop-filter: blur(12px);} }
         
         .sd-modal {
-          background: rgba(15, 12, 30, 0.65);
+          background: color-mix(in srgb, var(--card) 65%, transparent);
           backdrop-filter: blur(24px);
           -webkit-backdrop-filter: blur(24px);
-          border: 1px solid rgba(139, 92, 246, 0.25);
+          border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
           border-radius: 24px;
           width: 100%;
           max-width: 700px;
@@ -88,7 +88,7 @@ export function ServiceDetailsModal({ service, onClose }: ServiceDetailsModalPro
         .sd-header-gradient {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to top, rgba(15, 12, 30, 1) 0%, rgba(15, 12, 30, 0.2) 100%);
+          background: linear-gradient(to top, var(--card) 0%, transparent 100%);
           z-index: 1;
         }
         .sd-header-content {
@@ -98,7 +98,7 @@ export function ServiceDetailsModal({ service, onClose }: ServiceDetailsModalPro
         
         .sd-num {
           font-family: 'DM Mono', monospace;
-          color: #a78bfa;
+          color: var(--primary);
           font-weight: 700;
           font-size: 14px;
           margin-bottom: 8px;
@@ -108,10 +108,10 @@ export function ServiceDetailsModal({ service, onClose }: ServiceDetailsModalPro
         .sd-title {
           font-size: 32px;
           font-weight: 800;
-          color: #fff;
+          color: var(--foreground);
           margin: 0;
           letter-spacing: -0.02em;
-          text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+          text-shadow: 0 4px 12px color-mix(in srgb, var(--foreground) 30%, transparent);
         }
         
         .sd-close {
@@ -123,11 +123,11 @@ export function ServiceDetailsModal({ service, onClose }: ServiceDetailsModalPro
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(0, 0, 0, 0.5);
+          background: color-mix(in srgb, var(--background) 50%, transparent);
           backdrop-filter: blur(4px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
           border-radius: 10px;
-          color: #fff;
+          color: var(--foreground);
           cursor: pointer;
           transition: all .25s cubic-bezier(.22,1,.36,1);
         }
@@ -144,7 +144,7 @@ export function ServiceDetailsModal({ service, onClose }: ServiceDetailsModalPro
         .sd-desc {
           font-size: 15px;
           line-height: 1.7;
-          color: #c4b5fd;
+          color: var(--foreground);
           margin-bottom: 28px;
         }
 
@@ -157,9 +157,9 @@ export function ServiceDetailsModal({ service, onClose }: ServiceDetailsModalPro
         .sd-tag {
           padding: 6px 12px;
           border-radius: 8px;
-          background: rgba(139, 92, 246, 0.1);
-          border: 1px solid rgba(139, 92, 246, 0.2);
-          color: #a78bfa;
+          background: color-mix(in srgb, var(--primary) 10%, transparent);
+          border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+          color: var(--primary);
           font-size: 12px;
           font-weight: 600;
         }
@@ -172,8 +172,8 @@ export function ServiceDetailsModal({ service, onClose }: ServiceDetailsModalPro
         }
         
         .sd-cap-card {
-          background: rgba(0, 0, 0, 0.2);
-          border: 1px solid rgba(139, 92, 246, 0.1);
+          background: color-mix(in srgb, var(--foreground) 5%, transparent);
+          border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
           border-radius: 16px;
           padding: 20px;
           transition: all 0.3s ease;
@@ -186,12 +186,12 @@ export function ServiceDetailsModal({ service, onClose }: ServiceDetailsModalPro
         .sd-cap-title {
           font-size: 14px;
           font-weight: 700;
-          color: #fff;
+          color: var(--foreground);
           margin-bottom: 6px;
         }
         .sd-cap-desc {
           font-size: 12px;
-          color: #8b80b5;
+          color: color-mix(in srgb, var(--foreground) 70%, transparent);
           line-height: 1.5;
         }
 

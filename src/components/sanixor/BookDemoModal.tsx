@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 interface BookDemoModalProps {
   isOpen: boolean;
   onClose: () => void;
-  productType: "BitBenchmark" | "Hackathon Evaluation";
+  productType: "BitBench" | "Hackathon Evaluation";
 }
 
 interface DemoForm {
@@ -21,7 +21,7 @@ const PRODUCT_META: Record<
   BookDemoModalProps["productType"],
   { icon: React.ReactNode; accent: string; tagline: string }
 > = {
-  BitBenchmark: {
+  BitBench: {
     tagline: "AI Performance & Benchmarking Platform",
     accent: "#6366f1",
     icon: (
@@ -179,7 +179,7 @@ export function BookDemoModal({
         .bdm-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(3, 3, 10, 0.85);
+          background: color-mix(in srgb, var(--background) 85%, transparent);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
           z-index: 1100;
@@ -213,7 +213,7 @@ export function BookDemoModal({
 
         /* Modal Card — natural height, no inner scroll needed */
         .bdm-modal {
-          background: rgba(15, 12, 30, 0.72);
+          background: color-mix(in srgb, var(--card) 85%, transparent);
           backdrop-filter: blur(28px);
           -webkit-backdrop-filter: blur(28px);
           border: 1px solid rgba(139, 92, 246, 0.28);
@@ -267,7 +267,7 @@ export function BookDemoModal({
         .bdm-head-titles h2 {
           font-size: 20px;
           font-weight: 700;
-          color: #fff;
+          color: var(--foreground);
           margin: 0 0 3px;
           letter-spacing: -0.015em;
           white-space: nowrap;
@@ -276,7 +276,7 @@ export function BookDemoModal({
         }
         .bdm-head-tagline {
           font-size: 12px;
-          color: #a78bfa;
+          color: var(--primary);
           font-weight: 500;
           letter-spacing: 0.01em;
           white-space: nowrap;
@@ -334,11 +334,11 @@ export function BookDemoModal({
         }
         .bdm-banner-text {
           font-size: 13px;
-          color: #c4b5fd;
+          color: var(--foreground);
           line-height: 1.55;
           font-weight: 500;
         }
-        .bdm-banner-text strong { color: #f0ecff; font-weight: 700; }
+        .bdm-banner-text strong { color: var(--foreground); font-weight: 700; }
 
         /* Body */
         .bdm-body { padding: 28px 32px 32px; }
@@ -348,7 +348,7 @@ export function BookDemoModal({
           display: block;
           font-size: 10.5px;
           font-weight: 800;
-          color: #a78bfa;
+          color: var(--primary);
           text-transform: uppercase;
           letter-spacing: 0.15em;
           margin-bottom: 20px;
@@ -360,7 +360,7 @@ export function BookDemoModal({
           display: block;
           font-size: 11px;
           font-weight: 700;
-          color: #c4b5fd;
+          color: var(--foreground);
           text-transform: uppercase;
           letter-spacing: 0.12em;
           margin-bottom: 8px;
@@ -379,11 +379,11 @@ export function BookDemoModal({
         .bdm-textarea {
           width: 100%;
           padding: 13px 16px;
-          background: rgba(0, 0, 0, 0.22);
-          border: 1px solid rgba(139, 92, 246, 0.15);
+          background: color-mix(in srgb, var(--foreground) 6%, transparent);
+          border: 1px solid color-mix(in srgb, var(--primary) 15%, transparent);
           border-radius: 12px;
           font-size: 14px;
-          color: #fff;
+          color: var(--foreground);
           font-family: inherit;
           outline: none;
           appearance: none;
@@ -495,7 +495,7 @@ export function BookDemoModal({
         .bdm-booked-title {
           font-size: 17px;
           font-weight: 700;
-          color: #f0ecff;
+          color: var(--foreground);
           margin-bottom: 10px;
           letter-spacing: -0.01em;
         }
@@ -539,7 +539,7 @@ export function BookDemoModal({
         .bdm-success-title {
           font-size: 17px;
           font-weight: 700;
-          color: #f0ecff;
+          color: var(--foreground);
           margin-bottom: 10px;
           letter-spacing: -0.01em;
         }

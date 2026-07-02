@@ -26,12 +26,12 @@ export function InteractiveConsole({ className }: { className?: string }) {
     setIsFinished(false);
 
     let currentDelay = 0;
-    
+
     LOG_SEQUENCE.forEach((log, index) => {
       currentDelay += log.delay;
       setTimeout(() => {
         setLogs((prev) => [...prev, log]);
-        
+
         if (index === LOG_SEQUENCE.length - 1) {
           setTimeout(() => {
             setIsRunning(false);
@@ -53,7 +53,7 @@ export function InteractiveConsole({ className }: { className?: string }) {
     <section className={cn("mx-auto max-w-5xl px-4 py-20 md:px-6 md:py-28", className)}>
       <div className="mx-auto mb-12 max-w-2xl text-center">
         <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-primary">Contact Us</p>
-        <h2 className="text-3xl font-bold tracking-tight md:text-5xl">
+        <h2 className=" text-3xl font-bold tracking-tight md:text-5xl">
           Initialize connection.
         </h2>
         <p className="mt-4 text-muted-foreground md:text-lg">
@@ -67,7 +67,7 @@ export function InteractiveConsole({ className }: { className?: string }) {
         <div className="pointer-events-none absolute -bottom-20 -right-20 h-60 w-60 rounded-full bg-primary-glow/10 blur-3xl" />
 
         {/* Terminal Header */}
-        <div className="flex items-center justify-between border-b border-white/10 bg-white/5 px-4 py-3">
+        <div className="flex items-center justify-between border-b border-foreground/10 bg-foreground/5 px-4 py-3">
           <div className="flex items-center gap-2">
             <div className="h-3 w-3 rounded-full bg-red-500/80" />
             <div className="h-3 w-3 rounded-full bg-yellow-500/80" />
@@ -81,12 +81,12 @@ export function InteractiveConsole({ className }: { className?: string }) {
         </div>
 
         {/* Terminal Body */}
-        <div 
+        <div
           ref={scrollRef}
           className="h-[250px] sm:h-[300px] overflow-y-auto p-4 sm:p-6 font-mono text-xs sm:text-sm"
         >
           <div className="mb-4 text-muted-foreground">
-            $ Welcome to Sanixor Network v2.4.1<br/>
+            $ Welcome to Sanixor Network v2.4.1<br />
             $ Ready to establish secure connection.
           </div>
 
@@ -103,7 +103,7 @@ export function InteractiveConsole({ className }: { className?: string }) {
               </span>
             </div>
           ))}
-          
+
           {isRunning && (
             <div className="mt-4 flex items-center gap-2 text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" />

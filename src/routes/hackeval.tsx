@@ -106,7 +106,7 @@ const customers = [
 
 export default function HackEval() {
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<"BitBenchmark" | "Hackathon Evaluation">("Hackathon Evaluation");
+  const [selectedProduct, setSelectedProduct] = useState<"BitBench" | "Hackathon Evaluation">("Hackathon Evaluation");
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background">
@@ -147,7 +147,7 @@ export default function HackEval() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="h-12 gap-2 rounded-xl border-white/10 bg-white/5 px-8 font-semibold text-foreground backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all"
+              className="h-12 gap-2 rounded-xl border-foreground/10 bg-foreground/5 px-8 font-semibold text-foreground backdrop-blur-md hover:bg-foreground/10 hover:border-foreground/20 transition-all"
               onClick={() => {
                 setSelectedProduct("Hackathon Evaluation");
                 setIsDemoModalOpen(true);
@@ -164,25 +164,25 @@ export default function HackEval() {
           transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10 mt-16 w-full max-w-5xl"
         >
-          <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0a0a14]/90 backdrop-blur-xl shadow-[0_0_60px_rgba(139,92,246,0.08)]">
-            <div className="flex items-center gap-2 border-b border-white/[0.06] px-5 py-3">
+          <div className="relative overflow-hidden rounded-2xl border border-foreground/[0.08] bg-background/90 backdrop-blur-xl shadow-[0_0_60px_rgba(139,92,246,0.08)]">
+            <div className="flex items-center gap-2 border-b border-foreground/[0.06] px-5 py-3">
               <span className="h-3 w-3 rounded-full bg-red-500/60" />
               <span className="h-3 w-3 rounded-full bg-yellow-500/60" />
               <span className="h-3 w-3 rounded-full bg-green-500/60" />
-              <span className="ml-3 text-xs text-white/30 font-mono">hackeval evaluation pipeline</span>
+              <span className="ml-3 text-xs text-foreground/30 font-mono">hackeval evaluation pipeline</span>
             </div>
             <div className="p-6 space-y-3 font-mono text-sm">
               <div className="flex items-center gap-3 text-green-400/80">
-                <span className="text-white/30 select-none">~</span>
-                <span className="text-white/50">$</span>
+                <span className="text-foreground/30 select-none">~</span>
+                <span className="text-foreground/50">$</span>
                 <span>hackeval run --project stellar-falcon --stage scoring</span>
               </div>
-              <div className="text-white/40 pl-7 leading-relaxed">
+              <div className="text-foreground/40 pl-7 leading-relaxed">
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>{"[Agent:CodeReview]"} {"  "}Analyzing repository structure... <span className="text-green-400/70">OK</span></motion.div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}>{"[Agent:Innovation]"} {" "}Evaluating technical novelty... <span className="text-green-400/70">OK</span></motion.div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>{"[Agent:Impact]"} {"   "}Assessing real-world applicability... <span className="text-green-400/70">OK</span></motion.div>
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}>{"[Aggregator]"} {"   "}Computing weighted scores... <span className="text-yellow-400/70">...</span></motion.div>
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }} className="text-primary/80 pt-2">{"✓"} Final Score: <span className="text-white font-bold">92.4 / 100</span> — Rank <span className="text-white font-bold">#2</span> of 148</motion.div>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }} className="text-primary/80 pt-2">{"✓"} Final Score: <span className="text-foreground font-bold">92.4 / 100</span> — Rank <span className="text-foreground font-bold">#2</span> of 148</motion.div>
               </div>
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none" />
@@ -192,7 +192,7 @@ export default function HackEval() {
 
       {/* ── PROBLEM & SOLUTION ── */}
       <ScrollReveal delay={100}>
-        <section className="relative z-10 border-y border-white/[0.06] bg-white/[0.015] py-20 md:py-28">
+        <section className="relative z-10 border-y border-foreground/[0.06] bg-foreground/[0.015] py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-4 md:px-6">
             <div className="grid gap-10 md:grid-cols-2">
               <motion.div whileHover={{ scale: 1.01 }} className="glass rounded-3xl p-10 border-l-4 border-l-red-500/60">
@@ -224,7 +224,7 @@ export default function HackEval() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}
-                  className="flex flex-col items-center gap-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 backdrop-blur-sm text-center hover:border-primary/20 transition-all duration-300"
+                  className="flex flex-col items-center gap-3 rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] p-8 backdrop-blur-sm text-center hover:border-primary/20 transition-all duration-300"
                 >
                   <Icon className="h-6 w-6 text-primary/60" />
                   <div className="text-4xl font-extrabold text-foreground">
@@ -257,7 +257,7 @@ export default function HackEval() {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.08, duration: 0.5 }}
                 >
-                  <Card className="group h-full relative border-white/[0.06] bg-white/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-primary/20 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(139,92,246,0.1)]">
+                  <Card className="group h-full relative border-foreground/[0.06] bg-foreground/[0.02] backdrop-blur-sm transition-all duration-500 hover:border-primary/20 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(139,92,246,0.1)]">
                     <CardHeader>
                       <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(139,92,246,0.3)]">
                         <feat.icon className="h-6 w-6" strokeWidth={1.5} />
@@ -278,7 +278,7 @@ export default function HackEval() {
 
       {/* ── HOW IT WORKS ── */}
       <ScrollReveal>
-        <section className="relative z-10 border-y border-white/[0.06] bg-white/[0.015] py-20 md:py-28">
+        <section className="relative z-10 border-y border-foreground/[0.06] bg-foreground/[0.015] py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-4 md:px-6">
             <div className="mx-auto mb-16 max-w-2xl text-center">
               <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-primary">Process</p>
@@ -299,7 +299,7 @@ export default function HackEval() {
                     <div className="absolute top-12 left-1/2 hidden h-px w-full bg-gradient-to-r from-primary/40 to-transparent lg:block" />
                   )}
                   <div className="relative flex flex-col items-center text-center">
-                    <div className="relative mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm transition-all duration-300 group-hover:border-primary/30 group-hover:bg-primary/10 group-hover:shadow-[0_0_24px_rgba(139,92,246,0.15)] group-hover:scale-110">
+                    <div className="relative mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-foreground/[0.08] bg-foreground/[0.03] backdrop-blur-sm transition-all duration-300 group-hover:border-primary/30 group-hover:bg-primary/10 group-hover:shadow-[0_0_24px_rgba(139,92,246,0.15)] group-hover:scale-110">
                       <Icon className="h-7 w-7 text-primary/70 transition-colors duration-300 group-hover:text-primary" />
                     </div>
                     <span className="mb-2 text-xs font-bold tracking-widest text-primary/40">{num}</span>
@@ -334,7 +334,7 @@ export default function HackEval() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.06, duration: 0.4 }}
                 >
-                  <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-foreground backdrop-blur-sm hover:border-primary/30 hover:bg-primary/5 hover:text-primary transition-all duration-300 cursor-default">
+                  <div className="flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/5 px-5 py-3 text-sm font-medium text-foreground backdrop-blur-sm hover:border-primary/30 hover:bg-primary/5 hover:text-primary transition-all duration-300 cursor-default">
                     <div className="h-1.5 w-1.5 rounded-full bg-primary/60" />
                     {item}
                   </div>

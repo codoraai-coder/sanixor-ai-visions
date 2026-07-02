@@ -105,7 +105,7 @@ export default function ContactPage() {
   return (
     <Layout>
       {/* Structural Page Base Wrapper */}
-      <main className="relative min-h-screen w-full bg-[#030307] text-slate-100 overflow-hidden selection:bg-primary/30 font-sans">
+      <main className="relative min-h-screen w-full bg-background text-slate-100 overflow-hidden selection:bg-primary/30 font-sans">
         
         {/* --- PREMIUM GRADIENT BLAST BACKGROUND CONFIGURATION --- */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[650px] pointer-events-none z-0">
@@ -130,7 +130,7 @@ export default function ContactPage() {
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.1] mb-6 bg-gradient-to-b from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
               Let's <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-accent animate-text">connect.</span>
             </h1>
-            <p className="mx-auto text-lg md:text-xl text-slate-400/90 max-w-2xl font-normal leading-relaxed balance">
+            <p className="mx-auto text-lg md:text-xl text-muted-foreground/90 max-w-2xl font-normal leading-relaxed balance">
               Have questions about our deployment capabilities or need a product demo? Leave us a message below.
             </p>
           </section>
@@ -142,16 +142,16 @@ export default function ContactPage() {
               {/* Form Component Container */}
               <div className="lg:col-span-3">
                 <div className="relative rounded-[2.5rem] p-[1px] bg-gradient-to-b from-white/10 via-white/5 to-transparent shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] backdrop-blur-xl">
-                  <div className="bg-[#090911]/90 rounded-[2.4rem] p-6 md:p-10 space-y-6">
+                  <div className="bg-background/90 rounded-[2.4rem] p-6 md:p-10 space-y-6">
                     <div>
-                      <h2 className="text-2xl font-bold tracking-tight text-white">Send us a message</h2>
-                      <p className="text-sm text-slate-400 mt-1">Our team processes requests globally and routes answers in under 24 hours.</p>
+                      <h2 className="text-2xl font-bold tracking-tight text-foreground">Send us a message</h2>
+                      <p className="text-sm text-muted-foreground mt-1">Our team processes requests globally and routes answers in under 24 hours.</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                       {/* Topic Selector Button Array */}
                       <div className="space-y-3">
-                        <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">What can we help with?</label>
+                        <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground block">What can we help with?</label>
                         <div className="flex flex-wrap gap-2">
                           {topics.map((topic) => (
                             <button
@@ -160,8 +160,8 @@ export default function ContactPage() {
                               onClick={() => setSelectedTopic(topic)}
                               className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 transform active:scale-95 ${
                                 selectedTopic === topic
-                                  ? "bg-gradient-to-r from-primary via-purple-600 to-accent text-white shadow-lg shadow-primary/20 scale-[1.02]"
-                                  : "bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/5"
+                                  ? "bg-gradient-to-r from-primary via-purple-600 to-accent text-foreground shadow-lg shadow-primary/20 scale-[1.02]"
+                                  : "bg-foreground/5 hover:bg-foreground/10 text-muted-foreground hover:text-foreground border border-foreground/5"
                               }`}
                             >
                               {topic}
@@ -179,7 +179,7 @@ export default function ContactPage() {
                           value={formData.name}
                           onChange={handleInputChange}
                           placeholder="Your name"
-                          className="w-full rounded-xl bg-white/5 px-4 py-3.5 text-sm border border-white/10 text-white placeholder:text-slate-500 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 outline-none transition-all duration-300"
+                          className="w-full rounded-xl bg-foreground/5 px-4 py-3.5 text-sm border border-foreground/10 text-foreground placeholder:text-slate-500 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 outline-none transition-all duration-300"
                         />
                         <input
                           required
@@ -188,7 +188,7 @@ export default function ContactPage() {
                           value={formData.email}
                           onChange={handleInputChange}
                           placeholder="Email address"
-                          className="w-full rounded-xl bg-white/5 px-4 py-3.5 text-sm border border-white/10 text-white placeholder:text-slate-500 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 outline-none transition-all duration-300"
+                          className="w-full rounded-xl bg-foreground/5 px-4 py-3.5 text-sm border border-foreground/10 text-foreground placeholder:text-slate-500 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 outline-none transition-all duration-300"
                         />
                       </div>
 
@@ -198,7 +198,7 @@ export default function ContactPage() {
                         value={formData.company}
                         onChange={handleInputChange}
                         placeholder="Company or Institution (optional)"
-                        className="w-full rounded-xl bg-white/5 px-4 py-3.5 text-sm border border-white/10 text-white placeholder:text-slate-500 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 outline-none transition-all duration-300"
+                        className="w-full rounded-xl bg-foreground/5 px-4 py-3.5 text-sm border border-foreground/10 text-foreground placeholder:text-slate-500 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 outline-none transition-all duration-300"
                       />
 
                       <textarea
@@ -208,7 +208,7 @@ export default function ContactPage() {
                         onChange={handleInputChange}
                         rows={5}
                         placeholder="Tell us more about what you're looking for..."
-                        className="w-full rounded-xl bg-white/5 px-4 py-3.5 text-sm border border-white/10 text-white placeholder:text-slate-500 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 outline-none transition-all duration-300 resize-none"
+                        className="w-full rounded-xl bg-foreground/5 px-4 py-3.5 text-sm border border-foreground/10 text-foreground placeholder:text-slate-500 focus:border-primary/50 focus:ring-2 focus:ring-primary/10 outline-none transition-all duration-300 resize-none"
                       />
 
                       {/* Status-Driven Submit Button */}
@@ -217,10 +217,10 @@ export default function ContactPage() {
                         disabled={status === "loading" || status === "success"}
                         className={`w-full inline-flex items-center justify-center gap-2 rounded-xl px-6 py-4 text-base font-semibold shadow-xl transition-all duration-300 transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-90 ${
                           status === "success"
-                            ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white"
+                            ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-foreground"
                             : status === "error"
-                            ? "bg-gradient-to-r from-rose-500 to-red-600 text-white"
-                            : "bg-gradient-to-r from-primary via-purple-600 to-accent text-white hover:opacity-95 hover:shadow-xl hover:shadow-primary/10"
+                            ? "bg-gradient-to-r from-rose-500 to-red-600 text-foreground"
+                            : "bg-gradient-to-r from-primary via-purple-600 to-accent text-foreground hover:opacity-95 hover:shadow-xl hover:shadow-primary/10"
                         }`}
                       >
                         {status === "loading" && (
@@ -254,9 +254,9 @@ export default function ContactPage() {
                       key={info.label}
                       className="group relative rounded-2xl p-[1px] bg-gradient-to-b from-white/10 to-transparent hover:from-primary/30 hover:to-accent/30 transition-all duration-500"
                     >
-                      <div className="bg-[#090911]/80 backdrop-blur-md rounded-[15px] p-5 flex items-center gap-4 transition-all">
+                      <div className="bg-background/80 backdrop-blur-md rounded-[15px] p-5 flex items-center gap-4 transition-all">
                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br ${info.color} shadow-lg shadow-black/30 transform transition-all duration-300 group-hover:scale-105`}>
-                          <info.icon className="h-5 w-5 text-white" />
+                          <info.icon className="h-5 w-5 text-foreground" />
                         </div>
                         <div>
                           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
@@ -270,7 +270,7 @@ export default function ContactPage() {
                 </div>
 
                 {/* Geo Map Tracking Bounded Cleanly to Noida Area */}
-                <div className="rounded-2xl overflow-hidden border border-white/5 shadow-2xl h-48 transition-all duration-300 hover:border-white/10 relative group">
+                <div className="rounded-2xl overflow-hidden border border-foreground/5 shadow-2xl h-48 transition-all duration-300 hover:border-foreground/10 relative group">
                   <iframe
                     title="Sanixor.AI office"
                     src="https://www.openstreetmap.org/export/embed.html?bbox=77.26%2C28.47%2C77.38%2C28.59&layer=mapnik&marker=28.5355%2C77.3910"
@@ -280,14 +280,14 @@ export default function ContactPage() {
                 </div>
 
                 {/* Ecosystem Tracking Links */}
-                {/*<div className="bg-gradient-to-b from-white/5 to-transparent border border-white/5 rounded-2xl p-6 shadow-sm">
+                {/*<div className="bg-gradient-to-b from-white/5 to-transparent border border-foreground/5 rounded-2xl p-6 shadow-sm">
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">Follow our ecosystem</p>
                   <div className="flex gap-3">
                     {[Twitter, Linkedin,Instagram].map((Icon, i) => (
                       <a
                         key={i}
                         href="#"
-                        className="w-11 h-11 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center text-slate-400 transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:text-primary hover:shadow-lg hover:shadow-primary/5"
+                        className="w-11 h-11 rounded-xl border border-foreground/10 bg-foreground/5 flex items-center justify-center text-muted-foreground transition-all duration-300 hover:-translate-y-1 hover:border-primary hover:text-primary hover:shadow-lg hover:shadow-primary/5"
                       >
                         <Icon className="h-5 w-5" />
                       </a>
@@ -300,13 +300,13 @@ export default function ContactPage() {
           </section>
 
           {/* FAQ Accordion Grid Framework */}
-          <section className="mx-auto max-w-4xl px-6 py-20 border-t border-white/5 relative">
+          <section className="mx-auto max-w-4xl px-6 py-20 border-t border-foreground/5 relative">
             {/* Soft Ambient Bottom Blur Blast */}
             <div className="absolute bottom-[-10%] left-1/2 -translate-x-1/2 w-[70vw] h-[300px] rounded-full bg-purple-900/5 blur-[120px] pointer-events-none" />
 
             <div className="text-center mb-12 relative z-10">
-              <h2 className="text-3xl font-bold tracking-tight text-white mb-3">Frequently Asked Questions</h2>
-              <p className="text-slate-400 text-sm max-w-md mx-auto">
+              <h2 className="text-3xl font-bold tracking-tight text-foreground mb-3">Frequently Asked Questions</h2>
+              <p className="text-muted-foreground text-sm max-w-md mx-auto">
                 Quick technical baseline information regarding operational protocols.
               </p>
             </div>
@@ -318,12 +318,12 @@ export default function ContactPage() {
                   <div
                     key={index}
                     className={`border rounded-2xl transition-all duration-300 overflow-hidden ${
-                      isOpen ? "bg-white/5 border-primary/20 shadow-inner" : "bg-transparent border-white/5"
+                      isOpen ? "bg-foreground/5 border-primary/20 shadow-inner" : "bg-transparent border-foreground/5"
                     }`}
                   >
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : index)}
-                      className="w-full flex items-center justify-between p-5 text-left transition-colors hover:bg-white/[0.02]"
+                      className="w-full flex items-center justify-between p-5 text-left transition-colors hover:bg-foreground/[0.02]"
                     >
                       <span className="font-medium text-sm sm:text-base text-slate-200 pr-4">
                         {faq.question}
@@ -344,7 +344,7 @@ export default function ContactPage() {
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <div className="px-5 pb-5 text-sm text-slate-400 leading-relaxed">
+                        <div className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed">
                           {faq.answer}
                         </div>
                       </div>

@@ -54,29 +54,29 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
     }
 
     try {
-    const response = await fetch(SCRIPT_URL, {
-      method: "POST",
-      body: formData,
-    });
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: formData,
+      });
 
-    // Safe parsing: Agar response khali (blank) hai toh crash nahi hoga
-    const textData = await response.text();
-    const data = textData ? JSON.parse(textData) : {};
+      // Safe parsing: Agar response khali (blank) hai toh crash nahi hoga
+      const textData = await response.text();
+      const data = textData ? JSON.parse(textData) : {};
 
-    if (data && data.status === "duplicate") {
-      setErrorMessage(data.message || "This email is already registered!");
-      return false;
+      if (data && data.status === "duplicate") {
+        setErrorMessage(data.message || "This email is already registered!");
+        return false;
+      }
+
+      console.log("Data successfully queued!");
+      return true;
+    } catch (error) {
+      console.error("Error sending data:", error);
+      // Safety check: Agar network issue ya khali response ho, tab bhi true return karo taaki success modal dikhe
+      return true;
+    } finally {
+      setIsSendingToSheet(false);
     }
-
-    console.log("Data successfully queued!");
-    return true;
-  } catch (error) {
-    console.error("Error sending data:", error);
-    // Safety check: Agar network issue ya khali response ho, tab bhi true return karo taaki success modal dikhe
-    return true; 
-  } finally {
-    setIsSendingToSheet(false);
-  }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -102,7 +102,7 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
     setIsProcessingPayment(true);
     setErrorMessage("");
     const currentUserType = userType;
-    
+
     setTimeout(async () => {
       // Sends data to sheet/webhook AFTER payment is completed
       const isAllowed = await sendDataToGoogleSheet(form, currentUserType);
@@ -161,15 +161,15 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
               <p className="av2-sec-text" style={{ marginBottom: 20 }}>
                 Complete your {userType} registration by paying the entry fee.
               </p>
-              
+
               <div style={{ background: 'rgba(0, 0, 0, 0.2)', border: '1px solid rgba(139, 92, 246, 0.15)', borderRadius: 16, padding: 32, textAlign: 'center', marginBottom: 24, boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)' }}>
                 <div style={{ fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 8, letterSpacing: '-0.02em' }}>₹{userType === 'student' ? '500' : '1500'}.00</div>
                 <div style={{ fontSize: 13, color: '#a78bfa', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>AgentVerse 2.0 Entry Fee</div>
               </div>
 
-              <button 
-                type="button" 
-                className="av2-submit" 
+              <button
+                type="button"
+                className="av2-submit"
                 onClick={handleDummyPayment}
                 disabled={isProcessingPayment || isSendingToSheet}
                 style={{ opacity: (isProcessingPayment || isSendingToSheet) ? 0.7 : 1, cursor: (isProcessingPayment || isSendingToSheet) ? 'wait' : 'pointer' }}
@@ -181,10 +181,10 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
                   </svg>
                 )}
               </button>
-              
-              <button 
-                type="button" 
-                className="av2-back-btn" 
+
+              <button
+                type="button"
+                className="av2-back-btn"
                 onClick={() => setIsPaying(false)}
                 style={{ marginTop: 20, justifyContent: 'center', width: '100%', marginLeft: 0 }}
                 disabled={isProcessingPayment || isSendingToSheet}
@@ -201,7 +201,7 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
               <div className="av2-type-grid">
                 <button type="button" className="av2-type-btn" onClick={() => setUserType("student")}>
                   <div className="av2-type-btn-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 22, height: 22, color: '#a78bfa' }}><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 22, height: 22, color: '#a78bfa' }}><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" /></svg>
                   </div>
                   <div>
                     <div className="av2-type-btn-title">Student</div>
@@ -210,7 +210,7 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
                 </button>
                 <button type="button" className="av2-type-btn" onClick={() => setUserType("professional")}>
                   <div className="av2-type-btn-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 22, height: 22, color: '#a78bfa' }}><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 22, height: 22, color: '#a78bfa' }}><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
                   </div>
                   <div>
                     <div className="av2-type-btn-title">Working Professional</div>
@@ -219,11 +219,11 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
                 </button>
                 <button type="button" className="av2-type-btn" onClick={() => setUserType("institution")}>
                   <div className="av2-type-btn-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 22, height: 22, color: '#a78bfa' }}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 22, height: 22, color: '#a78bfa' }}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
                   </div>
                   <div>
-                    <div className="av2-type-btn-title">Institution / Community</div>
-                    <div className="av2-type-btn-desc">Register on behalf of an organization</div>
+                    <div className="av2-type-btn-title">Partnership</div>
+                    <div className="av2-type-btn-desc">Colleges, Communities, or Startups</div>
                   </div>
                 </button>
               </div>
@@ -231,7 +231,7 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
           ) : (
             <form onSubmit={handleSubmit}>
               <button type="button" className="av2-back-btn" onClick={() => setUserType("")} disabled={isSendingToSheet}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 14, height: 14 }}><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 14, height: 14 }}><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
                 Back to options
               </button>
 
@@ -294,38 +294,51 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
               )}
 
               {userType === "institution" && (
-                <>
-                  <div className="av2-fg">
-                    <label className="av2-label">Institution / Organization Name *</label>
-                    <input className="av2-input" name="organization" value={form.organization} onChange={handleChange} placeholder="Name of institution or community" required pattern="^[A-Za-z0-9\s.,&'-]+$" title="Enter a valid institution name" />
+                <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                  <div className="av2-success-ico" style={{ margin: '0 auto 20px', color: '#a855f7', background: 'rgba(168, 85, 247, 0.1)', borderColor: 'rgba(168, 85, 247, 0.3)' }}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 28, height: 28 }}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
                   </div>
-                  <div className="av2-fg">
-                    <label className="av2-label">Contact Person (POC) *</label>
-                    <input className="av2-input" name="name" value={form.name} onChange={handleChange} placeholder="Full Name of POC" required pattern="^[A-Za-z\s]+$" title="Only letters and spaces allowed" />
+                  <h3 style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Let's Build Together</h3>
+                  <p className="av2-sec-text" style={{ marginBottom: 24 }}>
+                    We're looking for forward-thinking colleges, communities, and startups to co-host and support the AgentVerse ecosystem.
+                  </p>
+                  <div style={{ background: 'rgba(255,255,255,0.05)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', marginBottom: '24px' }}>
+                    <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.7)', marginBottom: '8px' }}>Reach out to us at:</div>
+                    <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#a855f7', letterSpacing: '1px' }}>team@sanixor.space</div>
                   </div>
-                  <div className="av2-frow">
-                    <div className="av2-fg">
-                      <label className="av2-label">Email *</label>
-                      <input className="av2-input" type="email" name="email" value={form.email} onChange={handleChange} placeholder="you@email.com" required />
-                    </div>
-                    <div className="av2-fg">
-                      <label className="av2-label">Contact Number (POC) *</label>
-                      <input className="av2-input" type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="9876543210" required pattern="^[0-9]{10}$" title="Enter a valid 10-digit phone number" />
-                    </div>
-                  </div>
-                  <div className="av2-fg">
-                    <label className="av2-label">Number of Participants *</label>
-                    <input className="av2-input" type="number" name="participants" value={form.participants} onChange={handleChange} placeholder="Expected number of participants" required min="1" />
-                  </div>
-                </>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText("team@sanixor.space");
+                      const btn = document.getElementById("copy-email-btn");
+                      if (btn) {
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = 'Copied to Clipboard!';
+                        setTimeout(() => { btn.innerHTML = originalText; }, 3000);
+                      }
+                      window.location.href = "mailto:team@sanixor.space?subject=Partnership%20Inquiry%20-%20AgentVerse%202.0";
+                    }}
+                    id="copy-email-btn"
+                    className="av2-submit"
+                    style={{ width: 'auto', padding: '16px 32px' }}
+                  >
+                    Copy Email & Contact Us
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '10px' }}>
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                  </button>
+                </div>
               )}
 
-              <button type="submit" className="av2-submit" disabled={isSendingToSheet}>
-                {isSendingToSheet ? 'Processing...' : (userType === 'student' || userType === 'professional') ? 'Proceed to Payment' : 'Complete Registration'}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </button>
+              {userType !== "institution" && (
+                <button type="submit" className="av2-submit" disabled={isSendingToSheet}>
+                  {isSendingToSheet ? 'Processing...' : 'Proceed to Payment'}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </button>
+              )}
             </form>
           )}
         </div>
