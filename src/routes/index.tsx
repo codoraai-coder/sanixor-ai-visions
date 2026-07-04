@@ -1,11 +1,11 @@
 import { ScrollReveal } from "@/components/sanixor/ScrollReveal";
 import { AgentVerse2 } from "@/components/sanixor/AgentVerse2";
-import { ArrowRight, ArrowUpRight, Cpu, FlaskConical, GraduationCap, Network } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Cpu, FlaskConical, GraduationCap, Network, PenTool, Smile, Code2, Play, Sparkles, Heart } from "lucide-react";
 import { HeroParallax } from "@/components/sanixor/HeroParallax";
 import { Footer } from "@/components/sanixor/Footer";
 import { InteractiveConsole } from "@/components/sanixor/InteractiveConsole";
 import { Navbar } from "@/components/sanixor/Navbar";
-import { ProductCarousel } from "@/components/sanixor/ProductCarousel";
+import InteractiveSelector from "@/components/ui/interactive-selector";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,14 +13,16 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ServiceDetailsModal, ServiceInfo } from "@/components/sanixor/ServiceDetailsModal";
 import { cn } from "@/lib/utils";
+import { ServicesCube, ServiceCubeData } from "@/components/sanixor/ServicesCube";
 
-const services: ServiceInfo[] = [
+const services: ServiceCubeData[] = [
   {
     num: "01",
     id: "agent-as-a-service",
     title: "Agent as a Service",
-    description:
-      "Deploy a Sanixor-built AI agent into your product, workflow, or event. We handle architecture, fine-tuning, and integration — you get a working agent from day one.",
+    shortSubtitle: "Fully Managed Agents",
+    iconComponent: Sparkles,
+    description: "",
     tags: ["API Integration", "Event Automation", "Custom Workflows", "Managed Hosting"],
     image: "/service-1.png",
     capabilities: [
@@ -33,9 +35,10 @@ const services: ServiceInfo[] = [
   {
     num: "02",
     id: "custom-agent-dev",
-    title: "Custom Agent Development",
-    description:
-      "Have a problem that needs a tailored AI solution? We scope, design, and build custom agents for legal, educational, financial, or technical domains — with full handover.",
+    title: "Custom Agent Dev",
+    shortSubtitle: "Bespoke AI Solutions",
+    iconComponent: Code2,
+    description: "",
     tags: ["Domain-Specific", "Full Ownership", "Docs & Handover", "Institutional"],
     image: "/service-2.png",
     capabilities: [
@@ -48,9 +51,10 @@ const services: ServiceInfo[] = [
   {
     num: "03",
     id: "api-integration",
-    title: "Enterprise API Integration",
-    description:
-      "AI is only as powerful as the systems it can interact with. Connect our advanced agentic capabilities directly to your internal tools, CRMs, ERPs, and legacy applications.",
+    title: "API Integration",
+    shortSubtitle: "Enterprise Connectivity",
+    iconComponent: Network,
+    description: "",
     tags: ["Comprehensive SDKs", "Webhooks", "Legacy Support", "REST/GraphQL"],
     image: "/service-3.png",
     capabilities: [
@@ -63,9 +67,10 @@ const services: ServiceInfo[] = [
   {
     num: "04",
     id: "event-automation",
-    title: "Autonomous Event Operations",
-    description:
-      "Transform how you run conferences, hackathons, and corporate events. Deploy agents that handle ticketing, attendee queries, and real-time scheduling autonomously.",
+    title: "Event Operations",
+    shortSubtitle: "Autonomous Management",
+    iconComponent: Play,
+    description: "",
     tags: ["Live Q&A Agents", "Ticketing", "Scheduling", "Analytics"],
     image: "/service-4.png",
     capabilities: [
@@ -75,6 +80,38 @@ const services: ServiceInfo[] = [
       { title: "Speaker Coordination", desc: "Automated briefing and content collection." },
     ]
   },
+  {
+    num: "05",
+    id: "conversational-ux",
+    title: "Conversational UX",
+    shortSubtitle: "Next-Gen Interfaces",
+    iconComponent: Smile,
+    description: "",
+    tags: ["Sentiment Analysis", "Voice Interfaces", "Emotion AI", "UX Design"],
+    image: "/service-1.png",
+    capabilities: [
+      { title: "Sentiment Tracking", desc: "Real-time emotion detection during interactions." },
+      { title: "Contextual Memory", desc: "Remembering user preferences across sessions." },
+      { title: "Voice & Text", desc: "Seamless switching between spoken and typed input." },
+      { title: "Empathy Routing", desc: "Escalating to human agents based on frustration." },
+    ]
+  },
+  {
+    num: "06",
+    id: "ai-architecture",
+    title: "AI Architecture",
+    shortSubtitle: "Strategic System Design",
+    iconComponent: PenTool,
+    description: "",
+    tags: ["System Design", "Compliance", "Security Audits", "Scalability"],
+    image: "/service-2.png",
+    capabilities: [
+      { title: "Topology Planning", desc: "Designing robust multi-model infrastructures." },
+      { title: "Security & Compliance", desc: "Ensuring SOC2 and GDPR readiness for AI." },
+      { title: "Cost Optimization", desc: "Minimizing inference costs without sacrificing quality." },
+      { title: "Redundancy Systems", desc: "Failover strategies for mission-critical agents." },
+    ]
+  }
 ];
 
 const learningTracks = [
@@ -107,13 +144,13 @@ function SectionHeader({
 }: {
   label: string;
   title: string;
-  description: string;
+  description?: string;
 }) {
   return (
-    <div className="mx-auto mb-14 max-w-2xl text-center">
+    <div className={cn("mx-auto max-w-2xl text-center", description ? "mb-14" : "mb-6")}>
       <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-primary">{label}</p>
       <h2 className="text-3xl font-bold tracking-tight md:text-5xl">{title}</h2>
-      <p className="mt-4 text-muted-foreground md:text-lg">{description}</p>
+      {description && <p className="mt-4 text-muted-foreground md:text-lg">{description}</p>}
     </div>
   );
 }
@@ -132,76 +169,26 @@ export default function Index() {
 
       {/* Products */}
       <ScrollReveal>
-        <section id="products" className="relative z-10 bg-transparent pt-16 md:pt-32 pb-4 md:pb-8">
+        <section id="products" className="relative z-10 bg-transparent pt-16 md:pt-32 pb-16 md:pb-32">
           <div className="mx-auto max-w-7xl px-4 md:px-6">
             <SectionHeader
               label="Products"
               title="Every tool is an AI agent."
-              description="Six purpose-built AI products — each solving a real problem with real accuracy, not demo-mode results."
             />
           </div>
-          <ProductCarousel />
+          <InteractiveSelector />
         </section>
       </ScrollReveal>
 
-      {/* Services */}
-      <ScrollReveal delay={100}>
-        <section id="services" className="border-y border-border/30 bg-card/20 pt-8 md:pt-16 pb-16 md:pb-32">
-          <div className="mx-auto max-w-7xl px-4 md:px-6">
-            <SectionHeader
-              label="Services"
-              title="Agents, on demand."
-              description="We don't just build our own agents — we build yours. Fully customised, production-ready, and actually deployed."
-            />
-            <div className="grid gap-6 md:grid-cols-2">
-              {services.map((service) => (
-                <Card
-                  key={service.num}
-                  onClick={() => setSelectedService(service)}
-                  className="group relative cursor-pointer overflow-hidden border-border/50 bg-card/40 backdrop-blur-md transition-[border-color,box-shadow,transform] duration-500 hover:border-primary/25 hover:shadow-glow hover:-translate-y-1"
-                  style={{ transform: "translateZ(0)", willChange: "transform, box-shadow" }}
-                >
-                  {service.image && (
-                    <div className="relative h-64 w-full overflow-hidden md:h-80">
-                      <img
-                        src={service.image}
-                        alt={service.title}
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
-                      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                    </div>
-                  )}
-                  <CardHeader className="p-5 md:p-6">
-                    <span className="text-4xl font-bold text-primary/20">{service.num}</span>
-                    <CardTitle className="text-2xl">{service.title}</CardTitle>
-                    <CardDescription className="text-base leading-relaxed">
-                      {service.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-5 pt-0 md:p-6 md:pt-0">
-                    <div className="flex flex-wrap gap-2">
-                      {service.tags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="outline"
-                          className="border-primary/20 bg-primary/5 text-primary"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-      </ScrollReveal>
+      {/* Services — 3D Cube */}
+      <ServicesCube 
+        services={services} 
+        onSelectService={(service) => setSelectedService(service)} 
+      />
 
       {/* Event */}
       <ScrollReveal delay={100}>
-        <section id="event" className="mx-auto max-w-[1500px] px-4 py-16 md:py-32 md:px-6">
+        <section id="event" className="mx-auto max-w-[1500px] px-4 py-8 md:py-12 md:px-6">
           <AgentVerse2 />
         </section>
       </ScrollReveal>

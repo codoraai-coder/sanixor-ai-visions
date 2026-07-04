@@ -1,19 +1,25 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
 
 export function InitialLoader({ children }: { children: React.ReactNode }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isVideoReady, setIsVideoReady] = useState(false);
+  const location = useLocation();
+  const [isLoading, setIsLoading] = useState(location.pathname === "/");
 
   useEffect(() => {
-    // Only start the countdown once the video has buffered and is ready
-    if (isLoading && isVideoReady) {
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 12000); // Massive 12 seconds delay to let it play as intended
-      return () => clearTimeout(timer);
+    // If not on the main home page, disable loader immediately
+    if (location.pathname !== "/") {
+      setIsLoading(false);
+      return;
     }
-  }, [isLoading, isVideoReady]);
+
+    // Safety fallback in case video fails to load or play
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 15000); 
+    
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
 
 
 
@@ -34,19 +40,18 @@ export function InitialLoader({ children }: { children: React.ReactNode }) {
         {isLoading && (
           <motion.div
             key="loader"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
+            initial={{ opacity: 1, y: 0 }}
+            exit={{ y: "-100%" }}
+            transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }} // elegant shutter curve
             className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#09090b] overflow-hidden"
           >
             <video 
               src="/sanixor.mp4" 
               autoPlay
-              loop
               muted
               playsInline
               className="absolute inset-0 w-full h-full object-cover" 
-              onCanPlayThrough={() => setIsVideoReady(true)}
+              onEnded={() => setIsLoading(false)}
             />
             
             {/* The loading text/dots placed over the GIF */}

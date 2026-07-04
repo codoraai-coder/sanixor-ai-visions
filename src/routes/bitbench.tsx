@@ -124,15 +124,20 @@ export default function BitBench() {
             <Activity className="h-3.5 w-3.5" /> Performance Intelligence
           </Badge>
 
-          <h1 className="max-w-4xl text-center text-5xl font-extrabold tracking-tight md:text-7xl lg:text-8xl">
-            Intelligent{" "}
-            <span className="bg-gradient-to-r from-primary via-primary-glow to-cyan-400 bg-[length:200%_200%] bg-clip-text text-transparent animate-[hackGradient_8s_ease_infinite]">
-              BitBench
+          <h1 className="max-w-5xl text-center flex flex-col items-center leading-[0.85] tracking-tight mb-8">
+            <span className="text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[9rem] font-extrabold pb-0">
+              <span className="text-white">Bit</span>{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-b from-purple-400 to-purple-700">Bench</span>
+            </span>
+            <span className="text-lg md:text-xl text-muted-foreground font-medium lowercase tracking-normal mt-3 mb-0">by</span>
+            <span className="text-4xl md:text-6xl lg:text-[4rem] font-extrabold mt-1">
+              <span className="text-white">Sanixor</span>{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-b from-purple-400 to-purple-700">AI</span>
             </span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-            A performance intelligence platform that benchmarks AI models, applications, and infrastructure using standardized metrics and comparative analytics.
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/90 md:text-xl text-center">
+            BitBench evaluates developer environments by standardizing project configuration, automating benchmark tests, and generating deterministic performance metrics across tech stacks.
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">

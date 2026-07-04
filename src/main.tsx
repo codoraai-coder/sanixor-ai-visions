@@ -23,6 +23,8 @@ import APIIntegration from "./routes/api-integration";
 import EventAutomation from "./routes/event-automation";
 import AutoDash from "./routes/autodash";
 import About from "./routes/about";
+import NyayAi from "./routes/nyayai";
+import SocioAi from "./routes/socioai";
 import "./styles.css";
 
 import StandardScrollToTop from "./components/sanixor/StandardScrollToTop";
@@ -79,6 +81,8 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/custom-agent-dev" element={<CustomAgentDev />} />
               <Route path="/api-integration" element={<APIIntegration />} />
               <Route path="/event-automation" element={<EventAutomation />} />
+              <Route path="/nyayai" element={<NyayAi />} />
+              <Route path="/socioai" element={<SocioAi />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </InitialLoader>

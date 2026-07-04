@@ -4,6 +4,7 @@ import { Footer } from "@/components/sanixor/Footer";
 import { InteractiveConsole } from "@/components/sanixor/InteractiveConsole";
 import { Navbar } from "@/components/sanixor/Navbar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { ArrowRight, BarChart2, Eye, FileSpreadsheet, LayoutTemplate, PieChart, ShieldAlert } from "lucide-react";
 
 export default function AutoDash() {
@@ -41,31 +42,35 @@ export default function AutoDash() {
   ];
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-background snx-page">
-      <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
-      </div>
-
+    <div className="relative min-h-screen overflow-x-hidden bg-background">
       <Navbar />
 
-      <section className="hero relative min-h-[90vh]">
-        <div className="hero-glow" />
-        <div className="hero-grid" />
+      <section className="relative flex min-h-screen flex-col items-center justify-center px-4 pt-28 pb-20 overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-grid-pattern opacity-[0.03]" />
+        <div className="pointer-events-none absolute top-1/4 left-1/2 -translate-x-1/2 h-[600px] w-[900px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.2)_0%,rgba(109,40,217,0.08)_40%,transparent_70%)] blur-[80px]" />
         
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 flex flex-col items-center w-full max-w-6xl px-4"
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-10 flex max-w-6xl flex-col items-center text-center"
         >
-          <div className="hero-tag">
-            <BarChart2 className="h-4 w-4" /> AI Analytics
-          </div>
-          <h1 className="max-w-5xl text-center text-5xl md:text-7xl font-bold tracking-tight mb-6">
-            Intelligent <span className="grad">AutoDash</span>
+          <Badge className="mb-8 gap-2 rounded-full border border-primary/30 bg-primary/10 px-5 py-2 text-xs font-semibold text-primary backdrop-blur-md hover:border-primary/50 hover:bg-primary/15 hover:shadow-[0_8px_24px_rgba(139,92,246,0.2)] transition-all duration-300">
+            <BarChart2 className="h-3.5 w-3.5" /> AI Analytics
+          </Badge>
+          <h1 className="max-w-5xl text-center flex flex-col items-center leading-[0.85] tracking-tight mb-8">
+            <span className="text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[9rem] font-extrabold pb-0">
+              <span className="text-white">Auto</span>{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-b from-purple-400 to-purple-700">Dash</span>
+            </span>
+            <span className="text-lg md:text-xl text-muted-foreground font-medium lowercase tracking-normal mt-3 mb-0">by</span>
+            <span className="text-4xl md:text-6xl lg:text-[4rem] font-extrabold mt-1">
+              <span className="text-white">Sanixor</span>{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-b from-purple-400 to-purple-700">AI</span>
+            </span>
           </h1>
-          <p className="hero-sub max-w-3xl text-center mt-4 text-lg md:text-xl leading-relaxed text-muted-foreground">
-            AutoDash is an AI-powered analytics and dashboard automation platform that converts raw data into intelligent visualizations, predictive insights, and real-time business intelligence.
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/90 md:text-xl text-center">
+            The next-generation BI platform that automatically transforms complex datasets into real-time, interactive dashboards without writing a single line of code.
           </p>
           
           <div className="hero-actions mt-10">

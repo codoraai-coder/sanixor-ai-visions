@@ -164,6 +164,15 @@ export function Navbar() {
 
         {/* Right side actions (desktop) - empty since toggle moved */}
         <div className="flex items-center gap-3 relative z-10 md:mr-0 mr-12">
+          <a
+            href="/contact"
+            className="hidden md:flex relative group h-10 items-center justify-center rounded-full bg-foreground/10 px-6 font-medium text-sm transition-all duration-300 overflow-hidden border border-foreground/10 hover:border-transparent hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+          >
+            <span className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <span className="relative z-10 text-foreground group-hover:text-white transition-colors duration-300">
+              Contact Us
+            </span>
+          </a>
         </div>
       </header>
 
@@ -247,7 +256,15 @@ export function Navbar() {
                   </div>
                 </div>
 
-
+                {/* Contact CTA */}
+                <div>
+                  <a
+                    href="/contact"
+                    className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 p-4 text-center font-semibold text-white transition-transform duration-300 active:scale-95 shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+                  >
+                    Contact Us
+                  </a>
+                </div>
 
                 {/* Social Links */}
                 <div>
