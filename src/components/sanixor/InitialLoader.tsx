@@ -190,7 +190,7 @@ export function InitialLoader({ children }: { children: React.ReactNode }) {
                 
                 {/* Cyberpunk subtext */}
                 <motion.div
-                  className="mt-5 font-mono text-[11px] text-white/80 tracking-[0.4em] uppercase font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
+                  className="mt-5 font-mono text-[11px] text-purple-600 tracking-[0.4em] uppercase font-semibold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.2, duration: 1 }}
