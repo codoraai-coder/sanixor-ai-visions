@@ -50,6 +50,7 @@ export function ServicesCube({
 
   return (
     <div
+      id="services"
       ref={sectionRef}
       className="relative border-y border-border/30 overflow-hidden pt-16 pb-24"
       style={{ background: "var(--background)" }}

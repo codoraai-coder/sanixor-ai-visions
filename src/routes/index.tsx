@@ -143,13 +143,13 @@ function SectionHeader({
   description,
 }: {
   label: string;
-  title: string;
+  title?: string;
   description?: string;
 }) {
   return (
     <div className={cn("mx-auto max-w-2xl text-center", description ? "mb-14" : "mb-6")}>
       <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-primary">{label}</p>
-      <h2 className="text-3xl font-bold tracking-tight md:text-5xl">{title}</h2>
+      {title && <h2 className="text-3xl font-bold tracking-tight md:text-5xl">{title}</h2>}
       {description && <p className="mt-4 text-muted-foreground md:text-lg">{description}</p>}
     </div>
   );
@@ -189,6 +189,11 @@ export default function Index() {
       {/* Event */}
       <ScrollReveal delay={100}>
         <section id="event" className="mx-auto max-w-[1500px] px-4 py-8 md:py-12 md:px-6">
+          <div className="mx-auto max-w-7xl px-4 md:px-6 mb-8 md:mb-12">
+            <SectionHeader
+              label="Events"
+            />
+          </div>
           <AgentVerse2 />
         </section>
       </ScrollReveal>
