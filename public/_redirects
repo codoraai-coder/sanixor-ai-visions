@@ -1,9 +1,11 @@
-# Cloudflare Pages redirects & SPA routing.
-# (Ignored by Vercel — Vercel uses vercel.json — so this file is safe in both.)
-
-# 1) Canonical host: send www → apex (301, forced).
-https://www.sanixor.space/*   https://sanixor.space/:splat   301!
-
-# 2) SPA fallback: every unmatched path serves the app shell so React Router
-#    can handle client-side routes (must be LAST).
-/*   /index.html   200
+# Cloudflare Workers static-assets redirects.
+#
+# SPA routing (every unmatched path → app shell) is handled by wrangler.jsonc
+# `assets.not_found_handling = "single-page-application"`. Do NOT add a
+# `/*  /index.html  200` rule here — Workers static assets rejects it as an
+# infinite-loop redirect.
+#
+# The www → apex canonical redirect cannot live here either: Workers static
+# assets `_redirects` only allows relative URLs, not absolute ones with a host.
+# When a custom domain is attached, configure www → apex as a Cloudflare
+# Redirect Rule / Bulk Redirect in the dashboard instead.
