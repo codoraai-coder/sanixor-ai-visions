@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { ServiceInfo } from "@/components/sanixor/ServiceDetailsModal";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 export interface ServiceCubeData extends ServiceInfo {
   iconComponent: React.ElementType;
@@ -27,162 +28,200 @@ export function ServicesCube({
   onSelectService: (service: ServiceInfo) => void;
 }) {
   const [active, setActive] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const animatingRef = useRef(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (isHovered) return;
-    const interval = setInterval(() => {
-      setActive((prev) => (prev + 1) % 6);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [isHovered]);
+  // Track scroll progress through the tall container
+  const { scrollYProgress } = useScroll({
+    target: scrollContainerRef,
+    offset: ["start start", "end end"],
+  });
 
-  const S = 310; // Large, impressive cube size
+  // Map scroll progress (0 → 1) to face index (0 → 5)
+  const faceIndex = useTransform(scrollYProgress, [0, 1], [0, 5]);
+
+  // Smoothly interpolate rotation values
+  const rotateX = useTransform(scrollYProgress, 
+    [0, 0.16, 0.33, 0.50, 0.66, 0.83],
+    [ROTATIONS[0].x, ROTATIONS[1].x, ROTATIONS[2].x, ROTATIONS[3].x, ROTATIONS[4].x, ROTATIONS[5].x]
+  );
+  const rotateY = useTransform(scrollYProgress,
+    [0, 0.16, 0.33, 0.50, 0.66, 0.83],
+    [ROTATIONS[0].y, ROTATIONS[1].y, ROTATIONS[2].y, ROTATIONS[3].y, ROTATIONS[4].y, ROTATIONS[5].y]
+  );
+
+  // Update the active state for the buttons/counter display
+  useMotionValueEvent(faceIndex, "change", (latest) => {
+    const clamped = Math.max(0, Math.min(5, Math.round(latest)));
+    setActive(clamped);
+  });
+
+  const S = 310;
   const H = S / 2;
 
-
-
-  const rot = ROTATIONS[active] ?? ROTATIONS[0];
   const svc = services[active] ?? services[0];
-  const go = (i: number) => setActive(((i % 6) + 6) % 6);
+  const go = (i: number) => {
+    // Manual navigation: scroll the container to the right position
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const idx = ((i % 6) + 6) % 6;
+    const containerRect = container.getBoundingClientRect();
+    const containerTop = container.offsetTop;
+    const scrollableHeight = container.scrollHeight - window.innerHeight;
+    const targetScroll = containerTop + (idx / 5) * scrollableHeight;
+    window.scrollTo({ top: targetScroll, behavior: "smooth" });
+  };
 
   return (
+    // Tall outer container — creates the scroll runway
     <div
-      id="services"
-      ref={sectionRef}
-      className="relative border-y border-border/30 overflow-hidden pt-16 pb-24"
-      style={{ background: "var(--background)" }}
+      ref={scrollContainerRef}
+      className="relative"
+      style={{ height: "400vh" }}
     >
-      {/* ── Section Header ── */}
-      <div className="mx-auto text-center max-w-3xl pb-12 px-4 relative z-10">
-        <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">SERVICES</p>
-      </div>
+      {/* Sticky inner — pins to viewport while user scrolls */}
+      <div
+        id="services"
+        className="sticky top-0 h-screen border-y border-border/30 overflow-hidden flex flex-col justify-center"
+        style={{ background: "var(--background)" }}
+      >
+        {/* ── Section Header ── */}
+        <div className="mx-auto text-center max-w-3xl pb-12 px-4 relative z-10 pt-8">
+          <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">SERVICES</p>
+        </div>
 
-      {/* Cube and controls wrapper */}
-      <div className="relative w-full flex flex-col items-center justify-center z-10">
+        {/* Cube and controls wrapper */}
+        <div className="relative w-full flex flex-col items-center justify-center z-10 flex-1 pb-12">
 
-        {/* ── Background marquee (theme color matching) ── */}
-        {[-1, 0, 1].map((row) => (
-          <div
-            key={row}
-            className="absolute z-0 overflow-hidden pointer-events-none select-none"
-            style={{ top: `calc(45% + ${row} * clamp(70px, 15vw, 160px))`, left: 0, right: 0, transform: "translateY(-50%)" }}
-          >
-            <motion.div
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{ repeat: Infinity, ease: "linear", duration: 25 + Math.abs(row) * 6 }}
-              className="whitespace-nowrap font-mono text-[2.25rem] sm:text-[4rem] md:text-[7rem] lg:text-[9rem] font-black flex gap-8 md:gap-24"
-              style={{
-                width: "max-content",
-                backgroundImage: "radial-gradient(circle, #ffffff 2.2px, transparent 2.5px)",
-                backgroundSize: "8px 8px",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                opacity: 0.35 + Math.abs(row) * 0.05,
-              }}
+          {/* ── Background marquee ── */}
+          {[-1, 0, 1].map((row) => (
+            <div
+              key={row}
+              className="absolute z-0 overflow-hidden pointer-events-none select-none"
+              style={{ top: `calc(45% + ${row} * clamp(70px, 15vw, 160px))`, left: 0, right: 0, transform: "translateY(-50%)" }}
             >
-              <div className="flex gap-12 md:gap-24 shrink-0">
-                {Array.from({ length: 12 }).map((_, i) => <span key={i}>Services @ Sanixor Ai</span>)}
-              </div>
-              <div className="flex gap-12 md:gap-24 shrink-0">
-                {Array.from({ length: 12 }).map((_, i) => <span key={i}>Services @ Sanixor Ai</span>)}
-              </div>
-            </motion.div>
-          </div>
-        ))}
-
-        {/* ── Ambient glow ── */}
-        <div
-          className="absolute z-0 rounded-full blur-[120px] pointer-events-none"
-          style={{
-            width: 600,
-            height: 600,
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            background: "radial-gradient(circle, var(--primary) 0%, transparent 70%)",
-            opacity: 0.15,
-          }}
-        />
-
-        {/* ── Spacious Cube & Control Stack ── */}
-        <div 
-          className="relative z-10 flex flex-col items-center w-full max-w-4xl px-4 gap-8"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-
-          {/* Cube and navigation arrows */}
-          <div className="flex items-center gap-6 md:gap-10">
-            <ArrowBtn dir="left" onClick={() => go(active - 1)} />
-
-            <div style={{ perspective: "1000px", perspectiveOrigin: "50% 48%" }}>
-              <div
+              <motion.div
+                animate={{ x: ["0%", "-50%"] }}
+                transition={{ repeat: Infinity, ease: "linear", duration: 25 + Math.abs(row) * 6 }}
+                className="whitespace-nowrap font-mono text-[2.25rem] sm:text-[4rem] md:text-[7rem] lg:text-[9rem] font-black flex gap-8 md:gap-24"
                 style={{
-                  width: S, height: S,
-                  transformStyle: "preserve-3d",
-                  transform: `rotateX(${rot.x}deg) rotateY(${rot.y}deg)`,
-                  transition: "transform 1s cubic-bezier(0.4, 0, 0.2, 1)",
+                  width: "max-content",
+                  backgroundImage: "radial-gradient(circle, #ffffff 2.2px, transparent 2.5px)",
+                  backgroundSize: "8px 8px",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  opacity: 0.35 + Math.abs(row) * 0.05,
                 }}
               >
-                {/* 4 side faces */}
-                {[
-                  { r: `rotateY(0deg)   translateZ(${H}px)`, i: 0 },
-                  { r: `rotateY(90deg)  translateZ(${H}px)`, i: 1 },
-                  { r: `rotateY(180deg) translateZ(${H}px)`, i: 2 },
-                  { r: `rotateY(-90deg) translateZ(${H}px)`, i: 3 },
-                ].map(({ r, i }) => {
-                  const s = services[i];
-                  return s ? (
-                    <div key={s.id} className="absolute" style={{ width: S, height: S, transform: r, backfaceVisibility: "hidden" }}>
-                      <CubeFace service={s} onClick={() => onSelectService(s)} index={i} />
-                    </div>
-                  ) : null;
-                })}
-                {/* Top face */}
-                <div className="absolute" style={{ width: S, height: S, transform: `rotateX(90deg) translateZ(${H}px)`, backfaceVisibility: "hidden" }}>
-                  <CubeFace service={services[4]} onClick={() => onSelectService(services[4])} index={4} />
+                <div className="flex gap-12 md:gap-24 shrink-0">
+                  {Array.from({ length: 12 }).map((_, i) => <span key={i}>Services @ Sanixor Ai</span>)}
                 </div>
-                {/* Bottom face */}
-                <div className="absolute" style={{ width: S, height: S, transform: `rotateX(-90deg) translateZ(${H}px)`, backfaceVisibility: "hidden" }}>
-                  <CubeFace service={services[5]} onClick={() => onSelectService(services[5])} index={5} />
+                <div className="flex gap-12 md:gap-24 shrink-0">
+                  {Array.from({ length: 12 }).map((_, i) => <span key={i}>Services @ Sanixor Ai</span>)}
                 </div>
+              </motion.div>
+            </div>
+          ))}
+
+          {/* ── Ambient glow ── */}
+          <div
+            className="absolute z-0 rounded-full blur-[120px] pointer-events-none"
+            style={{
+              width: 600,
+              height: 600,
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              background: "radial-gradient(circle, var(--primary) 0%, transparent 70%)",
+              opacity: 0.15,
+            }}
+          />
+
+          {/* ── Cube & Controls ── */}
+          <div className="relative z-10 flex flex-col items-center w-full max-w-4xl px-4 gap-8">
+
+            {/* Cube and navigation arrows */}
+            <div className="flex items-center gap-6 md:gap-10">
+              <ArrowBtn dir="left" onClick={() => go(active - 1)} />
+
+              <div style={{ perspective: "1000px", perspectiveOrigin: "50% 48%" }}>
+                <motion.div
+                  style={{
+                    width: S, height: S,
+                    transformStyle: "preserve-3d",
+                    rotateX,
+                    rotateY,
+                  }}
+                  transition={{ type: "tween", ease: "easeOut", duration: 0.1 }}
+                >
+                  {/* 4 side faces */}
+                  {[
+                    { r: `rotateY(0deg)   translateZ(${H}px)`, i: 0 },
+                    { r: `rotateY(90deg)  translateZ(${H}px)`, i: 1 },
+                    { r: `rotateY(180deg) translateZ(${H}px)`, i: 2 },
+                    { r: `rotateY(-90deg) translateZ(${H}px)`, i: 3 },
+                  ].map(({ r, i }) => {
+                    const s = services[i];
+                    return s ? (
+                      <div key={s.id} className="absolute" style={{ width: S, height: S, transform: r, backfaceVisibility: "hidden" }}>
+                        <CubeFace service={s} onClick={() => onSelectService(s)} index={i} />
+                      </div>
+                    ) : null;
+                  })}
+                  {/* Top face */}
+                  <div className="absolute" style={{ width: S, height: S, transform: `rotateX(90deg) translateZ(${H}px)`, backfaceVisibility: "hidden" }}>
+                    <CubeFace service={services[4]} onClick={() => onSelectService(services[4])} index={4} />
+                  </div>
+                  {/* Bottom face */}
+                  <div className="absolute" style={{ width: S, height: S, transform: `rotateX(-90deg) translateZ(${H}px)`, backfaceVisibility: "hidden" }}>
+                    <CubeFace service={services[5]} onClick={() => onSelectService(services[5])} index={5} />
+                  </div>
+                </motion.div>
               </div>
+
+              <ArrowBtn dir="right" onClick={() => go(active + 1)} />
             </div>
 
-            <ArrowBtn dir="right" onClick={() => go(active + 1)} />
-          </div>
+            {/* 6 Labeled Buttons */}
+            <div className="flex flex-wrap justify-center gap-2.5 max-w-2xl mt-16">
+              {services.slice(0, 6).map((s, idx) => {
+                const Icon = s.iconComponent as React.ComponentType<{ className?: string }>;
+                const isActive = idx === active;
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => go(idx)}
+                    className={cn(
+                      "flex items-center gap-2 px-3 py-2 rounded-lg text-xs md:text-sm font-mono uppercase tracking-wider transition-all duration-300 outline-none border",
+                      isActive
+                        ? "bg-white/10 text-foreground border-white shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                        : "bg-card/45 text-muted-foreground border-border hover:bg-card/85 hover:text-foreground"
+                    )}
+                  >
+                    <Icon className="w-4 h-4 text-current" />
+                    <span className="hidden sm:inline">{s.title}</span>
+                    <span className="sm:hidden">{String(idx + 1).padStart(2, "0")}</span>
+                  </button>
+                );
+              })}
+            </div>
 
-          {/* 6 Labeled Buttons Redesigned (Spacious layout) */}
-          <div className="flex flex-wrap justify-center gap-2.5 max-w-2xl mt-16">
-            {services.slice(0, 6).map((s, idx) => {
-              const Icon = s.iconComponent as React.ComponentType<{ className?: string }>;
-              const isActive = idx === active;
-              return (
-                <button
-                  key={s.id}
-                  onClick={() => go(idx)}
-                  className={cn(
-                    "flex items-center gap-2 px-3 py-2 rounded-lg text-xs md:text-sm font-mono uppercase tracking-wider transition-all duration-300 outline-none border",
-                    isActive
-                      ? "bg-white/10 text-foreground border-white shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-                      : "bg-card/45 text-muted-foreground border-border hover:bg-card/85 hover:text-foreground"
-                  )}
-                >
-                  <Icon className="w-4 h-4 text-current" />
-                  <span className="hidden sm:inline">{s.title}</span>
-                  <span className="sm:hidden">{String(idx + 1).padStart(2, "0")}</span>
-                </button>
-              );
-            })}
-          </div>
+            {/* Counter */}
+            <p className="font-mono text-xs tracking-[0.3em] uppercase text-muted-foreground">
+              {String(active + 1).padStart(2, "0")} / 06
+            </p>
 
-          {/* Counter */}
-          <p className="font-mono text-xs tracking-[0.3em] uppercase text-muted-foreground">
-            {String(active + 1).padStart(2, "0")} / 06
-          </p>
+            {/* Scroll hint */}
+            <motion.div 
+              className="flex flex-col items-center gap-2 text-muted-foreground/50"
+              animate={{ opacity: [0.3, 0.7, 0.3] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+            >
+              <span className="text-[10px] font-mono uppercase tracking-widest">Scroll to explore</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </motion.div>
+          </div>
         </div>
       </div>
     </div>

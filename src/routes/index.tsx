@@ -159,7 +159,7 @@ export default function Index() {
   const [selectedService, setSelectedService] = useState<ServiceInfo | null>(null);
 
   return (
-    <div id="main-content" className="relative min-h-screen overflow-x-hidden elite-bg">
+    <div id="main-content" className="relative min-h-screen elite-bg" style={{ overflowX: "clip" }}>
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute inset-0 elite-grid" />
       </div>
