@@ -1,6 +1,6 @@
 import sanixorMark from "@/assets/sanixor-mark.png";
 import { cn } from "@/lib/utils";
-import { Box, Briefcase, Calendar, GraduationCap, X, Twitter, Linkedin, Instagram } from "lucide-react";
+import { Box, Briefcase, Calendar, GraduationCap, Trophy, UserPlus, X, Twitter, Linkedin, Instagram } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MenuToggle } from "./MenuToggle";
@@ -12,6 +12,12 @@ const homeLinks = [
   { href: "/#services", label: "Services", icon: Briefcase, gradientFrom: "#56CCF2", gradientTo: "#2F80ED" },
   { href: "/#event", label: "Events", icon: Calendar, gradientFrom: "#FF9966", gradientTo: "#FF5E62" },
   { href: "/#learn", label: "Learn", icon: GraduationCap, gradientFrom: "#80FF72", gradientTo: "#7EE8FA" },
+];
+
+// Route-based nav items (full pages, not home-page sections).
+const pageLinks = [
+  { to: "/achievements", label: "Achievements", icon: Trophy, gradientFrom: "#F7971E", gradientTo: "#FFD200" },
+  { to: "/hiring", label: "Careers", icon: UserPlus, gradientFrom: "#FF6A88", gradientTo: "#FF99AC" },
 ];
 
 const socialLinks = [
@@ -158,8 +164,42 @@ export function Navbar() {
               </span>
             </a>
           )})}
-          
-          {/* Theme Toggle removed */}
+
+          {/* Page links (routes) — same pill style, client-side navigation */}
+          {pageLinks.map(({ to, label, icon: Icon, gradientFrom, gradientTo }) => {
+            const isActive = location.pathname === to;
+            return (
+            <Link
+              key={to}
+              to={to}
+              style={{ '--gradient-from': gradientFrom, '--gradient-to': gradientTo } as React.CSSProperties}
+              className={cn(
+                "relative h-[48px] bg-foreground/5 border border-foreground/10 shadow-lg rounded-full flex items-center justify-center transition-all duration-500 hover:shadow-none group cursor-pointer",
+                isActive ? "w-[130px]" : "w-[48px] hover:w-[130px]"
+              )}
+            >
+              <span className={cn(
+                "absolute inset-0 rounded-full bg-[linear-gradient(45deg,var(--gradient-from),var(--gradient-to))] transition-all duration-500",
+                isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+              )}></span>
+              <span className={cn(
+                "absolute top-[8px] inset-x-0 h-full rounded-full bg-[linear-gradient(45deg,var(--gradient-from),var(--gradient-to))] blur-[15px] -z-10 transition-all duration-500",
+                isActive ? "opacity-40" : "opacity-0 group-hover:opacity-40"
+              )}></span>
+              <span className={cn(
+                "relative z-10 transition-all duration-500 flex items-center justify-center",
+                isActive ? "scale-0" : "group-hover:scale-0"
+              )}>
+                <Icon className={cn("h-[22px] w-[22px] transition-colors", isActive ? "text-foreground" : "text-foreground/70")} />
+              </span>
+              <span className={cn(
+                "absolute text-foreground font-bold tracking-wide text-sm transition-all duration-500 delay-75",
+                isActive ? "scale-100" : "scale-0 group-hover:scale-100"
+              )}>
+                {label}
+              </span>
+            </Link>
+          )})}
         </nav>
 
         {/* Right side actions (desktop) - empty since toggle moved */}
@@ -251,6 +291,28 @@ export function Navbar() {
                           </span>
                           <span className="font-medium text-foreground transition-colors group-hover:text-foreground">{label}</span>
                         </a>
+                      </motion.div>
+                    ))}
+                    {pageLinks.map(({ to, label, icon: Icon, gradientFrom, gradientTo }, i) => (
+                      <motion.div
+                        key={to}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ delay: (homeLinks.length + i) * 0.06, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                      >
+                        <Link
+                          to={to}
+                          onClick={() => setMenuOpen(false)}
+                          style={{ '--gradient-from': gradientFrom, '--gradient-to': gradientTo } as React.CSSProperties}
+                          className="group flex items-center gap-4 rounded-xl p-3 bg-foreground/5 border border-foreground/10 hover:bg-foreground/10 transition-all duration-300"
+                        >
+                          <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-transform duration-300 group-hover:scale-110">
+                            <span className="absolute inset-0 rounded-lg bg-[linear-gradient(45deg,var(--gradient-from),var(--gradient-to))] opacity-0 transition-opacity duration-300 group-hover:opacity-20"></span>
+                            <Icon className="relative z-10 h-5 w-5 text-foreground/70 transition-colors duration-300 group-hover:text-foreground" />
+                          </span>
+                          <span className="font-medium text-foreground transition-colors group-hover:text-foreground">{label}</span>
+                        </Link>
                       </motion.div>
                     ))}
                   </div>

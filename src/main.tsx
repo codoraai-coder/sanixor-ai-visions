@@ -28,6 +28,7 @@ import NyayAi from "./routes/nyayai";
 import SocioAi from "./routes/socioai";
 import ConversationalUX from "./routes/conversational-ux";
 import AIArchitecture from "./routes/ai-architecture";
+import Achievements from "./routes/achievements";
 import "./styles.css";
 
 import StandardScrollToTop from "./components/sanixor/StandardScrollToTop";
@@ -74,6 +75,7 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/hiring" element={<Hiring />} />
+              <Route path="/achievements" element={<Achievements />} />
               <Route path="/hackeval" element={<HackEval />} />
               <Route path="/bitbench" element={<BitBench />} />
               <Route path="/sanixor-studio" element={<SanixorStudio />} />

@@ -10,7 +10,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "sanixor-website",
-  "compatibility_date": "2025-09-24",
+  "compatibility_date": "2026-07-07",
 
   // Deploy to the account's *.workers.dev subdomain.
   //
@@ -30,6 +30,7 @@
   },
 
   "observability": {
-    "enabled": true
+    "enabled": true,
+    "head_sampling_rate": 1
   }
 }

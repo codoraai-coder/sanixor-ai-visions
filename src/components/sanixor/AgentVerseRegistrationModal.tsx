@@ -254,7 +254,15 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
                     <div className="av2-type-btn-desc">Register as an industry professional</div>
                   </div>
                 </button>
-
+                <button type="button" className="av2-type-btn" onClick={() => setUserType("institution")}>
+                  <div className="av2-type-btn-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ width: 22, height: 22, color: '#a78bfa' }}><path d="M3 21h18" /><path d="M5 21V7l8-4v18" /><path d="M19 21V11l-6-4" /><path d="M9 9h.01" /><path d="M9 13h.01" /><path d="M9 17h.01" /></svg>
+                  </div>
+                  <div>
+                    <div className="av2-type-btn-title">Institution</div>
+                    <div className="av2-type-btn-desc">Register an institution or large cohort</div>
+                  </div>
+                </button>
               </div>
             </>
           ) : (
@@ -322,8 +330,41 @@ export function AgentVerseRegistrationModal({ onClose }: Props) {
                 </>
               )}
 
+              {userType === "institution" && (
+                <>
+                  <div className="av2-fg">
+                    <label className="av2-label">Point of Contact *</label>
+                    <input className="av2-input" name="name" value={form.name} onChange={handleChange} placeholder="Full Name" required pattern="^[A-Za-z\s]+$" title="Only letters and spaces allowed" />
+                  </div>
+                  <div className="av2-frow">
+                    <div className="av2-fg">
+                      <label className="av2-label">Email *</label>
+                      <input className="av2-input" type="email" name="email" value={form.email} onChange={handleChange} placeholder="you@institution.edu" required />
+                    </div>
+                    <div className="av2-fg">
+                      <label className="av2-label">Contact Number *</label>
+                      <input className="av2-input" type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="9876543210" required pattern="^[0-9]{10}$" title="Enter a valid 10-digit phone number" />
+                    </div>
+                  </div>
+                  <div className="av2-frow">
+                    <div className="av2-fg">
+                      <label className="av2-label">Institution / Organization *</label>
+                      <input className="av2-input" name="organization" value={form.organization} onChange={handleChange} placeholder="College / Organization Name" required pattern="^[A-Za-z0-9\s.,&'-]+$" title="Enter a valid organization name" />
+                    </div>
+                    <div className="av2-fg">
+                      <label className="av2-label">Expected Participants *</label>
+                      <input className="av2-input" type="number" name="participants" value={form.participants} onChange={handleChange} placeholder="e.g. 100" required min="1" max="10000" />
+                    </div>
+                  </div>
+                </>
+              )}
+
               <button type="submit" className="av2-submit" disabled={isSendingToSheet}>
-                {isSendingToSheet ? 'Processing...' : 'Proceed to Payment'}
+                {isSendingToSheet
+                  ? 'Processing...'
+                  : userType === "institution"
+                    ? 'Submit Registration'
+                    : 'Proceed to Payment'}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>

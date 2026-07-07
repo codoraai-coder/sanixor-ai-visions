@@ -326,6 +326,57 @@ export function AgentVerse2() {
           color: #ffffff;
           transform: translateY(-2px);
         }
+        /* Flashy dual-CTA row: Register Now + Become a Partner */
+        .av2-cta-row {
+          display: flex;
+          gap: 12px;
+          margin-top: 16px;
+        }
+        /* Register Now — bold gradient with a periodic shine sweep */
+        .av2-btn-flashy {
+          background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+          color: #fff;
+          box-shadow: 0 4px 18px rgba(124, 58, 237, 0.45);
+        }
+        .av2-btn-flashy::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: -60%;
+          width: 40%;
+          height: 100%;
+          background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+          transform: skewX(-20deg);
+          pointer-events: none;
+          animation: av2-shine 3.2s ease-in-out infinite;
+        }
+        .av2-btn-flashy:hover {
+          transform: translateY(-3px);
+          background: linear-gradient(135deg, #b062fa 0%, #8b5cf6 100%);
+          box-shadow: 0 10px 30px rgba(124, 58, 237, 0.65);
+        }
+        .av2-btn-flashy:active { transform: translateY(0); }
+        @keyframes av2-shine {
+          0% { left: -60%; }
+          55%, 100% { left: 130%; }
+        }
+        /* Become a Partner — elegant glowing outline */
+        .av2-btn-glow {
+          background: rgba(168, 85, 247, 0.06);
+          color: #e9d5ff;
+          border: 1px solid rgba(168, 85, 247, 0.45);
+        }
+        .av2-btn-glow:hover {
+          transform: translateY(-3px);
+          background: rgba(168, 85, 247, 0.14);
+          border-color: rgba(168, 85, 247, 0.8);
+          box-shadow: 0 8px 26px rgba(168, 85, 247, 0.4);
+          color: #fff;
+        }
+        .av2-btn-glow:active { transform: translateY(0); }
+        @media (max-width: 520px) {
+          .av2-cta-row { flex-direction: column; }
+        }
         .av2-ribbon {
           margin-top: 24px;
           font-size: 14px;
@@ -892,26 +943,6 @@ export function AgentVerse2() {
             </div>
 
             <div className="av2-actions">
-              {/* Note for Developers: 
-                  The "Register Now" button is currently hidden to disable registrations (offline mode). 
-                  To re-enable registrations and bring the button back online, simply remove the `style={{ display: 'none' }}` prop below. */}
-              <button
-                className="av2-btn av2-btn-primary"
-                onClick={() => setShowRegister(true)}
-                style={{ display: "none" }}
-              >
-                Register Now
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </button>
               <button className="av2-btn av2-btn-outline" onClick={() => setShowDetails(true)}>
                 View Details
                 <svg
@@ -930,21 +961,26 @@ export function AgentVerse2() {
             </div>
 
             <div
+              className="av2-cta-row"
               style={{
-                marginTop: 16,
                 opacity: 0,
                 animation: "av2-up .6s .6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
               }}
             >
-              <button
-                className="av2-btn av2-btn-outline"
-                style={{
-                  width: "100%",
-                  justifyContent: "center",
-                  background: "rgba(255,255,255,0.02)",
-                }}
-                onClick={() => setShowPartnership(true)}
-              >
+              <button className="av2-btn av2-btn-flashy" onClick={() => setShowRegister(true)}>
+                Register Now
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+              <button className="av2-btn av2-btn-glow" onClick={() => setShowPartnership(true)}>
                 Become a Partner
                 <svg
                   viewBox="0 0 24 24"
