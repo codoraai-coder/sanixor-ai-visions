@@ -1,7 +1,30 @@
+// Cloudflare Workers configuration for the Sanixor frontend.
+//
+// This is a static single-page app (Vite + React + react-router-dom). It ships
+// as a Workers *static assets* deployment — no server-side Worker script — so
+// `wrangler deploy` uploads the built `dist/` directory and serves it from the
+// edge. Unmatched routes fall back to index.html so client-side routing works.
+//
+// Deploy:  npm run deploy         (builds, then wrangler deploy)
+// Local:   npm run cf:preview     (serves the built dist/ via wrangler)
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tanstack-start-app",
+  "name": "sanixor-website",
   "compatibility_date": "2025-09-24",
-  "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server-entry",
+
+  // Deploy to the account's *.workers.dev subdomain. A custom domain
+  // (sanixor.space) can be attached from the dashboard once the zone is on
+  // Cloudflare — see docs/CLOUDFLARE_DEPLOYMENT.md.
+  "workers_dev": true,
+
+  // Static SPA: serve ./dist, and serve index.html (200) for any unmatched
+  // path so React Router handles the route on the client.
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  },
+
+  "observability": {
+    "enabled": true
+  }
 }

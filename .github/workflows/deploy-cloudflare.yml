@@ -1,0 +1,46 @@
+name: Deploy to Cloudflare
+
+# Builds the SPA and deploys it to Cloudflare Workers (static assets) on every
+# push to the deploy branch. The existing CI workflow (ci.yml) still gates on
+# typecheck + build; this one performs the actual deploy.
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN   — token with the "Edit Cloudflare Workers" template
+#   CLOUDFLARE_ACCOUNT_ID  — from the Cloudflare dashboard (Workers & Pages)
+#
+# NOTE: while the frontend also deploys to Vercel, keep only one host as the
+# canonical production origin to avoid two live copies diverging.
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          # The production API base URL. Update this to the deployed backend
+          # Worker URL if api.sanixor.space is not yet wired up.
+          VITE_API_BASE_URL: https://api.sanixor.space
+
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # dist/ is already built above; deploy without rebuilding.
+          command: deploy
